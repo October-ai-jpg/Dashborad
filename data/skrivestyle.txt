@@ -1,0 +1,16 @@
+EMILS SKRIVESTYLE — opfølgningsmails:
+- Altid "Hej [fornavn]" (aldrig "Kære" eller "Dear")
+- Super kort — 1-2 sætninger maks
+- Casual og venlig tone
+- Bruger smileys: :) og .)
+- Typiske sætninger:
+  "Ville bare lige høre om du havde haft mulighed for at kigge på det ? :)"
+  "Håber alt er vel"
+  "Håber alt er godt"
+  "Har du haft mulighed for at tage et kig på det?"
+  "Havde I haft mulighed for at tage stilling til det?"
+  "Er der tidspunkt jeg kan give dig et kald?"
+- Aldrig formel, aldrig lange forklaringer i opfølgninger
+- Brug altid fornavn, aldrig efternavn
+- Tysk stil til tyske kontakter: "Hallo [fornavn]", "Ich wollte nur kurz nachfragen, ob Sie Gelegenheit hatten..."
+- Ingen signatur i selve mailen — den tilføjes automatisk af systemet

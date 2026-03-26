@@ -4,6 +4,7 @@ const WebSocket = require('ws');
 const fs = require('fs');
 const path = require('path');
 const nodemailer = require('nodemailer');
+const { Pool } = require('pg');
 
 const app = express();
 const server = http.createServer(app);
@@ -11,8 +12,13 @@ const wss = new WebSocket.Server({ server });
 
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'data', 'state.json');
-const FOLLOWUPS_FILE = path.join(__dirname, 'data', 'followups.json');
 const CONFIG_DIR = path.join(__dirname, 'config');
+
+// PostgreSQL til followups — DASHBOARD's EGEN database, IKKE October AI's
+const pool = process.env.DATABASE_URL ? new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+}) : null;
 
 // Email config — sæt GMAIL_USER og GMAIL_APP_PASSWORD som env vars
 const GMAIL_USER = process.env.GMAIL_USER || 'eb-media.dk@eb-media.dk';
@@ -72,67 +78,74 @@ function broadcast(data, excludeWs = null) {
 }
 
 /* ════════════════════════════════════════
-   FOLLOWUPS — opfølgning på mails
+   FOLLOWUPS — opfølgning på mails (PostgreSQL)
    ════════════════════════════════════════ */
-function loadFollowups() {
-  try {
-    if (fs.existsSync(FOLLOWUPS_FILE)) {
-      return JSON.parse(fs.readFileSync(FOLLOWUPS_FILE, 'utf8'));
-    }
-  } catch (e) {}
-  return [];
-}
 
-function saveFollowups(followups) {
-  fs.writeFileSync(FOLLOWUPS_FILE, JSON.stringify(followups, null, 2));
+// Opret tabellen automatisk ved opstart
+async function initFollowupsTable() {
+  if (!pool) { console.log('⚠️  Ingen DATABASE_URL — followups kører IKKE'); return; }
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS followups (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      til TEXT NOT NULL,
+      emne TEXT NOT NULL,
+      sendt_dato TEXT,
+      dage_siden INTEGER DEFAULT 0,
+      draft TEXT NOT NULL,
+      status TEXT DEFAULT 'afventer',
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ,
+      sent_at TIMESTAMPTZ
+    )
+  `);
+  console.log('✅ Followups tabel klar (PostgreSQL)');
 }
 
 // GET alle afventende opfølgninger
-app.get('/api/followups', (req, res) => {
-  const followups = loadFollowups().filter(f => f.status === 'afventer');
-  res.json(followups);
+app.get('/api/followups', async (req, res) => {
+  if (!pool) return res.json([]);
+  const { rows } = await pool.query("SELECT * FROM followups WHERE status = 'afventer' ORDER BY created_at DESC");
+  res.json(rows);
 });
 
 // GET alle opfølgninger (inkl. sendte/ignorerede)
-app.get('/api/followups/all', (req, res) => {
-  res.json(loadFollowups());
+app.get('/api/followups/all', async (req, res) => {
+  if (!pool) return res.json([]);
+  const { rows } = await pool.query('SELECT * FROM followups ORDER BY created_at DESC');
+  res.json(rows);
 });
 
 // POST ny opfølgning
-app.post('/api/followups', (req, res) => {
+app.post('/api/followups', async (req, res) => {
+  if (!pool) return res.status(500).json({ error: 'Database ikke konfigureret' });
   const { til, emne, sendt_dato, dage_siden, draft } = req.body;
   if (!til || !emne || !sendt_dato || !draft) {
     return res.status(400).json({ error: 'Mangler felter: til, emne, sendt_dato, draft' });
   }
-  const followups = loadFollowups();
-  const entry = {
-    id: require('crypto').randomUUID(),
-    til, emne, sendt_dato,
-    dage_siden: dage_siden || 0,
-    draft,
-    status: 'afventer',
-    created_at: new Date().toISOString()
-  };
-  followups.push(entry);
-  saveFollowups(followups);
+  const { rows } = await pool.query(
+    `INSERT INTO followups (til, emne, sendt_dato, dage_siden, draft)
+     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+    [til, emne, sendt_dato, dage_siden || 0, draft]
+  );
+  const entry = rows[0];
   broadcast({ type: 'followup-new', followup: entry });
   res.status(201).json(entry);
 });
 
 // PATCH opdater status (sendt/ignoreret)
-app.patch('/api/followups/:id', (req, res) => {
+app.patch('/api/followups/:id', async (req, res) => {
+  if (!pool) return res.status(500).json({ error: 'Database ikke konfigureret' });
   const { status } = req.body;
   if (!['sendt', 'ignoreret'].includes(status)) {
     return res.status(400).json({ error: "Status skal være 'sendt' eller 'ignoreret'" });
   }
-  const followups = loadFollowups();
-  const idx = followups.findIndex(f => f.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ error: 'Ikke fundet' });
-  followups[idx].status = status;
-  followups[idx].updated_at = new Date().toISOString();
-  saveFollowups(followups);
+  const { rows } = await pool.query(
+    `UPDATE followups SET status = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
+    [status, req.params.id]
+  );
+  if (rows.length === 0) return res.status(404).json({ error: 'Ikke fundet' });
   broadcast({ type: 'followup-update', id: req.params.id, status });
-  res.json(followups[idx]);
+  res.json(rows[0]);
 });
 
 // POST send email direkte + marker som sendt
@@ -140,14 +153,13 @@ app.post('/api/followups/:id/send', async (req, res) => {
   if (!transporter) {
     return res.status(500).json({ error: 'Email ikke konfigureret. Sæt GMAIL_APP_PASSWORD env var.' });
   }
-  const followups = loadFollowups();
-  const idx = followups.findIndex(f => f.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ error: 'Ikke fundet' });
+  if (!pool) return res.status(500).json({ error: 'Database ikke konfigureret' });
 
-  const f = followups[idx];
-  // Brug eventuelt redigeret draft fra request body
+  const { rows } = await pool.query('SELECT * FROM followups WHERE id = $1', [req.params.id]);
+  if (rows.length === 0) return res.status(404).json({ error: 'Ikke fundet' });
+
+  const f = rows[0];
   const body = req.body.draft || f.draft;
-  // Tilføj signatur automatisk hvis den ikke allerede er der
   const fullBody = body.includes('Best Regards') ? body : body + EMAIL_SIGNATURE;
 
   try {
@@ -157,9 +169,10 @@ app.post('/api/followups/:id/send', async (req, res) => {
       subject: 'Re: ' + f.emne,
       text: fullBody
     });
-    followups[idx].status = 'sendt';
-    followups[idx].sent_at = new Date().toISOString();
-    saveFollowups(followups);
+    await pool.query(
+      `UPDATE followups SET status = 'sendt', sent_at = NOW() WHERE id = $1`,
+      [f.id]
+    );
     broadcast({ type: 'followup-update', id: f.id, status: 'sendt' });
     res.json({ ok: true, message: 'Email sendt til ' + f.til });
   } catch (e) {
@@ -234,6 +247,16 @@ wss.on('connection', (ws) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Dashboard running on port ${PORT}`);
-});
+// Start server + init database
+initFollowupsTable()
+  .then(() => {
+    server.listen(PORT, () => {
+      console.log(`Dashboard running on port ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error('DB init fejl (kører uden followups):', err.message);
+    server.listen(PORT, () => {
+      console.log(`Dashboard running on port ${PORT} (uden database)`);
+    });
+  });
