@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EB-Media Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #EDE8DF;
+  --surface: #F4F0E8;
+  --surface2: #EDE8DF;
+  --surface3: #E4DDD2;
+  --border: rgba(60,45,30,0.1);
+  --border2: rgba(60,45,30,0.18);
+  --text: #1E1A14;
+  --text2: #6B5F4E;
+  --text3: #A89880;
+  --gold: #B08D5B;
+  --gold-bg: rgba(176,141,91,0.1);
+  --gold-border: rgba(176,141,91,0.28);
+  --green: #4A7C59;
+  --green-bg: rgba(74,124,89,0.1);
+  --green-border: rgba(74,124,89,0.28);
+  --red: #9B3A2F;
+  --red-bg: rgba(155,58,47,0.09);
+  --red-border: rgba(155,58,47,0.25);
+  --purple: #6B5B8A;
+  --purple-bg: rgba(107,91,138,0.09);
+  --purple-border: rgba(107,91,138,0.25);
+  --teal: #3A7A7A;
+  --teal-bg: rgba(58,122,122,0.09);
+  --teal-border: rgba(58,122,122,0.25);
+  --pink: #9B5A6A;
+  --pink-bg: rgba(155,90,106,0.09);
+  --pink-border: rgba(155,90,106,0.25);
+  --serif: 'Cormorant Garamond', serif;
+  --sans: 'DM Sans', sans-serif;
+  --r: 4px; --rl: 6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;overflow:hidden}
+.shell{display:flex;height:100vh}
+.sidebar{width:218px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border2);display:flex;flex-direction:column}
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.topbar{padding:14px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--surface)}
+.content{flex:1;overflow-y:auto;padding:24px 28px;background:var(--bg)}
+
+.sb-header{padding:22px 20px 16px;border-bottom:1px solid var(--border2)}
+.sb-logo{font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:1px}
+.sb-logo span{color:var(--gold)}
+.sb-sub{font-size:11px;color:var(--text3);margin-top:2px;letter-spacing:0.3px}
+.sb-month-select{margin-top:12px}
+.sb-month-select select{width:100%;background:var(--surface3);border:1px solid var(--border2);color:var(--text);border-radius:var(--r);padding:6px 10px;font-size:12px;font-family:var(--sans);cursor:pointer}
+.sb-nav{padding:8px 10px;flex:1;overflow-y:auto}
+.sb-group{font-size:10px;color:var(--text3);padding:12px 8px 4px;letter-spacing:1.2px;text-transform:uppercase}
+.sb-btn{display:flex;align-items:center;gap:9px;width:100%;padding:8px 10px;border-radius:var(--r);border:none;background:transparent;color:var(--text2);font-size:13px;font-family:var(--sans);cursor:pointer;text-align:left;transition:all 0.15s}
+.sb-btn:hover{background:var(--surface3);color:var(--text)}
+.sb-btn.active{background:var(--surface3);color:var(--text);font-weight:500;border-left:2px solid var(--gold);padding-left:8px}
+.sb-btn .ico{width:14px;height:14px;flex-shrink:0;opacity:0.4}
+.sb-btn.active .ico{opacity:0.85}
+.pill{margin-left:auto;font-size:10px;color:var(--text3);background:var(--surface3);padding:1px 7px;border-radius:10px;border:1px solid var(--border)}
+.sb-btn.active .pill{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-border)}
+.sb-footer{padding:14px 20px;border-top:1px solid var(--border)}
+.ws-status{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text3)}
+.ws-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0}
+.ws-dot.live{background:var(--green)}
+.ws-dot.err{background:var(--red)}
+
+.tb-title{font-family:var(--serif);font-size:21px;font-weight:500;letter-spacing:0.3px}
+.tb-right{display:flex;align-items:center;gap:10px}
+.badge{font-size:11px;padding:3px 11px;border-radius:20px;border:1px solid}
+.badge.gold{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-border)}
+#saveStatus{font-size:11px;color:var(--text3)}
+#saveStatus.saving{color:var(--green)}
+
+.sec{display:none}.sec.active{display:block}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:20px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px}
+.stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.stat-val{font-family:var(--serif);font-size:34px;font-weight:500;letter-spacing:-0.5px}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.pbar{height:1px;background:var(--border2);border-radius:1px;margin-top:12px;overflow:hidden}
+.pfill{height:100%;border-radius:1px;transition:width 0.5s ease}
+.pfill.gold{background:var(--gold)}.pfill.green{background:var(--green)}.pfill.purple{background:var(--purple)}
+
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:20px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-left:2px solid var(--gold);border-radius:var(--rl);padding:14px 18px}
+.kpi-lbl{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.kpi-val{font-size:13px;color:var(--text);line-height:1.6;font-weight:300}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.card-hdr{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-hdr h3{font-family:var(--serif);font-size:16px;font-weight:500;letter-spacing:0.3px}
+.card-hdr .cnt{font-size:11px;color:var(--text3)}
+
+.task{display:flex;align-items:flex-start;gap:11px;padding:10px 18px;cursor:pointer;transition:background 0.1s;border-bottom:1px solid var(--border)}
+.task:last-child{border-bottom:none}
+.task:hover{background:var(--surface2)}
+.task.done-row{opacity:0.4}
+.chk{width:15px;height:15px;border:1px solid var(--border2);border-radius:2px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.chk.done{background:var(--green);border-color:var(--green)}
+.chk.done::after{content:'';display:block;width:5px;height:3px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.task-body{flex:1;min-width:0}
+.task-txt{font-size:13px;line-height:1.5;color:var(--text);font-weight:300}
+.task-txt.done{color:var(--text3);text-decoration:line-through}
+.task-foot{display:flex;align-items:center;gap:6px;margin-top:4px}
+.tag{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:400;border:1px solid;letter-spacing:0.2px}
+.tag-Leads{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-border)}
+.tag-Pitch{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-border)}
+.tag-Sales{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.tag-AI{background:var(--teal-bg);color:var(--teal);border-color:var(--teal-border)}
+.tag-Tech{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-border)}
+.tag-Research{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-border)}
+.tag-Deal{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
+.tag-Ekspansion{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.tag-Team{background:var(--pink-bg);color:var(--pink);border-color:var(--pink-border)}
+.tag-Demo{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-border)}
+.tag-Kunde{background:var(--teal-bg);color:var(--teal);border-color:var(--teal-border)}
+
+.cal-wrap{padding:18px}
+.cal-wd-row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.cal-wd{font-size:10px;color:var(--text3);text-align:center;padding:4px 0;text-transform:uppercase;letter-spacing:0.8px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{border-radius:var(--r);padding:8px 7px;min-height:62px;border:1px solid var(--border);background:var(--surface)}
+.cal-day.empty{background:transparent;border-color:transparent}
+.cal-day.weekend{background:var(--surface2);border-color:transparent;opacity:0.5}
+.cal-day .dn{font-family:var(--serif);font-size:15px;font-weight:500;margin-bottom:3px}
+.cal-day .dl{font-size:9px;line-height:1.4;color:var(--text3)}
+.cal-day.together{background:rgba(74,124,89,0.07);border-color:rgba(74,124,89,0.18)}
+.cal-day.together .dn{color:var(--green)}.cal-day.together .dl{color:var(--green);opacity:0.7}
+.cal-day.blocked{background:rgba(155,58,47,0.07);border-color:rgba(155,58,47,0.18)}
+.cal-day.blocked .dn{color:var(--red)}.cal-day.blocked .dl{color:var(--red);opacity:0.7}
+.cal-day.travel{background:rgba(176,141,91,0.09);border-color:rgba(176,141,91,0.22)}
+.cal-day.travel .dn{color:var(--gold)}.cal-day.travel .dl{color:var(--gold);opacity:0.7}
+.cal-day.vaekst{background:rgba(58,122,122,0.07);border-color:rgba(58,122,122,0.18)}
+.cal-day.vaekst .dn{color:var(--teal)}.cal-day.vaekst .dl{color:var(--teal);opacity:0.7}
+.cal-day.exam{background:rgba(107,91,138,0.07);border-color:rgba(107,91,138,0.18)}
+.cal-day.exam .dn{color:var(--purple)}.cal-day.exam .dl{color:var(--purple);opacity:0.7}
+.today-ring{float:right;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:2px}
+.cal-legend{display:flex;flex-wrap:wrap;gap:14px;padding:14px 18px;border-top:1px solid var(--border)}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)}
+.leg-dot{width:8px;height:8px;border-radius:1px;flex-shrink:0}
+
+.deal-row{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;border-bottom:1px solid var(--border)}
+.deal-row:last-child{border-bottom:none}
+.deal-name{font-size:13px;font-weight:300}
+.deal-status{font-size:10px;padding:3px 9px;border-radius:20px;border:1px solid;letter-spacing:0.3px}
+.ds-open{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-border)}
+.ds-done{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+
+.hs-task{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:11px 18px;border-bottom:1px solid var(--border)}
+.hs-task:last-child{border-bottom:none}
+.hs-task-title{font-size:13px;font-weight:400;margin-bottom:3px}
+.hs-task-meta{font-size:11px;color:var(--text3)}
+.hs-badge{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid;flex-shrink:0}
+.hs-open{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-border)}
+.hs-done{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.hs-overdue{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
+
+.empty-state{padding:32px;text-align:center;color:var(--text3);font-size:13px}
+.loading{padding:24px;text-align:center;color:var(--text3);font-size:12px}
+
+.fu-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:10px;overflow:hidden}
+.fu-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.fu-to{font-size:13px;font-weight:500;color:var(--text)}
+.fu-meta{font-size:11px;color:var(--text3)}
+.fu-subject{font-size:12px;color:var(--text2);padding:0 18px;margin-top:8px}
+.fu-draft{padding:12px 18px;font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;font-family:var(--sans);font-weight:300}
+.fu-draft textarea{width:100%;min-height:120px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);padding:10px 12px;font-size:13px;color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.6;resize:vertical}
+.fu-sig{padding:8px 18px;font-size:11px;color:var(--text3);background:var(--surface2);border-top:1px solid var(--border);white-space:pre-wrap;line-height:1.5}
+.fu-actions{padding:10px 18px;display:flex;gap:8px;border-top:1px solid var(--border)}
+.fu-btn{padding:7px 16px;border-radius:var(--r);border:1px solid;font-size:12px;font-family:var(--sans);cursor:pointer;transition:all 0.15s}
+.fu-btn.send{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.fu-btn.send:hover{background:var(--green);color:#fff}
+.fu-btn.edit{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-border)}
+.fu-btn.edit:hover{background:var(--gold);color:#fff}
+.fu-btn.ignore{background:var(--surface2);color:var(--text3);border-color:var(--border2)}
+.fu-btn.ignore:hover{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
+.fu-btn:disabled{opacity:0.4;cursor:not-allowed}
+.fu-badge{font-size:10px;padding:2px 8px;border-radius:10px}
+.fu-badge.old{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.fu-badge.med{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-border)}
+.fu-badge.new{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.fu-toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;padding:12px 20px;border-radius:var(--rl);font-size:13px;z-index:100;opacity:0;transition:opacity 0.3s}
+.fu-toast.show{opacity:1}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="sidebar">
+    <div class="sb-header">
+      <div class="sb-logo">EB<span>.</span></div>
+      <div class="sb-sub">Team Dashboard</div>
+      <div class="sb-month-select">
+        <select id="monthSelect" onchange="switchMonth(this.value)"></select>
+      </div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-group">Navigér</div>
+      <button class="sb-btn active" onclick="showSec('overview')" data-sec="overview">
+        <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+        Overblik<span class="pill" id="pill-overview">0%</span>
+      </button>
+      <button class="sb-btn" onclick="showSec('calendar')" data-sec="calendar">
+        <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="12" rx="1.5"/><path d="M5 1v4M11 1v4M1 7h14"/></svg>
+        Kalender
+      </button>
+      <button class="sb-btn" onclick="showSec('followups')" data-sec="followups">
+        <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12M2 7h8M2 11h10"/><path d="M12 9l2 2-2 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Opfølgning<span class="pill" id="pill-followups">0</span>
+      </button>
+      <div class="sb-group">Projekter</div>
+      <div id="dynNav"></div>
+      <button class="sb-btn" onclick="showSec('hubspot')" data-sec="hubspot">
+        <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="8" r="2"/><circle cx="11" cy="4" r="2"/><circle cx="11" cy="12" r="2"/><path d="M7 8h1.5M9.5 5.5l-2 2M9.5 10.5l-2-2"/></svg>
+        HubSpot
+      </button>
+    </div>
+    <div class="sb-footer">
+      <div class="ws-status"><div class="ws-dot" id="wsDot"></div><span id="wsText">Forbinder…</span></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-title" id="tbTitle">Overblik</div>
+      <div class="tb-right">
+        <span id="saveStatus"></span>
+        <span class="badge gold" id="tbBadge">April 2025</span>
+      </div>
+    </div>
+    <div class="content" id="content"><div class="loading">Henter…</div></div>
+  </div>
+</div>
+
+<script>
+let config=null,state={},currentMonth=null,currentSec='overview',ws=null,followups=[],emailConfigured=false;
+const SIGNATURE=`\n\n--\nBest Regards\nEmil Bloch Thomsen, indehaver\nWebsite: www.eb-media.dk\nT: 22312151\nM: 31213348\nkontakt@eb-media.dk\nMarstalsgade 29, København Ø`;
+
+async function init(){
+  const months=await fetch('/api/months').then(r=>r.json());
+  const sel=document.getElementById('monthSelect');
+  months.forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=fmtMonth(m);sel.appendChild(o);});
+  currentMonth=months[0]||'2025-04';
+  if(sel.options.length)sel.value=currentMonth;
+  state=await fetch('/api/state').then(r=>r.json());
+  await loadFollowups();
+  await loadConfig(currentMonth);
+  connectWS();
+}
+
+function fmtMonth(m){const[y,mo]=m.split('-');return new Date(y,mo-1,1).toLocaleDateString('da-DK',{month:'long',year:'numeric'});}
+
+async function loadConfig(month){
+  currentMonth=month;
+  config=await fetch(`/api/config/${month}`).then(r=>r.json()).catch(()=>null);
+  if(!config){document.getElementById('content').innerHTML='<div class="empty-state">Ingen konfiguration fundet</div>';return;}
+  document.getElementById('tbBadge').textContent=config.title||month;
+  buildDynNav();render();
+}
+
+async function switchMonth(month){state=await fetch('/api/state').then(r=>r.json());await loadConfig(month);}
+
+function connectWS(){
+  const proto=location.protocol==='https:'?'wss':'ws';
+  ws=new WebSocket(`${proto}://${location.host}`);
+  const dot=document.getElementById('wsDot'),txt=document.getElementById('wsText');
+  ws.onopen=()=>{dot.className='ws-dot live';txt.textContent='Live sync';};
+  ws.onclose=()=>{dot.className='ws-dot err';txt.textContent='Afbrudt…';setTimeout(connectWS,3000);};
+  ws.onmessage=(e)=>{
+    const d=JSON.parse(e.data);
+    if(d.type==='toggle'&&d.month===currentMonth){
+      if(!state[d.month])state[d.month]={};
+      if(!state[d.month][d.section])state[d.month][d.section]={};
+      state[d.month][d.section][d.id]=d.value;
+      render();flashSave('Opdateret af makker');
+    }
+    if(d.type==='followup-new'){
+      followups.push(d.followup);updateFollowupPill();
+      if(currentSec==='followups')render();
+      flashSave('Ny opfølgning');
+    }
+    if(d.type==='followup-update'){
+      followups=followups.filter(f=>f.id!==d.id);updateFollowupPill();
+      if(currentSec==='followups')render();
+    }
+  };
+}
+
+async function toggle(section,id){
+  const res=await fetch('/api/toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({month:currentMonth,section,id})});
+  const d=await res.json();
+  if(!state[currentMonth])state[currentMonth]={};
+  if(!state[currentMonth][section])state[currentMonth][section]={};
+  state[currentMonth][section][id]=d.value;
+  render();flashSave('Gemt');
+}
+
+function isDone(s,id){return!!(state[currentMonth]&&state[currentMonth][s]&&state[currentMonth][s][id]);}
+function flashSave(msg){const el=document.getElementById('saveStatus');el.textContent='✓ '+msg;el.className='saving';setTimeout(()=>{el.textContent='';el.className='';},2000);}
+
+function buildDynNav(){
+  if(!config)return;
+  const groups={};
+  Object.entries(config.sections).forEach(([k,s])=>{const g=s.group||'Andet';if(!groups[g])groups[g]=[];groups[g].push({k,s});});
+  const ico='<svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="1.5"/><path d="M5 8h6M5 5h6M5 11h4"/></svg>';
+  let html='';
+  Object.entries(groups).forEach(([g,secs])=>{
+    html+=`<div class="sb-group">${g}</div>`;
+    secs.forEach(({k,s})=>{const{done,total}=pct(k);html+=`<button class="sb-btn" onclick="showSec('sec-${k}')" data-sec="sec-${k}">${ico}${s.label}<span class="pill" id="pill-${k}">${done}/${total}</span></button>`;});
+  });
+  document.getElementById('dynNav').innerHTML=html;
+}
+
+function showSec(key){currentSec=key;document.querySelectorAll('.sb-btn').forEach(b=>b.classList.toggle('active',b.dataset.sec===key));render();}
+function pct(k){if(!config||!config.sections[k])return{done:0,total:0,p:0};const t=config.sections[k].tasks,d=t.filter(i=>isDone(k,i.id)).length;return{done:d,total:t.length,p:t.length?Math.round(d/t.length*100):0};}
+function allPct(){if(!config)return{done:0,total:0,p:0};let d=0,t=0;Object.keys(config.sections).forEach(k=>{const p=pct(k);d+=p.done;t+=p.total;});return{done:d,total:t,p:t?Math.round(d/t*100):0};}
+function groupPct(g){if(!config)return{done:0,total:0,p:0};let d=0,t=0;Object.entries(config.sections).forEach(([k,s])=>{if(s.group===g){const p=pct(k);d+=p.done;t+=p.total;}});return{done:d,total:t,p:t?Math.round(d/t*100):0};}
+
+function taskHtml(sk,task){
+  const done=isDone(sk,task.id);
+  const tag=task.tag?`<span class="tag tag-${task.tag}">${task.tag}</span>`:'';
+  return`<div class="task${done?' done-row':''}" onclick="toggle('${sk}','${task.id}')"><div class="chk${done?' done':''}"></div><div class="task-body"><div class="task-txt${done?' done':''}">${task.text}</div>${tag?`<div class="task-foot">${tag}</div>`:''}</div></div>`;
+}
+
+function calHtml(){
+  if(!config||!config.calendar)return'<div class="empty-state">Ingen kalender</div>';
+  const{year,month,events}=config.calendar;
+  let startDow=new Date(year,month-1,1).getDay();
+  startDow=startDow===0?6:startDow-1;
+  const dim=new Date(year,month,0).getDate(),today=new Date();
+  function cls(d){const dow=(startDow+d-1)%7;if(dow>=5)return'weekend';for(const e of events){if(e.day===d)return e.type;if(e.from&&e.from<=d&&d<=e.to)return e.type;}for(const e of events){if(e.weekday&&e.weekday===dow+1)return e.type;}return'together';}
+  function lbl(d){const dow=(startDow+d-1)%7;if(dow>=5)return'';for(const e of events){if(e.day===d)return e.label;if(e.from&&e.from<=d&&d<=e.to)return e.label;}for(const e of events){if(e.weekday&&e.weekday===dow+1)return e.label;}return'Arbejder sammen';}
+  let cells='';
+  for(let i=0;i<startDow;i++)cells+='<div class="cal-day empty"></div>';
+  for(let d=1;d<=dim;d++){const isToday=today.getFullYear()===year&&today.getMonth()===month-1&&today.getDate()===d;cells+=`<div class="cal-day ${cls(d)}">${isToday?'<div class="today-ring"></div>':''}<div class="dn">${d}</div><div class="dl">${lbl(d)}</div></div>`;}
+  return`<div class="card"><div class="cal-wrap"><div class="cal-wd-row"><div class="cal-wd">Man</div><div class="cal-wd">Tirs</div><div class="cal-wd">Ons</div><div class="cal-wd">Tors</div><div class="cal-wd">Fre</div><div class="cal-wd">Lør</div><div class="cal-wd">Søn</div></div><div class="cal-grid">${cells}</div></div><div class="cal-legend"><div class="leg"><div class="leg-dot" style="background:var(--green)"></div>Arbejder sammen</div><div class="leg"><div class="leg-dot" style="background:var(--red)"></div>Kan ikke arbejde</div><div class="leg"><div class="leg-dot" style="background:var(--gold)"></div>Rejse</div><div class="leg"><div class="leg-dot" style="background:var(--teal)"></div>Vækst for Alex</div><div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Eksamen</div></div></div>`;
+}
+
+async function loadHubspot(){
+  if(!config||!config.hubspot||!config.hubspot.enabled)return'<div class="empty-state">HubSpot ikke konfigureret</div>';
+  try{
+    const res=await fetch(`https://api.hubapi.com/crm/v3/objects/tasks?properties=hs_task_subject,hs_task_status,hs_task_type,hs_timestamp&limit=50&hapikey=${config.hubspot.apiKey}`);
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    const tasks=(data.results||[]).map(t=>({title:t.properties.hs_task_subject||'(Ingen titel)',status:t.properties.hs_task_status||'NOT_STARTED',type:t.properties.hs_task_type||'',ts:t.properties.hs_timestamp||''}));
+    const open=tasks.filter(t=>t.status==='NOT_STARTED'||t.status==='IN_PROGRESS');
+    const done=tasks.filter(t=>t.status==='COMPLETED'||t.status==='DEFERRED');
+    const fd=ts=>ts?new Date(ts).toLocaleDateString('da-DK',{day:'numeric',month:'short'}):'';
+    const bc=s=>s==='COMPLETED'?'hs-done':s==='DEFERRED'?'hs-overdue':'hs-open';
+    const bl=s=>s==='COMPLETED'?'Udført':s==='DEFERRED'?'Udsat':s==='IN_PROGRESS'?'I gang':'Åben';
+    const row=t=>`<div class="hs-task"><div><div class="hs-task-title">${t.title}</div><div class="hs-task-meta">${t.type?t.type+' · ':''}${fd(t.ts)}</div></div><span class="hs-badge ${bc(t.status)}">${bl(t.status)}</span></div>`;
+    return`<div class="grid-2"><div class="card"><div class="card-hdr"><h3>Åbne opgaver</h3><span class="cnt">${open.length}</span></div>${open.length?open.map(row).join(''):'<div class="empty-state">Ingen åbne opgaver</div>'}</div><div class="card"><div class="card-hdr"><h3>Afsluttede</h3><span class="cnt">${done.length}</span></div>${done.length?done.map(row).join(''):'<div class="empty-state">Ingen</div>'}</div></div>`;
+  }catch(e){return`<div class="card"><div class="empty-state">HubSpot fejl: ${e.message}</div></div>`;}
+}
+
+/* ════ Followups ════ */
+async function loadFollowups(){
+  try{
+    followups=await fetch('/api/followups').then(r=>r.json());
+    const es=await fetch('/api/email-status').then(r=>r.json());
+    emailConfigured=es.configured;
+  }catch(e){followups=[];}
+  updateFollowupPill();
+}
+
+function updateFollowupPill(){
+  const el=document.getElementById('pill-followups');
+  if(el)el.textContent=followups.length;
+}
+
+function ageBadge(days){
+  if(days>=30)return`<span class="fu-badge old">${days} dage</span>`;
+  if(days>=14)return`<span class="fu-badge med">${days} dage</span>`;
+  return`<span class="fu-badge new">${days} dage</span>`;
+}
+
+function renderFollowups(){
+  if(!followups.length)return'<div class="empty-state">Ingen afventende opfølgninger</div>';
+  const warn=!emailConfigured?`<div style="background:var(--gold-bg);border:1px solid var(--gold-border);border-radius:var(--rl);padding:12px 18px;margin-bottom:14px;font-size:12px;color:var(--gold)">⚠ Email-sending er ikke konfigureret. Sæt <code>GMAIL_APP_PASSWORD</code> env var på Railway for at sende direkte. Du kan stadig kopiere udkastet.</div>`:'';
+  return warn+followups.map(f=>{
+    const draftClean=f.draft.includes('Best Regards')?f.draft.split(/\n\n--\n/)[0]:f.draft;
+    return`<div class="fu-card" id="fu-${f.id}">
+      <div class="fu-header">
+        <div><span class="fu-to">${f.til}</span><div class="fu-subject">Re: ${f.emne}</div></div>
+        <div style="text-align:right">${ageBadge(f.dage_siden)}<div class="fu-meta" style="margin-top:4px">Sendt ${f.sendt_dato}</div></div>
+      </div>
+      <div class="fu-draft" id="fu-draft-${f.id}">
+        <textarea id="fu-text-${f.id}" onfocus="this.style.minHeight='160px'">${draftClean}</textarea>
+      </div>
+      <div class="fu-sig">Signatur tilføjes automatisk:\n${SIGNATURE.trim()}</div>
+      <div class="fu-actions">
+        <button class="fu-btn send" onclick="sendFollowup('${f.id}')" ${!emailConfigured?'disabled title="Email ikke konfigureret"':''}>✉ Send direkte</button>
+        <button class="fu-btn edit" onclick="copyFollowup('${f.id}')">📋 Kopiér udkast</button>
+        <button class="fu-btn ignore" onclick="ignoreFollowup('${f.id}')">Ignorér</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showToast(msg){
+  let t=document.getElementById('fu-toast');
+  if(!t){t=document.createElement('div');t.id='fu-toast';t.className='fu-toast';document.body.appendChild(t);}
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+async function sendFollowup(id){
+  const textarea=document.getElementById('fu-text-'+id);
+  const draft=textarea?textarea.value:'';
+  const btn=event.target;btn.disabled=true;btn.textContent='Sender…';
+  try{
+    const res=await fetch(`/api/followups/${id}/send`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({draft})
+    });
+    const data=await res.json();
+    if(res.ok){
+      showToast('✓ Email sendt!');
+      followups=followups.filter(f=>f.id!==id);
+      updateFollowupPill();render();
+    }else{
+      showToast('Fejl: '+data.error);btn.disabled=false;btn.textContent='✉ Send direkte';
+    }
+  }catch(e){showToast('Netværksfejl');btn.disabled=false;btn.textContent='✉ Send direkte';}
+}
+
+async function copyFollowup(id){
+  const textarea=document.getElementById('fu-text-'+id);
+  const draft=(textarea?textarea.value:'')+SIGNATURE;
+  try{await navigator.clipboard.writeText(draft);showToast('✓ Kopieret til udklipsholder');}
+  catch(e){showToast('Kunne ikke kopiere');}
+}
+
+async function ignoreFollowup(id){
+  await fetch(`/api/followups/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:'ignoreret'})});
+  followups=followups.filter(f=>f.id!==id);
+  updateFollowupPill();render();
+  showToast('Opfølgning ignoreret');
+}
+
+async function render(){
+  if(!config)return;
+  updatePills();
+  const content=document.getElementById('content'),tbTitle=document.getElementById('tbTitle');
+
+  if(currentSec==='followups'){
+    tbTitle.textContent='Opfølgning';
+    await loadFollowups();
+    content.innerHTML=renderFollowups();
+    return;
+  }
+
+  if(currentSec==='overview'){
+    tbTitle.textContent='Overblik';
+    const tot=allPct();
+    const groups=[...new Set(Object.values(config.sections).map(s=>s.group))];
+    const statCards=groups.map(g=>{const{p,done,total}=groupPct(g);return`<div class="stat-card"><div class="stat-lbl">${g}</div><div class="stat-val">${p}<span style="font-size:16px;color:var(--text3);font-family:var(--sans)">%</span></div><div class="stat-sub">${done} af ${total} punkter</div><div class="pbar"><div class="pfill gold" style="width:${p}%"></div></div></div>`;});
+    const dealsSec=Object.entries(config.sections).find(([k,s])=>s.label.toLowerCase().includes('deal'));
+    let dealsHtml='';
+    if(dealsSec){const[dk,ds]=dealsSec;const rows=ds.tasks.map(t=>{const d=isDone(dk,t.id);return`<div class="deal-row"><div class="deal-name">${t.text.replace(/^Luk\s*/i,'')}</div><span class="deal-status ${d?'ds-done':'ds-open'}">${d?'Lukket':'Åben'}</span></div>`;}).join('');const dc=ds.tasks.filter(t=>isDone(dk,t.id)).length;dealsHtml=`<div class="card"><div class="card-hdr"><h3>Deals pipeline</h3><span class="cnt">${dc}/${ds.tasks.length} lukket</span></div>${rows}</div>`;}
+    const teamSec=Object.entries(config.sections).find(([k,s])=>s.label.toLowerCase().includes('team'));
+    let teamHtml='';
+    if(teamSec){const[tk,ts]=teamSec;teamHtml=`<div class="card"><div class="card-hdr"><h3>Team</h3><span class="cnt">${pct(tk).done}/${pct(tk).total}</span></div>${ts.tasks.map(t=>taskHtml(tk,t)).join('')}</div>`;}
+    const kpiCards=(config.kpis||[]).map(k=>`<div class="kpi-card"><div class="kpi-lbl">${k.label}</div><div class="kpi-val">${k.value}</div></div>`).join('');
+    content.innerHTML=`<div class="stats-row"><div class="stat-card"><div class="stat-lbl">Samlet fremgang</div><div class="stat-val">${tot.p}<span style="font-size:16px;color:var(--text3);font-family:var(--sans)">%</span></div><div class="stat-sub">${tot.done} af ${tot.total} punkter</div><div class="pbar"><div class="pfill gold" style="width:${tot.p}%"></div></div></div>${statCards.join('')}</div><div class="kpi-strip">${kpiCards}</div><div class="grid-2">${dealsHtml}${teamHtml}</div>`;
+
+  }else if(currentSec==='calendar'){
+    tbTitle.textContent='Kalender';content.innerHTML=calHtml();
+
+  }else if(currentSec==='hubspot'){
+    tbTitle.textContent='HubSpot';content.innerHTML='<div class="loading">Henter opgaver…</div>';content.innerHTML=await loadHubspot();
+
+  }else if(currentSec.startsWith('sec-')){
+    const key=currentSec.replace('sec-',''),sec=config.sections[key];
+    if(!sec)return;
+    tbTitle.textContent=sec.label;
+    const{done,total,p}=pct(key);
+    content.innerHTML=`<div class="card"><div class="card-hdr"><h3>${sec.label}</h3><span class="cnt">${done}/${total} · ${p}%</span></div><div style="padding:0 18px 8px"><div class="pbar" style="margin-top:10px"><div class="pfill gold" style="width:${p}%"></div></div></div>${sec.tasks.map(t=>taskHtml(key,t)).join('')}</div>`;
+  }
+}
+
+function updatePills(){
+  if(!config)return;
+  const tot=allPct();const po=document.getElementById('pill-overview');if(po)po.textContent=tot.p+'%';
+  Object.keys(config.sections).forEach(k=>{const el=document.getElementById('pill-'+k);if(el){const{done,total}=pct(k);el.textContent=done+'/'+total;}});
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+{
+  "month": "2025-04",
+  "title": "April 2025",
+  "subtitle": "EB-Media + October AI",
+  "kpis": [
+    { "label": "KPI — nye kunder", "value": "4 kunder onboardet · 2× Hospitality + 2× Real Estate" },
+    { "label": "October AI — milestone", "value": "Demo klar uge 1-2 · 1-3 kunder med agent implementeret" }
+  ],
+  "sections": {
+    "eb_sales": {
+      "label": "Sales & Leads",
+      "group": "EB-Media",
+      "tasks": [
+        { "id": "s1", "text": "Gå igennem leads — sortér, lav ny liste (200-300 leads)", "tag": "Leads" },
+        { "id": "s2", "text": "Find ud af PitchBound til EB med Vækst", "tag": "Pitch" },
+        { "id": "s3", "text": "Gå efter 7 kald i timen + opfølgning", "tag": "Sales" },
+        { "id": "s4", "text": "Snak AI agent ind i samtalerne", "tag": "AI" },
+        { "id": "s5", "text": "Optimer pitch — lav prioritering / Anker-pris", "tag": "Pitch" },
+        { "id": "s6", "text": "Udskydelse af deals — gør det simpelt for dem", "tag": "Sales" }
+      ]
+    },
+    "eb_deals": {
+      "label": "Deals at lukke",
+      "group": "EB-Media",
+      "tasks": [
+        { "id": "d1", "text": "Luk DH — planlæg SOW (april/maj)", "tag": "Deal" },
+        { "id": "d2", "text": "Luk Charlottehaven", "tag": "Deal" },
+        { "id": "d3", "text": "Luk Kokkedal", "tag": "Deal" },
+        { "id": "d4", "text": "Luk Cynthia — lille Regstrup", "tag": "Deal" },
+        { "id": "d5", "text": "Fokus på Tyskland-etablering (afhænger af DH)", "tag": "Ekspansion" }
+      ]
+    },
+    "eb_tech": {
+      "label": "Tech & Produkt",
+      "group": "EB-Media",
+      "tasks": [
+        { "id": "t1", "text": "Conversion tracking op i Virtuelle ture USP", "tag": "Tech" },
+        { "id": "t2", "text": "Læs op på kommercielt brug af Matterport", "tag": "Research" },
+        { "id": "t3", "text": "Undersøg SDK til tracking tool", "tag": "Tech" }
+      ]
+    },
+    "eb_team": {
+      "label": "Team",
+      "group": "EB-Media",
+      "tasks": [
+        { "id": "tm1", "text": "Opret kommunikation til Fabian & Jeppe", "tag": "Team" },
+        { "id": "tm2", "text": "Send kamera til Jeppe", "tag": "Team" },
+        { "id": "tm3", "text": "Aftale aflønning/pris med Fabian", "tag": "Team" }
+      ]
+    },
+    "october": {
+      "label": "Milestones",
+      "group": "October AI",
+      "tasks": [
+        { "id": "oc1", "text": "October demo færdig (første 1-2 uger af april)", "tag": "Demo" },
+        { "id": "oc2", "text": "1-3 kunder fra kundebase har fået agent implementeret", "tag": "Kunde" }
+      ]
+    }
+  },
+  "calendar": {
+    "year": 2025,
+    "month": 4,
+    "events": [
+      { "from": 1, "to": 3, "type": "blocked", "label": "Kan ikke arbejde sammen" },
+      { "day": 10, "type": "travel", "label": "Rejse" },
+      { "from": 17, "to": 24, "type": "blocked", "label": "Kan ikke arbejde sammen" },
+      { "weekday": 1, "type": "exam", "label": "Eksamen (Alex)" },
+      { "weekday": 3, "type": "vaekst", "label": "Vækst for Alex" },
+      { "weekday": 4, "type": "vaekst", "label": "Vækst for Alex" }
+    ]
+  },
+  "hubspot": {
+    "enabled": true,
+    "apiKey": "96622bd7-3b7a-4b76-848c-e31c6cf81193"
+  }
+}
