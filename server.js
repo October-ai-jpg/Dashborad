@@ -26,8 +26,13 @@ const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD || '';
 const EMAIL_SIGNATURE = `\n\n--\nBest Regards\nEmil Bloch Thomsen, indehaver\nWebsite: www.eb-media.dk\nT: 22312151\nM: 31213348\nkontakt@eb-media.dk\nMarstalsgade 29, København Ø`;
 
 const transporter = GMAIL_APP_PASSWORD ? nodemailer.createTransport({
-  service: 'gmail',
-  auth: { user: GMAIL_USER, pass: GMAIL_APP_PASSWORD }
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  auth: { user: GMAIL_USER, pass: GMAIL_APP_PASSWORD.replace(/\s/g, '') },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000
 }) : null;
 
 app.use(express.json());
