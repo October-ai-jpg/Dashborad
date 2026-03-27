@@ -397,7 +397,7 @@ function renderFollowups(){
       </div>
       <div class="fu-sig">Signatur tilføjes automatisk:\n${SIGNATURE.trim()}</div>
       <div class="fu-actions">
-        <button class="fu-btn send" onclick="sendFollowup('${f.id}')" ${!emailConfigured?'disabled title="Email ikke konfigureret"':''}>✉ Send direkte</button>
+        <button class="fu-btn send" onclick="sendFollowup('${f.id}')">✉ Åbn i Gmail</button>
         <button class="fu-btn edit" onclick="copyFollowup('${f.id}')">📋 Kopiér udkast</button>
         <button class="fu-btn ignore" onclick="ignoreFollowup('${f.id}')">Ignorér</button>
       </div>
@@ -413,23 +413,25 @@ function showToast(msg){
 }
 
 async function sendFollowup(id){
+  const f=followups.find(x=>x.id===id);
+  if(!f) return;
   const textarea=document.getElementById('fu-text-'+id);
-  const draft=textarea?textarea.value:'';
-  const btn=event.target;btn.disabled=true;btn.textContent='Sender…';
+  const draft=textarea?textarea.value:f.draft;
+  const fullBody=draft+SIGNATURE;
+  const subject='Re: '+f.emne;
+  // Åbn Gmail compose med mailen udfyldt
+  const gmailUrl=`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(f.til)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(fullBody)}`;
+  window.open(gmailUrl,'_blank');
+  // Marker som sendt i databasen
   try{
-    const res=await fetch(`/api/followups/${id}/send`,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({draft})
+    await fetch(`/api/followups/${id}`,{
+      method:'PATCH',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({status:'sendt'})
     });
-    const data=await res.json();
-    if(res.ok){
-      showToast('✓ Email sendt!');
-      followups=followups.filter(f=>f.id!==id);
-      updateFollowupPill();render();
-    }else{
-      showToast('Fejl: '+data.error);btn.disabled=false;btn.textContent='✉ Send direkte';
-    }
-  }catch(e){showToast('Netværksfejl');btn.disabled=false;btn.textContent='✉ Send direkte';}
+    followups=followups.filter(x=>x.id!==id);
+    updateFollowupPill();render();
+    showToast('✓ Gmail åbnet — marker som sendt');
+  }catch(e){}
 }
 
 async function copyFollowup(id){
