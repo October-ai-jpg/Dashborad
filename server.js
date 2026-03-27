@@ -27,8 +27,8 @@ const EMAIL_SIGNATURE = `\n\n--\nBest Regards\nEmil Bloch Thomsen, indehaver\nWe
 
 const transporter = GMAIL_APP_PASSWORD ? nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 587,
-  secure: false,
+  port: 465,
+  secure: true,
   auth: { user: GMAIL_USER, pass: GMAIL_APP_PASSWORD.replace(/\s/g, '') },
   connectionTimeout: 10000,
   greetingTimeout: 10000,
