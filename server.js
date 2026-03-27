@@ -155,19 +155,19 @@ app.patch('/api/followups/:id', async (req, res) => {
 
 // POST send email direkte + marker som sendt
 app.post('/api/followups/:id/send', async (req, res) => {
-  if (!transporter) {
-    return res.status(500).json({ error: 'Email ikke konfigureret. Sæt GMAIL_APP_PASSWORD env var.' });
-  }
-  if (!pool) return res.status(500).json({ error: 'Database ikke konfigureret' });
-
-  const { rows } = await pool.query('SELECT * FROM followups WHERE id = $1', [req.params.id]);
-  if (rows.length === 0) return res.status(404).json({ error: 'Ikke fundet' });
-
-  const f = rows[0];
-  const body = req.body.draft || f.draft;
-  const fullBody = body.includes('Best Regards') ? body : body + EMAIL_SIGNATURE;
-
   try {
+    if (!transporter) {
+      return res.status(500).json({ error: 'Email ikke konfigureret. Sæt GMAIL_APP_PASSWORD env var.' });
+    }
+    if (!pool) return res.status(500).json({ error: 'Database ikke konfigureret' });
+
+    const { rows } = await pool.query('SELECT * FROM followups WHERE id = $1', [req.params.id]);
+    if (rows.length === 0) return res.status(404).json({ error: 'Ikke fundet' });
+
+    const f = rows[0];
+    const body = req.body.draft || f.draft;
+    const fullBody = body.includes('Best Regards') ? body : body + EMAIL_SIGNATURE;
+
     await transporter.sendMail({
       from: `"EB-media" <${GMAIL_USER}>`,
       to: f.til,
@@ -181,7 +181,8 @@ app.post('/api/followups/:id/send', async (req, res) => {
     broadcast({ type: 'followup-update', id: f.id, status: 'sendt' });
     res.json({ ok: true, message: 'Email sendt til ' + f.til });
   } catch (e) {
-    res.status(500).json({ error: 'Kunne ikke sende: ' + e.message });
+    console.error('Send fejl:', e);
+    res.status(500).json({ error: 'Kunne ikke sende: ' + e.message, code: e.code });
   }
 });
 
@@ -192,6 +193,17 @@ app.get('/api/email-status', (req, res) => {
     user: GMAIL_USER,
     signature: EMAIL_SIGNATURE
   });
+});
+
+// TEST SMTP-forbindelse (debug)
+app.get('/api/email-test', async (req, res) => {
+  if (!transporter) return res.json({ ok: false, error: 'Transporter ikke oprettet' });
+  try {
+    await transporter.verify();
+    res.json({ ok: true, message: 'SMTP-forbindelse virker' });
+  } catch (e) {
+    res.json({ ok: false, error: e.message, code: e.code });
+  }
 });
 
 // API: get config for a month
