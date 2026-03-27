@@ -187,6 +187,34 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .fu-badge.new{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
 .fu-toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;padding:12px 20px;border-radius:var(--rl);font-size:13px;z-index:100;opacity:0;transition:opacity 0.3s}
 .fu-toast.show{opacity:1}
+
+/* ── Add task ── */
+.add-task-btn{display:flex;align-items:center;gap:6px;padding:10px 18px;font-size:12px;color:var(--text3);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--sans);transition:color 0.15s}
+.add-task-btn:hover{color:var(--gold)}
+.add-task-form{padding:10px 18px 14px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+.add-task-form input{width:100%;padding:7px 10px;border:1px solid var(--border2);border-radius:var(--r);font-size:12px;font-family:var(--sans);color:var(--text);background:var(--surface2)}
+.add-task-form input:focus{outline:none;border-color:var(--gold)}
+.add-task-row{display:flex;gap:6px;align-items:center}
+.add-task-row select{padding:5px 8px;border:1px solid var(--border2);border-radius:var(--r);font-size:11px;font-family:var(--sans);color:var(--text2);background:var(--surface2);flex-shrink:0}
+.add-task-row button{padding:5px 14px;border-radius:var(--r);border:1px solid var(--gold-border);background:var(--gold-bg);color:var(--gold);font-size:11px;font-family:var(--sans);cursor:pointer;flex-shrink:0;transition:all 0.15s}
+.add-task-row button:hover{background:var(--gold);color:#fff}
+.add-task-row .cancel{background:none;border-color:var(--border2);color:var(--text3)}
+.add-task-row .cancel:hover{background:var(--surface3);color:var(--text2)}
+
+/* ── Upload modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(30,26,20,0.4);z-index:200;display:flex;align-items:center;justify-content:center}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:var(--rl);width:380px;max-width:90vw;box-shadow:0 8px 32px rgba(30,26,20,0.15)}
+.modal-hdr{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-hdr h3{font-family:var(--serif);font-size:18px;font-weight:500}
+.modal-close{background:none;border:none;font-size:18px;color:var(--text3);cursor:pointer;padding:4px}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:20px}
+.modal-field{margin-bottom:14px}
+.modal-field label{display:block;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px}
+.modal-field select,.modal-field input[type="file"]{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--r);font-size:12px;font-family:var(--sans);color:var(--text);background:var(--surface2)}
+.modal-submit{width:100%;padding:10px;border-radius:var(--r);border:1px solid var(--gold-border);background:var(--gold-bg);color:var(--gold);font-size:13px;font-family:var(--sans);cursor:pointer;font-weight:500;transition:all 0.15s}
+.modal-submit:hover{background:var(--gold);color:#fff}
+.modal-submit:disabled{opacity:0.4;cursor:not-allowed}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
@@ -201,6 +229,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
       <div class="sb-month-select">
         <select id="monthSelect" onchange="switchMonth(this.value)"></select>
       </div>
+      <button class="sb-btn" onclick="showUploadMonth()" style="margin-top:8px;font-size:11px;opacity:0.7;padding:5px 10px">
+        <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10"/></svg>
+        Ny måned
+      </button>
     </div>
     <div class="sb-nav">
       <div class="sb-group">Navigér</div>
@@ -281,6 +313,9 @@ function connectWS(){
       if(!state[d.month][d.section])state[d.month][d.section]={};
       state[d.month][d.section][d.id]=d.value;
       render();flashSave('Opdateret af makker');
+    }
+    if(d.type==='config-update'&&d.month===currentMonth){
+      loadConfig(currentMonth);
     }
     if(d.type==='followup-new'){
       followups.push(d.followup);updateFollowupPill();
@@ -485,7 +520,7 @@ async function render(){
     if(!sec)return;
     tbTitle.textContent=sec.label;
     const{done,total,p}=pct(key);
-    content.innerHTML=`<div class="card"><div class="card-hdr"><h3>${sec.label}</h3><span class="cnt">${done}/${total} · ${p}%</span></div><div style="padding:0 18px 8px"><div class="pbar" style="margin-top:10px"><div class="pfill gold" style="width:${p}%"></div></div></div>${sec.tasks.map(t=>taskHtml(key,t)).join('')}</div>`;
+    content.innerHTML=`<div class="card"><div class="card-hdr"><h3>${sec.label}</h3><span class="cnt">${done}/${total} · ${p}%</span></div><div style="padding:0 18px 8px"><div class="pbar" style="margin-top:10px"><div class="pfill gold" style="width:${p}%"></div></div></div>${sec.tasks.map(t=>taskHtml(key,t)).join('')}<div id="add-task-area-${key}"><button class="add-task-btn" onclick="showAddTask('${key}')">+ Tilføj opgave</button></div></div>`;
   }
 }
 
@@ -493,6 +528,82 @@ function updatePills(){
   if(!config)return;
   const tot=allPct();const po=document.getElementById('pill-overview');if(po)po.textContent=tot.p+'%';
   Object.keys(config.sections).forEach(k=>{const el=document.getElementById('pill-'+k);if(el){const{done,total}=pct(k);el.textContent=done+'/'+total;}});
+}
+
+/* ════ Tilføj opgave ════ */
+const TAG_OPTIONS=['','Leads','Pitch','Sales','AI','Tech','Research','Deal','Ekspansion','Team','Demo','Kunde'];
+function showAddTask(sectionKey){
+  const area=document.getElementById('add-task-area-'+sectionKey);
+  if(!area)return;
+  const tagOpts=TAG_OPTIONS.map(t=>t?`<option value="${t}">${t}</option>`:`<option value="">Ingen tag</option>`).join('');
+  area.innerHTML=`<div class="add-task-form"><input type="text" id="add-task-input-${sectionKey}" placeholder="Beskriv opgaven…" autofocus onkeydown="if(event.key==='Enter')submitAddTask('${sectionKey}');if(event.key==='Escape')cancelAddTask('${sectionKey}')"><div class="add-task-row"><select id="add-task-tag-${sectionKey}">${tagOpts}</select><button onclick="submitAddTask('${sectionKey}')">Gem</button><button class="cancel" onclick="cancelAddTask('${sectionKey}')">Annuller</button></div></div>`;
+  document.getElementById('add-task-input-'+sectionKey).focus();
+}
+function cancelAddTask(sectionKey){
+  const area=document.getElementById('add-task-area-'+sectionKey);
+  if(area)area.innerHTML=`<button class="add-task-btn" onclick="showAddTask('${sectionKey}')">+ Tilføj opgave</button>`;
+}
+async function submitAddTask(sectionKey){
+  const input=document.getElementById('add-task-input-'+sectionKey);
+  const tagSel=document.getElementById('add-task-tag-'+sectionKey);
+  const text=input?input.value.trim():'';
+  if(!text)return;
+  const body={text};
+  if(tagSel&&tagSel.value)body.tag=tagSel.value;
+  try{
+    await fetch(`/api/config/${currentMonth}/sections/${sectionKey}/tasks`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    await loadConfig(currentMonth);
+    flashSave('Opgave tilføjet');
+  }catch(e){flashSave('Fejl — prøv igen');}
+}
+
+/* ════ Upload ny måned ════ */
+function showUploadMonth(){
+  if(document.getElementById('upload-modal'))return;
+  const now=new Date();
+  const nextMonth=new Date(now.getFullYear(),now.getMonth()+1,1);
+  const defaultMonth=nextMonth.getFullYear()+'-'+String(nextMonth.getMonth()+1).padStart(2,'0');
+  // Generer 12 måneder fremad fra nu
+  let monthOpts='';
+  for(let i=0;i<12;i++){
+    const d=new Date(now.getFullYear(),now.getMonth()+i,1);
+    const val=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    const lbl=d.toLocaleDateString('da-DK',{month:'long',year:'numeric'});
+    monthOpts+=`<option value="${val}"${val===defaultMonth?' selected':''}>${lbl}</option>`;
+  }
+  const modal=document.createElement('div');
+  modal.id='upload-modal';
+  modal.className='modal-overlay';
+  modal.onclick=(e)=>{if(e.target===modal)modal.remove();};
+  modal.innerHTML=`<div class="modal"><div class="modal-hdr"><h3>Ny måned</h3><button class="modal-close" onclick="document.getElementById('upload-modal').remove()">&times;</button></div><div class="modal-body"><div class="modal-field"><label>Måned</label><select id="upload-month">${monthOpts}</select></div><div class="modal-field"><label>Upload dokument</label><input type="file" id="upload-file" accept=".pdf,.docx,.txt"></div><div id="upload-status" style="font-size:11px;color:var(--text3);margin-bottom:10px"></div><button class="modal-submit" id="upload-btn" onclick="doUploadMonth()">Upload og generer</button></div></div>`;
+  document.body.appendChild(modal);
+}
+async function doUploadMonth(){
+  const monthSel=document.getElementById('upload-month');
+  const fileInput=document.getElementById('upload-file');
+  const btn=document.getElementById('upload-btn');
+  const status=document.getElementById('upload-status');
+  if(!fileInput.files.length){status.textContent='Vælg en fil først';status.style.color='var(--red)';return;}
+  btn.disabled=true;btn.textContent='Uploader…';
+  const form=new FormData();
+  form.append('month',monthSel.value);
+  form.append('file',fileInput.files[0]);
+  try{
+    const res=await fetch('/api/config/upload',{method:'POST',body:form});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'Upload fejlede');
+    // Tilføj måned til dropdown og switch til den
+    const sel=document.getElementById('monthSelect');
+    const exists=[...sel.options].some(o=>o.value===monthSel.value);
+    if(!exists){const o=document.createElement('option');o.value=monthSel.value;o.textContent=fmtMonth(monthSel.value);sel.insertBefore(o,sel.firstChild);}
+    sel.value=monthSel.value;
+    await switchMonth(monthSel.value);
+    document.getElementById('upload-modal').remove();
+    flashSave('Ny måned genereret');
+  }catch(e){
+    status.textContent='Fejl: '+e.message;status.style.color='var(--red)';
+    btn.disabled=false;btn.textContent='Upload og generer';
+  }
 }
 
 init();

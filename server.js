@@ -5,6 +5,9 @@ const fs = require('fs');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const { Pool } = require('pg');
+const multer = require('multer');
+const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
 
 const app = express();
 const server = http.createServer(app);
@@ -205,6 +208,135 @@ app.get('/api/email-test', async (req, res) => {
     res.json({ ok: false, error: e.message, code: e.code });
   }
 });
+
+/* ════════════════════════════════════════
+   CONFIG MUTATIONS — tilføj tasks + upload ny måned
+   ════════════════════════════════════════ */
+
+// POST tilføj task til en sektion
+app.post('/api/config/:month/sections/:sectionKey/tasks', (req, res) => {
+  const { month, sectionKey } = req.params;
+  const { text, tag } = req.body;
+  if (!text) return res.status(400).json({ error: 'Mangler text' });
+
+  const file = path.join(CONFIG_DIR, `${month}.json`);
+  if (!fs.existsSync(file)) return res.status(404).json({ error: 'Måned ikke fundet' });
+
+  const cfg = JSON.parse(fs.readFileSync(file, 'utf8'));
+  if (!cfg.sections || !cfg.sections[sectionKey]) return res.status(404).json({ error: 'Sektion ikke fundet' });
+
+  const task = { id: `custom-${Date.now()}`, text };
+  if (tag) task.tag = tag;
+  cfg.sections[sectionKey].tasks.push(task);
+  fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+  broadcast({ type: 'config-update', month });
+  res.status(201).json(task);
+});
+
+// Multer til fil-upload (memory storage)
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
+
+// POST upload dokument → generér ny config
+app.post('/api/config/upload', upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'Ingen fil uploadet' });
+
+    const month = req.body.month; // forventet format: "2025-05"
+    if (!month || !/^\d{4}-\d{2}$/.test(month)) {
+      return res.status(400).json({ error: 'Ugyldig måned (brug YYYY-MM format)' });
+    }
+
+    // Udtræk tekst fra fil
+    let text = '';
+    const ext = path.extname(req.file.originalname).toLowerCase();
+
+    if (ext === '.txt') {
+      text = req.file.buffer.toString('utf8');
+    } else if (ext === '.pdf') {
+      const pdf = await pdfParse(req.file.buffer);
+      text = pdf.text;
+    } else if (ext === '.docx') {
+      const result = await mammoth.extractRawText({ buffer: req.file.buffer });
+      text = result.value;
+    } else {
+      return res.status(400).json({ error: 'Kun .pdf, .docx og .txt filer er understøttet' });
+    }
+
+    // Parse tekst til config-struktur
+    const cfg = parseTextToConfig(text, month);
+    const file = path.join(CONFIG_DIR, `${month}.json`);
+    fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+
+    res.status(201).json({ month, message: 'Config genereret', sections: Object.keys(cfg.sections).length });
+  } catch (e) {
+    console.error('Upload fejl:', e);
+    res.status(500).json({ error: 'Kunne ikke behandle fil: ' + e.message });
+  }
+});
+
+// Heuristik: konvertér rå tekst til config JSON
+function parseTextToConfig(text, month) {
+  const [year, mo] = month.split('-').map(Number);
+  const monthNames = ['januar','februar','marts','april','maj','juni','juli','august','september','oktober','november','december'];
+  const title = monthNames[mo - 1].charAt(0).toUpperCase() + monthNames[mo - 1].slice(1) + ' ' + year;
+  const lines = text.split(/\n/).map(l => l.trim()).filter(l => l.length > 0);
+
+  const sections = {};
+  let currentKey = null;
+  let sectionIdx = 0;
+
+  for (const line of lines) {
+    // Detect overskrifter (linjer uden bullet, korte, ikke punkt-lignende)
+    const isBullet = /^[-•*●◦▪]\s/.test(line) || /^\d+[\.\)]\s/.test(line);
+    const isHeading = !isBullet && line.length < 80 && !line.includes(':') && /^[A-ZÆØÅ]/.test(line);
+    const isLabeledHeading = !isBullet && /^[A-ZÆØÅ][^:]*:$/.test(line);
+
+    if (isHeading || isLabeledHeading) {
+      sectionIdx++;
+      currentKey = 'sec_' + sectionIdx;
+      const label = line.replace(/:$/, '').trim();
+      sections[currentKey] = {
+        label,
+        group: sectionIdx <= 3 ? 'Primær' : 'Sekundær',
+        tasks: []
+      };
+    } else if (currentKey && (isBullet || line.length > 5)) {
+      const cleanText = line.replace(/^[-•*●◦▪]\s*/, '').replace(/^\d+[\.\)]\s*/, '').trim();
+      if (cleanText.length > 2) {
+        sections[currentKey].tasks.push({
+          id: `t${sectionIdx}_${sections[currentKey].tasks.length + 1}`,
+          text: cleanText
+        });
+      }
+    } else if (!currentKey && line.length > 5) {
+      // Første linjer uden sektion → opret default sektion
+      sectionIdx++;
+      currentKey = 'sec_' + sectionIdx;
+      sections[currentKey] = { label: 'Generelt', group: 'Primær', tasks: [] };
+      const cleanText = line.replace(/^[-•*●◦▪]\s*/, '').replace(/^\d+[\.\)]\s*/, '').trim();
+      if (cleanText.length > 2) {
+        sections[currentKey].tasks.push({ id: `t${sectionIdx}_1`, text: cleanText });
+      }
+    }
+  }
+
+  // Fallback: mindst én sektion
+  if (Object.keys(sections).length === 0) {
+    sections['sec_1'] = { label: 'Opgaver', group: 'Primær', tasks: [{ id: 't1_1', text: 'Ingen opgaver fundet i dokumentet' }] };
+  }
+
+  // Byg simpel kalender (tom, uden events)
+  const calendar = { year, month: mo, events: [] };
+
+  return {
+    month,
+    title,
+    subtitle: 'EB-Media',
+    kpis: [],
+    sections,
+    calendar
+  };
+}
 
 // API: get config for a month
 app.get('/api/config/:month', (req, res) => {
