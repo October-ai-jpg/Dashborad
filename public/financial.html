@@ -206,6 +206,19 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .ovr-total{display:flex;justify-content:space-between;align-items:center;padding:11px 0 5px;margin-top:6px;border-top:1px solid var(--border2)}
 .ovr-total .ol{font-weight:500;font-size:13px}.ovr-total .ov{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--green)}
 .ovr-desc{margin-top:14px;font-size:12px;color:var(--text2);line-height:1.6;padding:11px 14px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--r)}
+
+/* ── LTV additions ── */
+.kpi-grid-ltv{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.churn-sync{font-size:11px;color:var(--gold);margin-top:5px;font-style:italic}
+.ltv-break-tbl{margin-top:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.ltv-break-tbl table{width:100%;border-collapse:collapse}
+.ltv-break-tbl th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;padding:9px 13px;text-align:right;border-bottom:1px solid var(--border)}
+.ltv-break-tbl th:first-child{text-align:left}
+.ltv-break-tbl td{padding:8px 13px;font-size:12px;font-weight:300;border-bottom:1px solid var(--border);text-align:right}
+.ltv-break-tbl td:first-child{text-align:left;color:var(--text2);font-weight:400}
+.ltv-break-tbl tr:last-child td{border-bottom:none}
+.ltv-break-tbl tr:nth-child(even) td{background:var(--surface2)}
+.cf-ltv-info{margin-top:10px;font-size:12px;color:var(--text2);padding:10px 14px;background:var(--teal-bg);border:1px solid var(--teal-border);border-radius:var(--r);line-height:1.6}
 </style>
 </head>
 <body>
@@ -321,6 +334,11 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
         <div class="sl-group">
           <div class="sl-label"><span class="sl-name">Churn %/md</span><span class="sl-val" id="v-churn">5%</span></div>
           <input type="range" id="sl-churn" min="0.5" max="20" step="0.5" value="5" oninput="onSlide('churn',this.value)">
+          <div class="churn-sync" id="churn-lifetime-sync">5% churn = 20 måneders gns. levetid</div>
+        </div>
+        <div class="sl-group">
+          <div class="sl-label"><span class="sl-name">Kundes levetid</span><span class="sl-val" id="v-lifetime">12 mdr</span></div>
+          <input type="range" id="sl-lifetime" min="1" max="36" step="1" value="12" oninput="onSlide('lifetime',this.value)">
         </div>
         <div class="sl-group">
           <div class="sl-label"><span class="sl-name">Affiliate provision %</span><span class="sl-val" id="v-affiliate">25%</span></div>
@@ -383,6 +401,23 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
           <div class="kpi-lbl">LTV : CAC</div>
           <div class="kpi-val" id="kv-ltvcac">—</div>
           <div class="kpi-sub" id="ks-ltvcac">—</div>
+        </div>
+      </div>
+      <div class="kpi-grid-ltv">
+        <div class="kpi-card" id="kc-ltvsimple">
+          <div class="kpi-lbl">Simpel LTV</div>
+          <div class="kpi-val" id="kv-ltvsimple">—</div>
+          <div class="kpi-sub" id="ks-ltvsimple">—</div>
+        </div>
+        <div class="kpi-card" id="kc-ltvnet">
+          <div class="kpi-lbl">Netto LTV</div>
+          <div class="kpi-val" id="kv-ltvnet">—</div>
+          <div class="kpi-sub" id="ks-ltvnet">—</div>
+        </div>
+        <div class="kpi-card" id="kc-ltvcac2">
+          <div class="kpi-lbl">LTV efter CAC</div>
+          <div class="kpi-val" id="kv-ltvcac2">—</div>
+          <div class="kpi-sub" id="ks-ltvcac2">—</div>
         </div>
       </div>
     </div>
@@ -530,6 +565,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
           <tbody id="cfBody"></tbody>
         </table>
       </div>
+      <div class="cf-ltv-info" id="cfLtvInfo"></div>
     </div>
 
     <div class="sec-divider"></div>
@@ -546,7 +582,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
         <div class="ue-card">
           <div class="ue-lbl">LTV</div>
           <div class="ue-val" id="ue-ltv">—</div>
-          <div class="ue-sub">ARPU ÷ churn%</div>
+          <div class="ue-sub">ARPU × levetid</div>
         </div>
         <div class="ue-card">
           <div class="ue-lbl">CAC</div>
@@ -578,6 +614,20 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
           <div class="ue-val" id="ue-eltier" style="font-size:22px">—</div>
           <div class="ue-sub" id="ue-elinfo">—</div>
         </div>
+      </div>
+      <div class="ltv-break-tbl">
+        <table>
+          <thead>
+            <tr>
+              <th style="text-align:left">Metric</th>
+              <th>Starter</th>
+              <th>Growth</th>
+              <th>Scale</th>
+              <th>Enterprise</th>
+            </tr>
+          </thead>
+          <tbody id="ltvBreakBody"></tbody>
+        </table>
       </div>
     </div>
 
@@ -686,7 +736,7 @@ const SCENARIOS = {
    STATE
 ═══════════════════════════════════ */
 let M = { starter:10, growth:3, scale:1, enterprise:0,
-          avgMins:200, churn:5, affiliate:25, adSpend:2000, cac:50,
+          avgMins:200, churn:5, lifetime:12, affiliate:25, adSpend:2000, cac:50,
           overPctStarter:30, overPctGrowth:30, overExtraMins:100 };
 let currentScen = 'base';
 let chartPL = null, chartCF = null;
@@ -728,19 +778,25 @@ function calc(m) {
   const netP    = grossP - opex;
   const netM    = mrr > 0 ? netP / mrr * 100 : 0;
 
-  const arpu    = total > 0 ? mrr / total : 0;
-  const ltv     = m.churn > 0 ? arpu / (m.churn / 100) : 9999;
-  const ltvCac  = m.cac > 0 ? ltv / m.cac : 0;
-  const payback = arpu > 0 ? m.cac / arpu : 999;
-  const newCust = m.cac > 0 ? m.adSpend / m.cac : 0;
-  const churnN  = total * m.churn / 100;
-  const netNew  = newCust - churnN;
-  const peak    = Math.ceil(total * 0.05);
+  const arpu       = total > 0 ? mrr / total : 0;
+  const lifetime   = m.lifetime || (m.churn > 0 ? Math.round(100 / m.churn) : 12);
+  const ltvSimple  = arpu * lifetime;
+  const ltv        = ltvSimple; // kept for backwards compat
+  const netArpuMo  = arpu * (1 - (m.affiliate||0)/100) * (1 - 0.029) - m.avgMins * 0.011;
+  const ltvNet     = netArpuMo * lifetime;
+  const ltvAfterCAC = ltvNet - m.cac;
+  const ltvCac     = m.cac > 0 ? ltvNet / m.cac : 0;
+  const payback    = arpu > 0 ? m.cac / arpu : 999;
+  const newCust    = m.cac > 0 ? m.adSpend / m.cac : 0;
+  const churnN     = total * m.churn / 100;
+  const netNew     = newCust - churnN;
+  const peak       = Math.ceil(total * 0.05);
 
   return { total, planRev, overMins, overRev, mrr, arr,
            apiCost, elTier, infra, cogs, grossP, grossM,
            affPay, opex, netP, netM,
-           arpu, ltv, ltvCac, payback, newCust, churnN, netNew,
+           arpu, lifetime, ltvSimple, ltv, netArpuMo, ltvNet, ltvAfterCAC,
+           ltvCac, payback, newCust, churnN, netNew,
            peak, totalMins };
 }
 
@@ -819,8 +875,19 @@ function renderKPI(r) {
   cls('kc-net', 'kpi-card'+(r.netP>0?' pos':' neg'));
 
   set('kv-ltvcac', fx(r.ltvCac));
-  set('ks-ltvcac', 'LTV '+f$(r.ltv)+' · CAC $'+M.cac);
+  set('ks-ltvcac', 'Net LTV '+f$(r.ltvNet)+' · CAC $'+M.cac);
   cls('kc-ltvcac', 'kpi-card'+(r.ltvCac>=3?' pos':r.ltvCac>=1?' warn':' neg'));
+
+  set('kv-ltvsimple', f$(r.ltvSimple));
+  set('ks-ltvsimple', 'ARPU '+f$(r.arpu)+' × '+M.lifetime+' mdr');
+
+  set('kv-ltvnet', f$(r.ltvNet));
+  set('ks-ltvnet', 'Net ARPU '+f$(r.netArpuMo)+' × '+M.lifetime+' mdr');
+  cls('kc-ltvnet', 'kpi-card'+(r.ltvNet>0?' pos':' neg'));
+
+  set('kv-ltvcac2', f$(r.ltvAfterCAC));
+  set('ks-ltvcac2', 'Net LTV '+f$(r.ltvNet)+' − CAC $'+M.cac);
+  cls('kc-ltvcac2', 'kpi-card'+(r.ltvAfterCAC>0?' pos':r.ltvAfterCAC>-M.cac/2?' warn':' neg'));
 }
 
 function renderPL(r) {
@@ -911,11 +978,15 @@ function renderCF() {
       <td class="${r.netP>=0?'pos':'neg'}">${r.netP>=0?'':'-'}${ff$(Math.abs(r.netP))}</td>
     </tr>`
   ).join('');
+
+  const cr = calc(M);
+  document.getElementById('cfLtvInfo').innerHTML =
+    `Ved nuværende churn på <strong>${M.churn}%</strong> og CAC på <strong>$${M.cac}</strong> er din netto LTV <strong>${f$(cr.ltvNet)}</strong> — du tjener <strong>${f$(cr.ltvAfterCAC)}</strong> per kunde over deres levetid på <strong>${M.lifetime} måneder</strong>.`;
 }
 
 function renderUE(r) {
   set('ue-arpu', f$(r.arpu));
-  set('ue-ltv',  f$(r.ltv<9999?r.ltv:0));
+  set('ue-ltv',  f$(r.ltvSimple));
   set('ue-cac',  '$'+M.cac);
 
   const ltvcEl = document.getElementById('ue-ltvcac');
@@ -932,6 +1003,32 @@ function renderUE(r) {
 
   set('ue-eltier', r.elTier.tier);
   set('ue-elinfo', '$'+r.elTier.cost+'/md · '+r.elTier.concurrent+' concurrent streams');
+
+  // LTV breakdown per plan
+  const planDefs = [
+    {label:'Starter',    price:79},
+    {label:'Growth',     price:299},
+    {label:'Scale',      price:799},
+    {label:'Enterprise', price:1999}
+  ];
+  const metrics = [
+    ['Pris/md',       p => '$'+p.price],
+    ['Levetid (mdr)', p => M.lifetime+' mdr'],
+    ['Simpel LTV',    p => f$(p.price * M.lifetime)],
+    ['Netto LTV',     p => {
+      const na = p.price * (1 - M.affiliate/100) * (1 - 0.029) - M.avgMins * 0.011;
+      return f$(na * M.lifetime);
+    }],
+    ['CAC',           p => '$'+M.cac],
+    ['LTV:CAC',       p => {
+      const na = p.price * (1 - M.affiliate/100) * (1 - 0.029) - M.avgMins * 0.011;
+      return M.cac > 0 ? fx(na * M.lifetime / M.cac) : '∞';
+    }],
+    ['Payback (mdr)', p => (p.price > 0 ? (M.cac / p.price).toFixed(1) : '∞')+' mdr']
+  ];
+  document.getElementById('ltvBreakBody').innerHTML = metrics.map(([label, fn]) =>
+    `<tr><td>${label}</td>${planDefs.map(p => `<td>${fn(p)}</td>`).join('')}</tr>`
+  ).join('');
 }
 
 function renderMeta(r) {
@@ -1115,12 +1212,35 @@ function renderOverage() {
 /* ═══════════════════════════════════
    EVENTS
 ═══════════════════════════════════ */
+function updateChurnLifetimeSync() {
+  const el = document.getElementById('churn-lifetime-sync');
+  if (el) el.textContent = M.churn+'% churn = '+M.lifetime+' måneders gns. levetid';
+}
+
 function onSlide(key, val) {
   M[key] = parseFloat(val);
   const el = document.getElementById('v-'+key);
   if (key==='churn'||key==='affiliate') el.textContent = val+'%';
   else if (key==='adSpend'||key==='cac') el.textContent = '$'+parseFloat(val).toLocaleString('en');
+  else if (key==='lifetime') el.textContent = val+' mdr';
   else el.textContent = val;
+  // Bidirectional churn <-> lifetime sync
+  if (key==='churn') {
+    const lt = Math.max(1, Math.min(36, Math.round(100 / parseFloat(val))));
+    M.lifetime = lt;
+    const slLt = document.getElementById('sl-lifetime');
+    const lblLt = document.getElementById('v-lifetime');
+    if (slLt) slLt.value = lt;
+    if (lblLt) lblLt.textContent = lt+' mdr';
+  } else if (key==='lifetime') {
+    const ch = parseFloat(Math.max(0.5, Math.min(20, 100 / parseFloat(val))).toFixed(1));
+    M.churn = ch;
+    const slCh = document.getElementById('sl-churn');
+    const lblCh = document.getElementById('v-churn');
+    if (slCh) slCh.value = ch;
+    if (lblCh) lblCh.textContent = ch+'%';
+  }
+  updateChurnLifetimeSync();
   currentScen = 'custom';
   document.querySelectorAll('.scen-pill').forEach(p => p.classList.toggle('active', p.dataset.s==='custom'));
   document.getElementById('scenBadge').textContent = 'Custom';
@@ -1143,6 +1263,7 @@ function setScenario(key) {
     document.getElementById('scenBadge').textContent = s.label;
     M = {starter:s.starter,growth:s.growth,scale:s.scale,enterprise:s.enterprise,
          avgMins:s.avgMins,churn:s.churn,affiliate:s.affiliate,adSpend:s.adSpend,cac:s.cac,
+         lifetime: Math.max(1, Math.min(36, Math.round(100 / s.churn))),
          overPctStarter:M.overPctStarter, overPctGrowth:M.overPctGrowth, overExtraMins:M.overExtraMins};
     ['starter','growth','scale','enterprise','avgMins','churn','affiliate','adSpend','cac'].forEach(k => {
       const inp = document.getElementById('sl-'+k);
@@ -1154,6 +1275,12 @@ function setScenario(key) {
         else lbl.textContent = M[k];
       }
     });
+    // Sync lifetime slider
+    const ltInp = document.getElementById('sl-lifetime');
+    const ltLbl = document.getElementById('v-lifetime');
+    if (ltInp) ltInp.value = M.lifetime;
+    if (ltLbl) ltLbl.textContent = M.lifetime+' mdr';
+    updateChurnLifetimeSync();
   } else {
     document.getElementById('scenBadge').textContent = 'Custom';
   }
