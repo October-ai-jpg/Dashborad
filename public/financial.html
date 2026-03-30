@@ -174,6 +174,38 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── Cost Scale Table ── */
+.scale-tbl{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.scale-tbl table{width:100%;border-collapse:collapse}
+.scale-tbl th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;padding:9px 11px;text-align:right;border-bottom:1px solid var(--border)}
+.scale-tbl th:first-child{text-align:left}
+.scale-tbl td{padding:8px 11px;font-size:12px;font-weight:300;border-bottom:1px solid var(--border);text-align:right}
+.scale-tbl td:first-child{text-align:left;font-weight:400}
+.scale-tbl tr:last-child td{border-bottom:none}
+.scale-tbl tr:nth-child(even) td{background:var(--surface2)}
+.scale-tbl tr.cur-scale td{border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);font-weight:500;background:rgba(176,141,91,0.06) !important}
+.mg{font-weight:500}.mg.g{color:var(--green)}.mg.a{color:var(--gold)}.mg.r{color:var(--red)}
+.scale-summary{margin-top:10px;font-size:12px;color:var(--text2);padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r)}
+
+/* ── Overage Section ── */
+.ovr-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ovr-plan-tbl{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;align-self:start}
+.ovr-plan-tbl table{width:100%;border-collapse:collapse}
+.ovr-plan-tbl th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;padding:9px 14px;border-bottom:1px solid var(--border);text-align:right}
+.ovr-plan-tbl th:first-child{text-align:left}
+.ovr-plan-tbl td{padding:9px 14px;font-size:12px;font-weight:300;border-bottom:1px solid var(--border);text-align:right}
+.ovr-plan-tbl td:first-child{text-align:left;font-weight:400}
+.ovr-plan-tbl tr:last-child td{border-bottom:none}
+.ovr-calc{display:flex;flex-direction:column;gap:12px}
+.ovr-sliders{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px;display:flex;flex-direction:column;gap:16px}
+.ovr-output{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px}
+.ovr-output-title{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.ovr-line{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px}
+.ovr-line .ol{color:var(--text3)}.ovr-line .ov{font-weight:400;color:var(--text)}
+.ovr-total{display:flex;justify-content:space-between;align-items:center;padding:11px 0 5px;margin-top:6px;border-top:1px solid var(--border2)}
+.ovr-total .ol{font-weight:500;font-size:13px}.ovr-total .ov{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--green)}
+.ovr-desc{margin-top:14px;font-size:12px;color:var(--text2);line-height:1.6;padding:11px 14px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--r)}
 </style>
 </head>
 <body>
@@ -202,6 +234,14 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
     <button class="sb-btn" onclick="scrollSec('sec-pl')">
       <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12V4l5-2 5 2v8"/><path d="M8 12V7"/></svg>
       P&amp;L
+    </button>
+    <button class="sb-btn" onclick="scrollSec('sec-costscale')">
+      <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 13h12M4 13V9m3 4V7m3 4V5m3 8V3"/></svg>
+      Costs ved Scale
+    </button>
+    <button class="sb-btn" onclick="scrollSec('sec-overage')">
+      <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v12M5 5l3-3 3 3M5 11l3 3 3-3"/></svg>
+      Overage Beregner
     </button>
     <button class="sb-btn" onclick="scrollSec('sec-cf')">
       <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12l3-4 3 2 3-5 3 3"/><rect x="1" y="1" width="14" height="14" rx="1.5"/></svg>
@@ -365,6 +405,107 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
           <div id="plLegend" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px"></div>
         </div>
       </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- ─── A. COST SCALE ─── -->
+    <div class="fin-sec" id="sec-costscale">
+      <div class="sec-title" style="margin-bottom:6px">Omkostningsoverblik ved Scale</div>
+      <div class="sec-sub" style="margin-bottom:14px">AI cost = $0.011/min × <span id="scaleMinsLbl">200</span> min × kunder · ElevenLabs tier skifter automatisk · Affiliate baseret på aktive sliders</div>
+      <div class="scale-tbl">
+        <table>
+          <thead>
+            <tr>
+              <th style="text-align:left">Kunder</th>
+              <th>MRR</th>
+              <th>AI cost</th>
+              <th>ElevenLabs</th>
+              <th>Infra</th>
+              <th>Affiliate</th>
+              <th>Stripe 2.9%</th>
+              <th>Total cost</th>
+              <th>Profit</th>
+              <th>Margin %</th>
+            </tr>
+          </thead>
+          <tbody id="scaleBody"></tbody>
+        </table>
+      </div>
+      <div class="scale-summary" id="scaleSummary"></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- ─── B. OVERAGE ─── -->
+    <div class="fin-sec" id="sec-overage">
+      <div class="sec-title" style="margin-bottom:6px">Hvad tjener vi på overforbrug?</div>
+      <div class="sec-sub" style="margin-bottom:14px">Overage-tallene fødes ind i P&amp;L og cashflow-projektion automatisk</div>
+      <div class="ovr-wrap">
+
+        <!-- LEFT: Plan overage table -->
+        <div class="ovr-plan-tbl">
+          <table>
+            <thead>
+              <tr>
+                <th>Pakke</th>
+                <th>Inkl. min</th>
+                <th>Cost/min</th>
+                <th>Salgspris/min</th>
+                <th>Margin/overmin</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Starter</td><td>200</td><td>$0.011</td><td>$0.10</td>
+                <td style="color:var(--green);font-weight:500">$0.089 (89%)</td>
+              </tr>
+              <tr>
+                <td>Growth</td><td>300</td><td>$0.011</td><td>$0.08</td>
+                <td style="color:var(--green);font-weight:500">$0.069 (87%)</td>
+              </tr>
+              <tr>
+                <td>Scale</td><td>400</td><td>$0.011</td><td>$0.06</td>
+                <td style="color:var(--green);font-weight:500">$0.049 (80%)</td>
+              </tr>
+              <tr>
+                <td>Enterprise</td><td>500</td><td>$0.011</td><td>$0.05</td>
+                <td style="color:var(--gold);font-weight:500">$0.039 (78%)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- RIGHT: Live calculator -->
+        <div class="ovr-calc">
+          <div class="ovr-sliders">
+            <div class="sl-group">
+              <div class="sl-label">
+                <span class="sl-name">Starter der overforbruger</span>
+                <span class="sl-val" id="ov-pS">30%</span>
+              </div>
+              <input type="range" id="ovsl-pS" min="0" max="100" step="5" value="30" oninput="onOvr('overPctStarter',this.value)">
+            </div>
+            <div class="sl-group">
+              <div class="sl-label">
+                <span class="sl-name">Growth der overforbruger</span>
+                <span class="sl-val" id="ov-pG">30%</span>
+              </div>
+              <input type="range" id="ovsl-pG" min="0" max="100" step="5" value="30" oninput="onOvr('overPctGrowth',this.value)">
+            </div>
+            <div class="sl-group">
+              <div class="sl-label">
+                <span class="sl-name">Gns. ekstra min/kunde</span>
+                <span class="sl-val" id="ov-em">100 min</span>
+              </div>
+              <input type="range" id="ovsl-em" min="0" max="500" step="10" value="100" oninput="onOvr('overExtraMins',this.value)">
+            </div>
+          </div>
+          <div class="ovr-output" id="overageOutput"></div>
+        </div>
+
+      </div>
+      <div class="ovr-desc" id="overageDesc"></div>
     </div>
 
     <div class="sec-divider"></div>
@@ -545,7 +686,8 @@ const SCENARIOS = {
    STATE
 ═══════════════════════════════════ */
 let M = { starter:10, growth:3, scale:1, enterprise:0,
-          avgMins:200, churn:5, affiliate:25, adSpend:2000, cac:50 };
+          avgMins:200, churn:5, affiliate:25, adSpend:2000, cac:50,
+          overPctStarter:30, overPctGrowth:30, overExtraMins:100 };
 let currentScen = 'base';
 let chartPL = null, chartCF = null;
 
@@ -567,8 +709,9 @@ function calcOverageMins(m) {
 function calc(m) {
   const total = m.starter + m.growth + m.scale + m.enterprise;
   const planRev = m.starter*79 + m.growth*299 + m.scale*799 + m.enterprise*1999;
-  const overMins = calcOverageMins(m);
-  const overRev  = overMins * 0.05;
+  const pS = (m.overPctStarter||0)/100, pG = (m.overPctGrowth||0)/100, xM = m.overExtraMins||0;
+  const overMins = Math.round((m.starter*pS + m.growth*pG + m.scale*pG + m.enterprise*pG) * xM);
+  const overRev  = m.starter*pS*xM*0.10 + m.growth*pG*xM*0.08 + m.scale*pG*xM*0.06 + m.enterprise*pG*xM*0.05;
   const mrr = planRev + overRev;
   const arr = mrr * 12;
 
@@ -635,6 +778,8 @@ function update() {
   const r = calc(M);
   renderKPI(r);
   renderPL(r);
+  renderCostScale();
+  renderOverage();
   renderCF();
   renderUE(r);
   renderMeta(r);
@@ -829,7 +974,8 @@ function renderMeta(r) {
 function renderScenTable() {
   const rows = Object.entries(SCENARIOS).map(([k,s]) => {
     const m = {starter:s.starter,growth:s.growth,scale:s.scale,enterprise:s.enterprise,
-               avgMins:s.avgMins,churn:s.churn,affiliate:s.affiliate,adSpend:s.adSpend,cac:s.cac};
+               avgMins:s.avgMins,churn:s.churn,affiliate:s.affiliate,adSpend:s.adSpend,cac:s.cac,
+               overPctStarter:M.overPctStarter, overPctGrowth:M.overPctGrowth, overExtraMins:M.overExtraMins};
     return {...calc(m), label:s.label, color:s.color, custom:false};
   });
   rows.push({...calc(M), label:'Custom', color:'teal', custom:true});
@@ -872,6 +1018,100 @@ function renderRisk(r) {
   ).join('');
 }
 
+function renderCostScale() {
+  const LEVELS = [10, 25, 50, 100, 200, 500];
+  const currTotal = M.starter + M.growth + M.scale + M.enterprise;
+  // Closest level for row highlight
+  let closest = LEVELS[0], minD = Math.abs(LEVELS[0]-currTotal);
+  for (const l of LEVELS) { const d=Math.abs(l-currTotal); if(d<minD){minD=d;closest=l;} }
+
+  document.getElementById('scaleMinsLbl').textContent = M.avgMins;
+
+  document.getElementById('scaleBody').innerHTML = LEVELS.map(n => {
+    let s=0, g=0, sc=0, e=0;
+    if (currTotal > 0) {
+      s  = Math.round(n * M.starter / currTotal);
+      g  = Math.round(n * M.growth  / currTotal);
+      sc = Math.round(n * M.scale   / currTotal);
+      e  = Math.max(0, n - s - g - sc);
+      s  = Math.max(0, s + (n - s - g - sc - e)); // absorb rounding diff into starter
+    } else { s = n; }
+
+    const mrr  = s*79 + g*299 + sc*799 + e*1999;
+    const aiC  = n * M.avgMins * 0.011;
+    const elT  = getElTier(n);
+    const infr = 20;
+    const aff  = mrr * M.affiliate / 100;
+    const strp = mrr * 0.029;
+    const tot  = aiC + elT.cost + infr + aff + strp;
+    const prof = mrr - tot;
+    const marg = mrr > 0 ? prof / mrr * 100 : 0;
+    const isCur = n === closest;
+    const mc   = marg > 70 ? 'mg g' : marg > 40 ? 'mg a' : 'mg r';
+
+    return `<tr class="${isCur?'cur-scale':''}">
+      <td>${n}${isCur?' ←':''}</td>
+      <td>${ff$(mrr)}</td>
+      <td style="color:var(--red)">−${ff$(aiC)}</td>
+      <td>${elT.tier} −${ff$(elT.cost)}</td>
+      <td style="color:var(--text3)">−$20</td>
+      <td style="color:var(--text3)">−${ff$(aff)}</td>
+      <td style="color:var(--text3)">−${ff$(strp)}</td>
+      <td style="font-weight:500">−${ff$(tot)}</td>
+      <td class="${prof>=0?'pos':'neg'}">${ff$(prof)}</td>
+      <td><span class="${mc}">${fp(marg)}</span></td>
+    </tr>`;
+  }).join('');
+
+  // Summary sentence
+  if (currTotal > 0) {
+    const mrr = M.starter*79 + M.growth*299 + M.scale*799 + M.enterprise*1999;
+    const aiC = currTotal * M.avgMins * 0.011;
+    const elT = getElTier(currTotal);
+    const aff = mrr * M.affiliate / 100;
+    const strp = mrr * 0.029;
+    const totC = aiC + elT.cost + 20 + aff + strp;
+    let bigL='AI-kost', bigV=aiC;
+    if (elT.cost>bigV){bigL='ElevenLabs';bigV=elT.cost;}
+    if (aff>bigV){bigL='Affiliate';bigV=aff;}
+    const pct = totC > 0 ? Math.round(bigV/totC*100) : 0;
+    document.getElementById('scaleSummary').innerHTML =
+      `Din største variable udgift ved <strong>${currTotal}</strong> kunder er <strong>${bigL}</strong> med <strong>${ff$(bigV)}/md</strong> (${pct}% af total cost)`;
+  } else {
+    document.getElementById('scaleSummary').textContent = 'Juster sliders for at se din største udgift';
+  }
+}
+
+function renderOverage() {
+  const pS  = M.overPctStarter, pG = M.overPctGrowth, xM = M.overExtraMins;
+  const sRev  = M.starter    * (pS/100) * xM * 0.10;
+  const gRev  = M.growth     * (pG/100) * xM * 0.08;
+  const scRev = M.scale      * (pG/100) * xM * 0.06;
+  const eRev  = M.enterprise * (pG/100) * xM * 0.05;
+  const total = sRev + gRev + scRev + eRev;
+  const ovrMins = (M.starter*(pS/100) + M.growth*(pG/100) + M.scale*(pG/100) + M.enterprise*(pG/100)) * xM;
+  const apiOvr  = ovrMins * 0.011;
+  const profit  = total - apiOvr;
+  const margin  = total > 0 ? profit / total * 100 : 0;
+
+  document.getElementById('overageOutput').innerHTML =
+    `<div class="ovr-output-title">Månedlig overage-indtægt</div>
+    <div class="ovr-line"><span class="ol">Starter (${M.starter} kunder, ${pS}% over ${xM} min):</span><span class="ov">${ff$(sRev)}</span></div>
+    <div class="ovr-line"><span class="ol">Growth (${M.growth} kunder, ${pG}% over ${xM} min):</span><span class="ov">${ff$(gRev)}</span></div>
+    <div class="ovr-line"><span class="ol">Scale (${M.scale} kunder, ${pG}% over ${xM} min):</span><span class="ov">${ff$(scRev)}</span></div>
+    ${M.enterprise>0?`<div class="ovr-line"><span class="ol">Enterprise (${M.enterprise} kunder, ${pG}% over):</span><span class="ov">${ff$(eRev)}</span></div>`:''}
+    <div class="ovr-total"><span class="ol">TOTAL OVERAGE:</span><span class="ov">${ff$(total)}/md</span></div>
+    <div class="ovr-line"><span class="ol">Heraf profit (minus API-kost):</span><span class="ov" style="color:var(--green)">${ff$(profit)}/md</span></div>
+    <div class="ovr-line"><span class="ol">Overage margin:</span><span class="ov">${fp(margin)}</span></div>`;
+
+  const r = calc(M);
+  const baseNet = r.netP - profit; // net profit without overage contribution
+  const pctInc  = Math.abs(baseNet) > 1 ? Math.round(profit / Math.abs(baseNet) * 100) : 0;
+  const avgPct  = Math.round((pS + pG) / 2);
+  document.getElementById('overageDesc').innerHTML =
+    `Hvis <strong>${avgPct}%</strong> af dine kunder overforbruger med <strong>${xM} min/md</strong> tilføjer det <strong>${ff$(profit)}</strong> til din månedlige profit — en <strong>${pctInc > 0 ? '+'+pctInc : pctInc}%</strong> stigning fra basisabonnementet alene.`;
+}
+
 /* ═══════════════════════════════════
    EVENTS
 ═══════════════════════════════════ */
@@ -887,6 +1127,14 @@ function onSlide(key, val) {
   update();
 }
 
+function onOvr(key, val) {
+  M[key] = parseFloat(val);
+  const ids = {overPctStarter:'ov-pS', overPctGrowth:'ov-pG', overExtraMins:'ov-em'};
+  const sfx = key==='overExtraMins' ? ' min' : '%';
+  document.getElementById(ids[key]).textContent = val + sfx;
+  update();
+}
+
 function setScenario(key) {
   currentScen = key;
   document.querySelectorAll('.scen-pill').forEach(p => p.classList.toggle('active', p.dataset.s===key));
@@ -894,7 +1142,8 @@ function setScenario(key) {
     const s = SCENARIOS[key];
     document.getElementById('scenBadge').textContent = s.label;
     M = {starter:s.starter,growth:s.growth,scale:s.scale,enterprise:s.enterprise,
-         avgMins:s.avgMins,churn:s.churn,affiliate:s.affiliate,adSpend:s.adSpend,cac:s.cac};
+         avgMins:s.avgMins,churn:s.churn,affiliate:s.affiliate,adSpend:s.adSpend,cac:s.cac,
+         overPctStarter:M.overPctStarter, overPctGrowth:M.overPctGrowth, overExtraMins:M.overExtraMins};
     ['starter','growth','scale','enterprise','avgMins','churn','affiliate','adSpend','cac'].forEach(k => {
       const inp = document.getElementById('sl-'+k);
       const lbl = document.getElementById('v-'+k);
