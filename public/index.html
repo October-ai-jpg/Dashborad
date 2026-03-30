@@ -242,12 +242,56 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .todo-txt{font-size:12px;line-height:1.5;color:var(--text);font-weight:300}
 .todo-txt.struck{text-decoration:line-through;color:var(--text3)}
 
-/* ── Arkitektur diagram ── */
-.arch-wrap{background:#1a1a2e;border:1px solid rgba(255,255,255,0.08);border-radius:var(--rl);overflow:auto;padding:24px}
-.arch-wrap svg{display:block;margin:0 auto}
-.arch-legend{display:flex;gap:18px;padding:16px 0 4px;justify-content:center}
-.arch-leg{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.6)}
-.arch-leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+/* ── Arkitektur diagram v2 ── */
+.arch-wrap{background:#0F1117;border:1px solid rgba(255,255,255,0.06);border-radius:12px;overflow:auto;padding:28px 24px 20px}
+.arch-row{display:flex;align-items:stretch;gap:0;min-width:820px}
+.arch-col{display:flex;flex-direction:column;gap:10px}
+.arch-col.col-1{width:188px;flex-shrink:0}
+.arch-col.col-server{flex:1;min-width:320px}
+.arch-col.col-ext{width:228px;flex-shrink:0}
+.arch-col-hdr{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(96,165,250,0.65);font-weight:600;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(96,165,250,0.12)}
+.arch-server-box{background:rgba(22,27,50,0.55);border:1px dashed rgba(255,255,255,0.09);border-radius:10px;padding:10px;flex:1;overflow:visible}
+.arch-server-lbl{font-size:8px;color:rgba(255,255,255,0.22);text-transform:uppercase;letter-spacing:1.5px;text-align:center;margin-bottom:8px}
+.arch-server-inner{display:grid;grid-template-columns:1fr 1fr;gap:7px;overflow:visible}
+.arch-card{background:#1A1D2E;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 12px;position:relative;cursor:default;transition:transform 150ms ease,border-color 150ms ease,box-shadow 150ms ease;overflow:visible}
+.arch-card:hover{transform:translateY(-2px)}
+.arch-card.stable{border-color:#22C55E;box-shadow:0 0 12px rgba(34,197,94,0.13)}
+.arch-card.dev{border-color:#F97316;box-shadow:0 0 12px rgba(249,115,22,0.13)}
+.arch-card.issue{border-color:#EF4444;box-shadow:0 0 12px rgba(239,68,68,0.13)}
+.arch-card:hover.stable{border-color:#4ADE80!important;box-shadow:0 0 20px rgba(34,197,94,0.24)!important}
+.arch-card:hover.dev{border-color:#FB923C!important;box-shadow:0 0 20px rgba(249,115,22,0.24)!important}
+.arch-card:hover.issue{border-color:#F87171!important;box-shadow:0 0 20px rgba(239,68,68,0.24)!important}
+.arch-card-name{font-size:11px;font-weight:500;color:#E2E8F0;font-family:'Courier New',monospace;margin-bottom:3px;letter-spacing:0.2px}
+.arch-card-sub{font-size:9px;color:rgba(255,255,255,0.3);line-height:1.45}
+.arch-tip{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);background:#2A2D3E;color:#f0f0f0;font-size:11px;line-height:1.55;padding:10px 13px;border-radius:8px;max-width:260px;width:max-content;border:1px solid rgba(255,255,255,0.1);box-shadow:0 4px 24px rgba(0,0,0,0.55);visibility:hidden;opacity:0;transition:opacity 150ms,visibility 150ms;z-index:300;white-space:normal;text-align:left;font-weight:300;pointer-events:none;font-family:var(--sans)}
+.arch-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#2A2D3E}
+.arch-card:hover .arch-tip,.arch-db-card:hover .arch-tip{visibility:visible;opacity:1}
+.arch-conn{width:68px;flex-shrink:0;display:flex;flex-direction:column;justify-content:space-around;align-items:stretch;padding:30px 6px 30px}
+.arch-arrow{display:flex;align-items:center;gap:0;margin-bottom:5px}
+.arch-arrow-line{flex:1;height:1px;background:rgba(71,85,105,0.75);position:relative}
+.arch-ah{width:0;height:0;border-top:3.5px solid transparent;border-bottom:3.5px solid transparent;border-left:5.5px solid rgba(100,116,139,0.8);flex-shrink:0}
+.arch-ah.left{border-left:none;border-right:5.5px solid rgba(100,116,139,0.8)}
+.arch-arrow-lbl{position:absolute;top:-12px;left:0;right:0;text-align:center;font-size:7px;color:rgba(255,255,255,0.2);white-space:nowrap;font-family:'Courier New',monospace}
+@keyframes flow-r{0%{left:2px;opacity:0}20%{opacity:1}80%{opacity:1}100%{left:calc(100% - 7px);opacity:0}}
+@keyframes flow-l{0%{left:calc(100% - 7px);opacity:0}20%{opacity:1}80%{opacity:1}100%{left:2px;opacity:0}}
+.arch-dot{width:5px;height:5px;border-radius:50%;position:absolute;top:50%;transform:translateY(-50%);animation:flow-r 2.2s ease-in-out infinite}
+.arch-dot.c-g{background:rgba(34,197,94,0.9)}
+.arch-dot.c-b{background:rgba(96,165,250,0.9)}
+.arch-dot.c-o{background:rgba(249,115,22,0.9)}
+.arch-dot.rev{animation:flow-l 2.2s ease-in-out infinite}
+.arch-db-arrow{text-align:center;font-size:14px;color:rgba(255,255,255,0.12);line-height:1;margin:3px 0 2px}
+.arch-db-card{background:#1A1D2E;border:1px solid #22C55E;border-radius:10px;padding:10px 12px;position:relative;cursor:default;box-shadow:0 0 12px rgba(34,197,94,0.13);transition:transform 150ms ease,box-shadow 150ms ease;overflow:visible}
+.arch-db-card:hover{transform:translateY(-2px);border-color:#4ADE80;box-shadow:0 0 20px rgba(34,197,94,0.24)}
+.latency-card{background:#1A1D2E;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px 14px;margin-top:8px}
+.latency-hdr{font-size:8px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.28);margin-bottom:10px}
+.latency-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px}
+.latency-row:last-child{margin-bottom:0;padding-top:5px;border-top:1px solid rgba(255,255,255,0.05)}
+.latency-lbl{color:rgba(255,255,255,0.35)}
+.latency-val{font-family:'Courier New',monospace;font-weight:600;font-size:11px}
+.arch-legend{display:flex;gap:20px;padding:16px 0 4px;justify-content:center}
+.arch-leg{display:flex;align-items:center;gap:7px;font-size:11px;color:rgba(255,255,255,0.45)}
+.arch-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+@media(max-width:900px){.arch-row{flex-direction:column;min-width:unset;gap:20px}.arch-conn{display:none}.arch-col.col-1,.arch-col.col-ext{width:auto}}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
@@ -758,105 +802,106 @@ function renderTodo(){
    ARKITEKTUR DIAGRAM — October AI stack
    ════════════════════════════════════════ */
 function renderArch(){
-  const W=960,H=620;
-  // Colors
-  const bg='#1a1a2e',boxBg='#16213e',boxBorder='#0f3460',textC='#e0e0e0',dimC='#7a7a9a';
-  const green='#4ade80',orange='#fb923c',red='#f87171',blue='#60a5fa',purple='#a78bfa';
-
-  function box(x,y,w,h,label,color,sub,status){
-    const sc=status==='orange'?orange:status==='red'?red:green;
-    let s=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${boxBg}" stroke="${sc}" stroke-width="1.5" opacity="0.95"/>`;
-    s+=`<text x="${x+w/2}" y="${y+18}" text-anchor="middle" fill="${textC}" font-size="11" font-weight="500" font-family="DM Sans,sans-serif">${label}</text>`;
-    if(sub){sub.forEach((t,i)=>{s+=`<text x="${x+w/2}" y="${y+34+i*14}" text-anchor="middle" fill="${dimC}" font-size="9" font-family="DM Sans,sans-serif">${t}</text>`;});}
-    return s;
+  function card(name,sub,status,tip,extra=''){
+    return`<div class="arch-card ${status}" ${extra}>
+      <div class="arch-card-name">${name}</div>
+      ${sub?`<div class="arch-card-sub">${sub}</div>`:''}
+      <div class="arch-tip">${tip}</div>
+    </div>`;
+  }
+  function arrowR(lbl,dotClass,delay){
+    return`<div class="arch-arrow">
+      <div class="arch-arrow-line">
+        <span class="arch-arrow-lbl">${lbl}</span>
+        <span class="arch-dot ${dotClass}" style="animation-delay:${delay}s"></span>
+      </div><div class="arch-ah"></div>
+    </div>`;
+  }
+  function arrowL(lbl,dotClass,delay){
+    return`<div class="arch-arrow">
+      <div class="arch-ah left"></div>
+      <div class="arch-arrow-line">
+        <span class="arch-arrow-lbl">${lbl}</span>
+        <span class="arch-dot ${dotClass} rev" style="animation-delay:${delay}s"></span>
+      </div>
+    </div>`;
   }
 
-  function arrow(x1,y1,x2,y2,label,labelPos){
-    const mx=(x1+x2)/2,my=(y1+y2)/2;
-    let s=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#334155" stroke-width="1.2" marker-end="url(#ah)"/>`;
-    if(label){
-      const lx=labelPos==='above'?mx:labelPos==='left'?Math.min(x1,x2)-4:mx;
-      const ly=labelPos==='above'?my-8:my;
-      const anchor=labelPos==='left'?'end':'middle';
-      s+=`<text x="${lx}" y="${ly}" text-anchor="${anchor}" fill="${dimC}" font-size="8" font-family="DM Sans,sans-serif">${label}</text>`;
-    }
-    return s;
-  }
+  // ── LAG 1: Browser ──
+  const col1=`<div class="arch-col col-1">
+    <div class="arch-col-hdr">LAG 1 — BROWSER</div>
+    ${card('Browser / Embed','AudioWorklet VAD · PCM16 capture<br>Gapless PCM16 playback · Matterport iframe','stable','Frontend-laget der kører i besøgendes browser. Bruger AudioWorklet til at fange mikrofon-PCM16 binært og afspille svar-audio. Embedded via iframe på kundens hjemmeside.')}
+  </div>`;
 
-  function sectionLabel(x,y,text){
-    return`<text x="${x}" y="${y}" fill="${blue}" font-size="10" font-weight="600" letter-spacing="1.5" text-transform="uppercase" font-family="DM Sans,sans-serif">${text}</text>`;
-  }
+  // ── Connector 1→2 ──
+  const conn12=`<div class="arch-conn">
+    ${arrowR('PCM16 WS →','c-b',0)}
+    ${arrowL('← PCM16 audio','c-g',0.45)}
+    ${arrowR('REST →','c-b',0.9)}
+  </div>`;
 
-  let svg=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="font-family:DM Sans,sans-serif">`;
-  svg+=`<defs><marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#334155"/></marker></defs>`;
-  svg+=`<rect width="${W}" height="${H}" fill="${bg}" rx="8"/>`;
+  // ── LAG 2: Server ──
+  const serverCards=`
+    ${card('voice/stt.js','Groq Whisper','stable','Modtager rå PCM16 fra WebSocket, sender til Groq Whisper og returnerer transkription. Typisk latency ~200ms.','style="grid-column:1"')}
+    ${card('services/tts.js','ElevenLabs Flash v2.5','dev','Konverterer LLM-tekst til PCM16 audio via ElevenLabs streaming API. Flash v2.5 er optimeret til lav latency. Under aktiv optimering.','style="grid-column:2"')}
+    ${card('voice/llm.js','GPT-4o-mini streaming','stable','Sender transkription + system-prompt til OpenAI GPT-4o-mini. Streamer tokens direkte videre til TTS-pipeline for minimal latency.','style="grid-column:1"')}
+    ${card('services/agentPersona.js','Persona config','stable','Loader og cacher agent-persona fra database. Bygger system-prompt med navn, tone, viden og instrukser for hver tenant.','style="grid-column:2"')}
+    ${card('voice/pipeline.js','Orkestrering','dev','Koordinerer hele STT→LLM→TTS pipeline. Håndterer interrupts, turn-taking og gapless audio-queue. Stadig under finjustering.','style="grid-column:1"')}
+    ${card('routes/','auth · tenants · billing · analytics','stable','Express REST API med JWT-auth, tenant-onboarding, Stripe-billing-hooks og analytics-endpoints. Alle ruter valideres med middleware.','style="grid-column:2;grid-row:span 2"')}
+    ${card('voice/index.js','WebSocket server','stable','Håndterer WS-forbindelser fra browser. Authenticerer tenant, initialiserer pipeline og streamer PCM16 binært bidirektionelt.','style="grid-column:1"')}
+  `;
+  const col2=`<div class="arch-col col-server">
+    <div class="arch-col-hdr">LAG 2 — SERVER</div>
+    <div class="arch-server-box">
+      <div class="arch-server-lbl">Railway · Node.js</div>
+      <div class="arch-server-inner">${serverCards}</div>
+    </div>
+    <div class="arch-db-arrow">↕</div>
+    <div class="arch-db-card">
+      <div class="arch-card-name">PostgreSQL</div>
+      <div class="arch-card-sub">users · tenants · clients · conversations<br>messages · voice_usage · analytics</div>
+      <div class="arch-tip">Primær database på Railway. Indeholder alle tenant-data, samtalehistorik, voice-forbrug og analytics-data. Tilgås via pg-bibliotek med connection pooling.</div>
+    </div>
+  </div>`;
 
-  // === LAG 1 — BROWSER (left) ===
-  svg+=sectionLabel(40,30,'LAG 1 — BROWSER');
-  svg+=box(30,42,200,130,'Browser / Embed',blue,[
-    'AudioWorklet VAD','PCM16 capture','Gapless PCM16 playback','Matterport iframe'
-  ],'green');
+  // ── Connector 2→3 ──
+  const conn23=`<div class="arch-conn">
+    ${arrowR('WAV →','c-b',0)}
+    ${arrowL('← transcript','c-g',0.3)}
+    ${arrowR('prompt →','c-b',0.65)}
+    ${arrowL('← tokens','c-g',0.95)}
+    ${arrowR('text →','c-o',1.3)}
+    ${arrowL('← PCM16','c-o',1.6)}
+    ${arrowR('billing','c-g',2.0)}
+  </div>`;
 
-  // === LAG 2 — SERVER (center) ===
-  svg+=sectionLabel(350,30,'LAG 2 — SERVER');
-  // Main server box
-  svg+=`<rect x="310" y="42" width="320" height="260" rx="8" fill="rgba(22,33,62,0.5)" stroke="${boxBorder}" stroke-width="1" stroke-dasharray="4"/>`;
-  svg+=`<text x="470" y="60" text-anchor="middle" fill="${textC}" font-size="11" font-weight="600">Railway Server (Node.js)</text>`;
+  // ── LAG 3: External + Latency ──
+  const latency=`<div class="latency-card">
+    <div class="latency-hdr">Typisk Latency</div>
+    <div class="latency-row"><span class="latency-lbl">STT (Whisper)</span><span class="latency-val" style="color:#22C55E">~200ms</span></div>
+    <div class="latency-row"><span class="latency-lbl">GPT first chunk</span><span class="latency-val" style="color:#F97316">~600ms</span></div>
+    <div class="latency-row"><span class="latency-lbl">TTS first audio</span><span class="latency-val" style="color:#F97316">~200ms</span></div>
+    <div class="latency-row"><span class="latency-lbl">End-to-end</span><span class="latency-val" style="color:#E2E8F0">~1.0s</span></div>
+  </div>`;
+  const col3=`<div class="arch-col col-ext">
+    <div class="arch-col-hdr">LAG 3 — EXTERNE</div>
+    ${card('Groq','Whisper STT · ~200ms','stable','Transcription-API via Groq Cloud. Sender komprimeret WAV-audio og modtager JSON-transkription. Groq\'s hardware-acceleration giver under 200ms latency.')}
+    ${card('OpenAI','GPT-4o-mini · streaming','stable','LLM-inference via OpenAI API. GPT-4o-mini balancerer hastighed og kvalitet. Server-Sent Events streamer tokens direkte til TTS-pipeline.')}
+    ${card('ElevenLabs','Flash v2.5 TTS · streaming','dev','Text-to-Speech via ElevenLabs streaming API. Flash v2.5 er optimeret til lav TTFB. Returnerer PCM16 audio-stream direkte.')}
+    ${card('Stripe','Billing · Webhooks','stable','Betalings-infrastruktur til abonnement og overage-fakturering. Webhook-events håndterer tenant lifecycle og betalingsstatus.')}
+    ${latency}
+  </div>`;
 
-  // Sub-boxes
-  svg+=box(325,70,140,38,'voice/stt.js',green,[],'green');
-  svg+=box(325,116,140,38,'voice/llm.js',green,[],'green');
-  svg+=box(325,162,140,38,'voice/pipeline.js',orange,[],'orange');
-  svg+=box(325,208,140,38,'voice/index.js (WS)',green,[],'green');
-  svg+=box(480,70,135,38,'services/tts.js',orange,[],'orange');
-  svg+=box(480,116,135,38,'services/agentPersona.js',green,[],'green');
-  svg+=box(480,162,135,80,'routes/',green,['auth, tenants','billing, analytics'],'green');
+  const legend=`<div class="arch-legend">
+    <div class="arch-leg"><div class="arch-leg-dot" style="background:#22C55E"></div>Virker stabilt</div>
+    <div class="arch-leg"><div class="arch-leg-dot" style="background:#F97316"></div>Under udvikling</div>
+    <div class="arch-leg"><div class="arch-leg-dot" style="background:#EF4444"></div>Known issues</div>
+  </div>`;
 
-  // PostgreSQL
-  svg+=box(350,320,220,90,'PostgreSQL',green,['users, tenants, clients','conversations, messages','voice_usage, analytics'],'green');
-
-  // === LAG 3 — EXTERNAL (right) ===
-  svg+=sectionLabel(710,30,'LAG 3 — EKSTERNE');
-  svg+=box(700,42,220,42,'Groq',green,['Whisper STT'],'green');
-  svg+=box(700,96,220,42,'OpenAI',green,['GPT-5.4-mini'],'green');
-  svg+=box(700,150,220,42,'ElevenLabs',orange,['Flash v2.5 TTS'],'orange');
-  svg+=box(700,204,220,42,'Stripe',green,['Billing'],'green');
-
-  // === ARROWS ===
-  // Browser → Server
-  svg+=arrow(230,90,310,90,'PCM16 binary (WebSocket)','above');
-  // Server → Browser
-  svg+=arrow(310,140,230,140,'PCM16 audio chunks (WS)','above');
-  // Browser → Server REST
-  svg+=arrow(230,160,310,225,'REST API','above');
-
-  // Server → External
-  svg+=arrow(630,89,700,63,'WAV audio → transcript','above');
-  svg+=arrow(630,135,700,117,'GPT streaming','above');
-  svg+=arrow(615,181,700,171,'Text → PCM16 audio','above');
-  svg+=arrow(615,225,700,225,'','above');
-
-  // Server → PostgreSQL
-  svg+=arrow(470,302,470,320,'Read/write','left');
-
-  // === LATENCY LABELS ===
-  svg+=`<rect x="700" y="270" width="220" height="90" rx="6" fill="${boxBg}" stroke="${boxBorder}" stroke-width="1"/>`;
-  svg+=`<text x="810" y="289" text-anchor="middle" fill="${textC}" font-size="10" font-weight="500">Latency</text>`;
-  svg+=`<text x="720" y="308" fill="${dimC}" font-size="9">STT:</text><text x="810" y="308" fill="${green}" font-size="9" font-weight="500">~200ms</text>`;
-  svg+=`<text x="720" y="323" fill="${dimC}" font-size="9">GPT first chunk:</text><text x="840" y="323" fill="${orange}" font-size="9" font-weight="500">~600ms</text>`;
-  svg+=`<text x="720" y="338" fill="${dimC}" font-size="9">TTS first audio:</text><text x="840" y="338" fill="${orange}" font-size="9" font-weight="500">~900ms</text>`;
-  svg+=`<text x="720" y="353" fill="${dimC}" font-size="9">Total end-to-end:</text><text x="850" y="353" fill="${textC}" font-size="10" font-weight="600">~1.1s</text>`;
-
-  svg+=`</svg>`;
-
-  // Legend
-  let legend=`<div class="arch-legend">`;
-  legend+=`<div class="arch-leg"><div class="arch-leg-dot" style="background:${green}"></div>Virker stabilt</div>`;
-  legend+=`<div class="arch-leg"><div class="arch-leg-dot" style="background:${orange}"></div>Under udvikling</div>`;
-  legend+=`<div class="arch-leg"><div class="arch-leg-dot" style="background:${red}"></div>Known issues</div>`;
-  legend+=`</div>`;
-
-  return`<div class="arch-wrap">${svg}${legend}</div>`;
+  return`<div class="arch-wrap">
+    <div class="arch-row">${col1}${conn12}${col2}${conn23}${col3}</div>
+    ${legend}
+  </div>`;
 }
 
 init();
