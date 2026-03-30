@@ -207,6 +207,13 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .ovr-total .ol{font-weight:500;font-size:13px}.ovr-total .ov{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--green)}
 .ovr-desc{margin-top:14px;font-size:12px;color:var(--text2);line-height:1.6;padding:11px 14px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--r)}
 
+/* ── Tooltips ── */
+.tip{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;border:1px solid currentColor;font-size:9px;font-style:normal;font-weight:500;font-family:var(--sans);text-transform:none;letter-spacing:0;cursor:help;position:relative;margin-left:4px;vertical-align:middle;opacity:0.45;flex-shrink:0;line-height:1}
+.tip:hover{opacity:1}
+.tip-box{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#333;color:#fff;font-size:11px;font-weight:300;font-family:var(--sans);text-transform:none;letter-spacing:0;line-height:1.55;padding:8px 11px;border-radius:6px;max-width:220px;width:max-content;white-space:normal;pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:9999;text-align:left}
+.tip:hover .tip-box{opacity:1}
+.tip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#333}
+
 /* ── LTV additions ── */
 .kpi-grid-ltv{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
 .churn-sync{font-size:11px;color:var(--gold);margin-top:5px;font-style:italic}
@@ -362,60 +369,60 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
       <div class="sec-title" style="margin-bottom:14px">KPI Overblik</div>
       <div class="kpi-grid">
         <div class="kpi-card" id="kc-mrr">
-          <div class="kpi-lbl">MRR</div>
+          <div class="kpi-lbl">MRR <span class="tip">?<span class="tip-box">Den samlede månedlige omsætning fra alle aktive abonnementer plus overage-betaling for det nuværende scenarie.</span></span></div>
           <div class="kpi-val" id="kv-mrr">—</div>
           <div class="kpi-sub" id="ks-mrr">—</div>
           <div class="kpi-bar"><div class="kpi-fill" id="kb-mrr" style="width:0%"></div></div>
         </div>
         <div class="kpi-card" id="kc-arr">
-          <div class="kpi-lbl">ARR</div>
+          <div class="kpi-lbl">ARR <span class="tip">?<span class="tip-box">Annualiseret omsætning — MRR × 12. Viser den forventede årsindtægt baseret på det aktuelle niveau.</span></span></div>
           <div class="kpi-val" id="kv-arr">—</div>
           <div class="kpi-sub" id="ks-arr">—</div>
         </div>
         <div class="kpi-card" id="kc-gm">
-          <div class="kpi-lbl">Gross Margin</div>
+          <div class="kpi-lbl">Gross Margin <span class="tip">?<span class="tip-box">Omsætning minus direkte variable costs: API, ElevenLabs og infrastruktur. Eksklusive salg og marketing.</span></span></div>
           <div class="kpi-val" id="kv-gm">—</div>
           <div class="kpi-sub" id="ks-gm">—</div>
         </div>
         <div class="kpi-card" id="kc-nm">
-          <div class="kpi-lbl">Net Margin</div>
+          <div class="kpi-lbl">Net Margin <span class="tip">?<span class="tip-box">Hvor stor en andel af omsætningen der er profit. 87% margin betyder at $87 af hver $100 er overskud efter alle udgifter.</span></span></div>
           <div class="kpi-val" id="kv-nm">—</div>
           <div class="kpi-sub" id="ks-nm">—</div>
         </div>
         <div class="kpi-card" id="kc-cust">
-          <div class="kpi-lbl">Total kunder</div>
+          <div class="kpi-lbl">Total kunder <span class="tip">?<span class="tip-box">Totalt antal aktive betalende kunder fordelt på Starter, Growth, Scale og Enterprise pakker.</span></span></div>
           <div class="kpi-val" id="kv-cust">—</div>
           <div class="kpi-sub" id="ks-cust">—</div>
         </div>
         <div class="kpi-card" id="kc-arpu">
-          <div class="kpi-lbl">ARPU</div>
+          <div class="kpi-lbl">ARPU <span class="tip">?<span class="tip-box">Average Revenue Per User — gennemsnitlig månedlig betaling per aktiv kunde på tværs af alle planer.</span></span></div>
           <div class="kpi-val" id="kv-arpu">—</div>
           <div class="kpi-sub" id="ks-arpu">—</div>
         </div>
         <div class="kpi-card" id="kc-net">
-          <div class="kpi-lbl">Nettoresultat/md</div>
+          <div class="kpi-lbl">Nettoresultat/md <span class="tip">?<span class="tip-box">Omsætning minus alle variable og faste udgifter: affiliate-kommission, AI costs, ElevenLabs, Stripe-gebyr og infrastruktur.</span></span></div>
           <div class="kpi-val" id="kv-net">—</div>
           <div class="kpi-sub" id="ks-net">—</div>
         </div>
         <div class="kpi-card" id="kc-ltvcac">
-          <div class="kpi-lbl">LTV : CAC</div>
+          <div class="kpi-lbl">LTV : CAC <span class="tip">?<span class="tip-box">Forholdet mellem hvad en kunde er værd (Net LTV) og hvad det kostede at få dem (CAC). Over 3× er sundt. Under 1× mister du penge på hver ny kunde.</span></span></div>
           <div class="kpi-val" id="kv-ltvcac">—</div>
           <div class="kpi-sub" id="ks-ltvcac">—</div>
         </div>
       </div>
       <div class="kpi-grid-ltv">
         <div class="kpi-card" id="kc-ltvsimple">
-          <div class="kpi-lbl">Simpel LTV</div>
+          <div class="kpi-lbl">Simpel LTV <span class="tip">?<span class="tip-box">Hvad en gennemsnitlig kunde betaler over hele deres levetid. Beregnes som: månedlig ARPU × gennemsnitlig antal måneder som kunde.</span></span></div>
           <div class="kpi-val" id="kv-ltvsimple">—</div>
           <div class="kpi-sub" id="ks-ltvsimple">—</div>
         </div>
         <div class="kpi-card" id="kc-ltvnet">
-          <div class="kpi-lbl">Netto LTV</div>
+          <div class="kpi-lbl">Netto LTV <span class="tip">?<span class="tip-box">LTV efter fratræk af variable costs som affiliate-kommission, AI costs og Stripe-gebyr. Det beløb du faktisk beholder per kunde.</span></span></div>
           <div class="kpi-val" id="kv-ltvnet">—</div>
           <div class="kpi-sub" id="ks-ltvnet">—</div>
         </div>
         <div class="kpi-card" id="kc-ltvcac2">
-          <div class="kpi-lbl">LTV efter CAC</div>
+          <div class="kpi-lbl">LTV efter CAC <span class="tip">?<span class="tip-box">Netto LTV minus hvad det kostede at erhverve kunden (CAC). Den reelle nettoværdi af en ny kunde.</span></span></div>
           <div class="kpi-val" id="kv-ltvcac2">—</div>
           <div class="kpi-sub" id="ks-ltvcac2">—</div>
         </div>
@@ -575,42 +582,42 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
       <div class="sec-title" style="margin-bottom:14px">Unit Economics</div>
       <div class="ue-grid">
         <div class="ue-card">
-          <div class="ue-lbl">ARPU</div>
+          <div class="ue-lbl">ARPU <span class="tip">?<span class="tip-box">Average Revenue Per User — gennemsnitlig månedlig betaling per aktiv kunde, beregnet som samlet MRR divideret med antal kunder.</span></span></div>
           <div class="ue-val" id="ue-arpu">—</div>
           <div class="ue-sub">Gennemsnitlig MRR per kunde</div>
         </div>
         <div class="ue-card">
-          <div class="ue-lbl">LTV</div>
+          <div class="ue-lbl">LTV <span class="tip">?<span class="tip-box">Hvad en gennemsnitlig kunde betaler over hele deres levetid. Beregnes som: månedlig ARPU × gennemsnitlig antal måneder som kunde.</span></span></div>
           <div class="ue-val" id="ue-ltv">—</div>
           <div class="ue-sub">ARPU × levetid</div>
         </div>
         <div class="ue-card">
-          <div class="ue-lbl">CAC</div>
+          <div class="ue-lbl">CAC <span class="tip">?<span class="tip-box">Customer Acquisition Cost — hvad det koster at skaffe én ny betalende kunde. Inkluderer ad spend divideret med antal nye kunder per måned.</span></span></div>
           <div class="ue-val" id="ue-cac">—</div>
           <div class="ue-sub">Kundeanskaffelsesomkostning</div>
         </div>
         <div class="ue-card">
-          <div class="ue-lbl">LTV : CAC</div>
+          <div class="ue-lbl">LTV : CAC <span class="tip">?<span class="tip-box">Forholdet mellem Net LTV og CAC. Over 3× er sundt for SaaS. Under 1× mister du penge på hver ny kunde.</span></span></div>
           <div class="ue-val" id="ue-ltvcac">—</div>
           <div class="ue-sub">Mål: &gt;3× er sundt</div>
         </div>
         <div class="ue-card">
-          <div class="ue-lbl">Payback Period</div>
+          <div class="ue-lbl">Payback Period <span class="tip">?<span class="tip-box">Antal måneder før du har tjent din kundeanskaffelseskost (CAC) tilbage på en ny kunde. Under 6 måneder er stærkt for SaaS.</span></span></div>
           <div class="ue-val" id="ue-payback">—</div>
           <div class="ue-sub">Måneder til CAC er tjent ind</div>
         </div>
         <div class="ue-card">
-          <div class="ue-lbl">Netto ny/md</div>
+          <div class="ue-lbl">Netto ny/md <span class="tip">?<span class="tip-box">Netto tilgang af kunder per måned = nye kunder (ad spend ÷ CAC) minus churnet kunder. Positiv = virksomheden vokser.</span></span></div>
           <div class="ue-val" id="ue-netnew">—</div>
           <div class="ue-sub">Nye kunder minus churn</div>
         </div>
         <div class="ue-card">
-          <div class="ue-lbl">Kostpris/min</div>
+          <div class="ue-lbl">Kostpris/min <span class="tip">?<span class="tip-box">Samlede udgift til AI voice pipeline. Beregnes som $0.011 per voice-minut × antal minutter per måned.</span></span></div>
           <div class="ue-val" style="font-size:22px">$0.011</div>
           <div class="ue-sub">OpenAI + Deepgram pr. voice-min</div>
         </div>
         <div class="ue-card">
-          <div class="ue-lbl">ElevenLabs tier</div>
+          <div class="ue-lbl">ElevenLabs tier <span class="tip">?<span class="tip-box">Fast månedlig udgift til ElevenLabs Flash v2.5 TTS. Stiger i trin: Creator $22 (0-100 kunder), Pro $99 (101-300), Scale $330 (301-1000), Enterprise $800 (1001+).</span></span></div>
           <div class="ue-val" id="ue-eltier" style="font-size:22px">—</div>
           <div class="ue-sub" id="ue-elinfo">—</div>
         </div>
