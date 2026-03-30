@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finansiel Model — October AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#EDE8DF;--surface:#F4F0E8;--surface2:#EDE8DF;--surface3:#E4DDD2;
+  --border:rgba(60,45,30,0.1);--border2:rgba(60,45,30,0.18);
+  --text:#1E1A14;--text2:#6B5F4E;--text3:#A89880;
+  --gold:#B08D5B;--gold-bg:rgba(176,141,91,0.1);--gold-border:rgba(176,141,91,0.28);
+  --green:#4A7C59;--green-bg:rgba(74,124,89,0.1);--green-border:rgba(74,124,89,0.28);
+  --red:#9B3A2F;--red-bg:rgba(155,58,47,0.09);--red-border:rgba(155,58,47,0.25);
+  --purple:#6B5B8A;--purple-bg:rgba(107,91,138,0.09);--purple-border:rgba(107,91,138,0.25);
+  --teal:#3A7A7A;--teal-bg:rgba(58,122,122,0.09);--teal-border:rgba(58,122,122,0.25);
+  --serif:'Cormorant Garamond',serif;--sans:'DM Sans',sans-serif;
+  --r:4px;--rl:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;overflow:hidden}
+.shell{display:flex;height:100vh}
+
+/* ── Sidebar ── */
+.sidebar{width:218px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border2);display:flex;flex-direction:column}
+.sb-header{padding:22px 20px 16px;border-bottom:1px solid var(--border2)}
+.sb-logo{font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:1px}
+.sb-logo span{color:var(--gold)}
+.sb-sub{font-size:11px;color:var(--text3);margin-top:2px;letter-spacing:0.3px}
+.sb-nav{padding:8px 10px;flex:1;overflow-y:auto}
+.sb-group{font-size:10px;color:var(--text3);padding:12px 8px 4px;letter-spacing:1.2px;text-transform:uppercase}
+.sb-btn{display:flex;align-items:center;gap:9px;width:100%;padding:8px 10px;border-radius:var(--r);border:none;background:transparent;color:var(--text2);font-size:13px;font-family:var(--sans);cursor:pointer;text-align:left;transition:all 0.15s}
+.sb-btn:hover{background:var(--surface3);color:var(--text)}
+.sb-btn .ico{width:14px;height:14px;flex-shrink:0;opacity:0.4}
+.sb-btn:hover .ico{opacity:0.85}
+.back-link{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text3);cursor:pointer;padding:8px 10px;border-radius:var(--r);text-decoration:none;transition:all 0.15s;margin-bottom:2px}
+.back-link:hover{color:var(--text);background:var(--surface2)}
+.sb-footer{padding:14px 20px;border-top:1px solid var(--border)}
+
+/* ── Main ── */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.topbar{padding:14px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--surface)}
+.tb-title{font-family:var(--serif);font-size:21px;font-weight:500;letter-spacing:0.3px}
+.tb-right{display:flex;align-items:center;gap:10px}
+.badge{font-size:11px;padding:3px 11px;border-radius:20px;border:1px solid}
+.badge.gold{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-border)}
+.content{flex:1;overflow-y:auto;padding:24px 28px;background:var(--bg)}
+
+/* ── Section headers ── */
+.sec-title{font-family:var(--serif);font-size:18px;font-weight:500;letter-spacing:0.3px;margin-bottom:6px}
+.sec-sub{font-size:11px;color:var(--text3);margin-bottom:14px}
+.sec-divider{height:1px;background:var(--border);margin:4px 0 24px}
+.fin-sec{margin-bottom:28px}
+
+/* ── Scenario pills ── */
+.scen-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.scen-pill{padding:7px 18px;border-radius:20px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);font-size:12px;font-family:var(--sans);cursor:pointer;transition:all 0.15s}
+.scen-pill:hover{border-color:var(--gold-border);color:var(--gold)}
+.scen-pill.active{background:var(--gold-bg);border-color:var(--gold-border);color:var(--gold);font-weight:500}
+
+/* ── Sliders grid ── */
+.sliders-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:20px}
+.sl-group{display:flex;flex-direction:column;gap:7px}
+.sl-label{display:flex;justify-content:space-between;align-items:center}
+.sl-name{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px}
+.sl-val{font-size:13px;font-weight:500;color:var(--text)}
+input[type=range]{width:100%;-webkit-appearance:none;height:3px;border-radius:2px;background:var(--border2);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid var(--surface)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid var(--surface)}
+
+/* ── KPI cards ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px}
+.kpi-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.kpi-val{font-family:var(--serif);font-size:28px;font-weight:500;letter-spacing:-0.5px}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.kpi-bar{height:1px;background:var(--border2);border-radius:1px;margin-top:12px;overflow:hidden}
+.kpi-fill{height:100%;border-radius:1px;background:var(--gold);transition:width 0.4s}
+.kpi-card.pos .kpi-val{color:var(--green)}
+.kpi-card.neg .kpi-val{color:var(--red)}
+.kpi-card.warn .kpi-val{color:var(--gold)}
+
+/* ── P&L ── */
+.pl-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.pl-table{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.pl-table table{width:100%;border-collapse:collapse}
+.pl-table th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;padding:10px 16px;text-align:left;border-bottom:1px solid var(--border)}
+.pl-table th:last-child{text-align:right}
+.pl-table td{padding:9px 16px;font-size:13px;font-weight:300;border-bottom:1px solid var(--border)}
+.pl-table tr:last-child td{border-bottom:none}
+.pl-table td:last-child{text-align:right}
+.pl-table tr.row-total td{font-weight:500;background:var(--surface2)}
+.pl-table tr.row-pos td{font-weight:500;background:var(--green-bg);color:var(--green)}
+.pl-table tr.row-neg td{font-weight:500;background:var(--red-bg);color:var(--red)}
+.pl-table tr.row-hdr td{font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);padding:12px 16px 6px;border-bottom:none;background:var(--surface2)}
+.pl-chart-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:20px;display:flex;flex-direction:column;align-items:center}
+.pl-canvas-wrap{height:200px;position:relative;width:100%}
+
+/* ── Cashflow ── */
+.cf-canvas-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:20px;margin-bottom:12px;height:240px;position:relative}
+.cf-table{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.cf-table table{width:100%;border-collapse:collapse}
+.cf-table th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;padding:8px 12px;text-align:right;border-bottom:1px solid var(--border)}
+.cf-table th:first-child{text-align:left}
+.cf-table td{padding:7px 12px;font-size:12px;font-weight:300;border-bottom:1px solid var(--border);text-align:right}
+.cf-table td:first-child{text-align:left;font-weight:400;color:var(--text2)}
+.cf-table tr:last-child td{border-bottom:none}
+.cf-table tr:nth-child(even) td{background:var(--surface2)}
+.pos{color:var(--green)}.neg{color:var(--red)}
+
+/* ── Unit economics ── */
+.ue-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ue-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px}
+.ue-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.ue-val{font-family:var(--serif);font-size:26px;font-weight:500}
+.ue-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.ue-good{color:var(--green)}.ue-warn{color:var(--gold)}.ue-bad{color:var(--red)}
+
+/* ── Meta & CAC ── */
+.meta-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.meta-tbl{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.meta-tbl table{width:100%;border-collapse:collapse}
+.meta-tbl th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;padding:10px 16px;text-align:left;border-bottom:1px solid var(--border)}
+.meta-tbl th:last-child{text-align:right}
+.meta-tbl td{padding:9px 16px;font-size:13px;font-weight:300;border-bottom:1px solid var(--border)}
+.meta-tbl tr:last-child td{border-bottom:none}
+.meta-tbl td:last-child{text-align:right;font-weight:400}
+.funnel-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:20px}
+.funnel-item{margin-bottom:14px}
+.funnel-item:last-child{margin-bottom:0}
+.funnel-row-lbl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+.funnel-row-lbl span:first-child{color:var(--text2)}
+.funnel-row-lbl span:last-child{font-weight:500}
+.funnel-track{height:6px;background:var(--border2);border-radius:3px;overflow:hidden}
+.funnel-fill{height:100%;border-radius:3px;transition:width 0.5s ease}
+
+/* ── Scenario analysis ── */
+.scen-tbl{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.scen-tbl table{width:100%;border-collapse:collapse}
+.scen-tbl th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;padding:10px 12px;text-align:right;border-bottom:1px solid var(--border)}
+.scen-tbl th:first-child{text-align:left}
+.scen-tbl td{padding:9px 12px;font-size:12px;font-weight:300;border-bottom:1px solid var(--border);text-align:right}
+.scen-tbl td:first-child{text-align:left}
+.scen-tbl tr:last-child td{border-bottom:none}
+.scen-tbl tr.custom-row td{background:var(--gold-bg)}
+.sbadge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;border:1px solid}
+.sbadge.red{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
+.sbadge.gold{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-border)}
+.sbadge.green{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.sbadge.purple{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-border)}
+.sbadge.teal{background:var(--teal-bg);color:var(--teal);border-color:var(--teal-border)}
+
+/* ── API Risk ── */
+.risk-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:20px;margin-bottom:12px}
+.risk-row{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.risk-row:last-child{margin-bottom:0}
+.risk-lbl{flex:0 0 200px;font-size:12px;color:var(--text2)}
+.risk-track{flex:1;height:8px;background:var(--border2);border-radius:4px;overflow:hidden}
+.risk-fill{height:100%;border-radius:4px;transition:width 0.4s,background 0.3s}
+.risk-pct{flex:0 0 46px;text-align:right;font-size:12px;font-weight:500}
+.risk-status{font-size:10px;color:var(--text3);margin-bottom:14px;padding-left:214px}
+.ref-tbl{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:0;overflow:hidden}
+.ref-tbl table{width:100%;border-collapse:collapse}
+.ref-tbl th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;padding:10px 14px;text-align:right;border-bottom:1px solid var(--border)}
+.ref-tbl th:first-child{text-align:left}
+.ref-tbl td{padding:8px 14px;font-size:12px;font-weight:300;border-bottom:1px solid var(--border);text-align:right}
+.ref-tbl td:first-child{text-align:left;font-weight:400}
+.ref-tbl tr:last-child td{border-bottom:none}
+.ref-tbl tr.active-tier td{background:var(--gold-bg);color:var(--gold);font-weight:500}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ════ SIDEBAR ════ -->
+<div class="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo">EB<span>.</span></div>
+    <div class="sb-sub">October AI — Finansiel</div>
+  </div>
+  <div class="sb-nav">
+    <a class="back-link" href="/">
+      <svg style="width:13px;height:13px;opacity:0.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg>
+      Tilbage til Dashboard
+    </a>
+    <div class="sb-group">Sektioner</div>
+    <button class="sb-btn" onclick="scrollSec('sec-assumptions')">
+      <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M5 8h6M7 12h2"/></svg>
+      Forudsætninger
+    </button>
+    <button class="sb-btn" onclick="scrollSec('sec-kpi')">
+      <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+      KPI Overblik
+    </button>
+    <button class="sb-btn" onclick="scrollSec('sec-pl')">
+      <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12V4l5-2 5 2v8"/><path d="M8 12V7"/></svg>
+      P&amp;L
+    </button>
+    <button class="sb-btn" onclick="scrollSec('sec-cf')">
+      <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12l3-4 3 2 3-5 3 3"/><rect x="1" y="1" width="14" height="14" rx="1.5"/></svg>
+      12 Mdr Cashflow
+    </button>
+    <button class="sb-btn" onclick="scrollSec('sec-ue')">
+      <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v8M5 6.5h4.5M5 9.5h5"/></svg>
+      Unit Economics
+    </button>
+    <button class="sb-btn" onclick="scrollSec('sec-meta')">
+      <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 10c2-6 4-7 6-7s4 4 6 7M2 10c1 2 2 3 3 3M13 13c1 0 1-1 1-2"/></svg>
+      Meta &amp; CAC
+    </button>
+    <button class="sb-btn" onclick="scrollSec('sec-scen')">
+      <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="14" height="14" rx="1"/><path d="M1 6h14M6 6v8"/></svg>
+      Scenarie-analyse
+    </button>
+    <button class="sb-btn" onclick="scrollSec('sec-risk')">
+      <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l1.5 4h4l-3.2 2.4 1.2 4L8 10l-3.5 2.4 1.2-4L2.5 6h4z"/></svg>
+      API Concurrent Risk
+    </button>
+  </div>
+  <div class="sb-footer">
+    <div style="font-size:11px;color:var(--text3)">
+      <div style="font-weight:500;color:var(--text2);margin-bottom:2px">October AI</div>
+      Finansiel v1.0
+    </div>
+  </div>
+</div>
+
+<!-- ════ MAIN ════ -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title">Finansiel Model — October AI</div>
+    <div class="tb-right">
+      <span id="scenBadge" class="badge gold">Base Case</span>
+      <span id="updatedAt" style="font-size:11px;color:var(--text3)"></span>
+    </div>
+  </div>
+
+  <div class="content" id="mainContent">
+
+    <!-- ─── 1. ASSUMPTIONS ─── -->
+    <div class="fin-sec" id="sec-assumptions">
+      <div class="sec-title">Forudsætninger</div>
+      <div class="sec-sub">Vælg scenarie eller juster sliders manuelt</div>
+
+      <div class="scen-row">
+        <button class="scen-pill" data-s="pessimistic" onclick="setScenario('pessimistic')">Pessimistisk</button>
+        <button class="scen-pill active" data-s="base" onclick="setScenario('base')">Base Case</button>
+        <button class="scen-pill" data-s="optimistic" onclick="setScenario('optimistic')">Optimistisk</button>
+        <button class="scen-pill" data-s="aggressive" onclick="setScenario('aggressive')">Aggressiv</button>
+        <button class="scen-pill" data-s="custom" onclick="setScenario('custom')">Custom</button>
+      </div>
+
+      <div class="sliders-grid">
+        <div class="sl-group">
+          <div class="sl-label"><span class="sl-name">Starter ($79/md)</span><span class="sl-val" id="v-starter">10</span></div>
+          <input type="range" id="sl-starter" min="0" max="100" step="1" value="10" oninput="onSlide('starter',this.value)">
+        </div>
+        <div class="sl-group">
+          <div class="sl-label"><span class="sl-name">Growth ($299/md)</span><span class="sl-val" id="v-growth">3</span></div>
+          <input type="range" id="sl-growth" min="0" max="50" step="1" value="3" oninput="onSlide('growth',this.value)">
+        </div>
+        <div class="sl-group">
+          <div class="sl-label"><span class="sl-name">Scale ($799/md)</span><span class="sl-val" id="v-scale">1</span></div>
+          <input type="range" id="sl-scale" min="0" max="20" step="1" value="1" oninput="onSlide('scale',this.value)">
+        </div>
+        <div class="sl-group">
+          <div class="sl-label"><span class="sl-name">Enterprise ($1,999/md)</span><span class="sl-val" id="v-enterprise">0</span></div>
+          <input type="range" id="sl-enterprise" min="0" max="10" step="1" value="0" oninput="onSlide('enterprise',this.value)">
+        </div>
+        <div class="sl-group">
+          <div class="sl-label"><span class="sl-name">Avg. min/kunde/md</span><span class="sl-val" id="v-avgMins">200</span></div>
+          <input type="range" id="sl-avgMins" min="50" max="1000" step="10" value="200" oninput="onSlide('avgMins',this.value)">
+        </div>
+        <div class="sl-group">
+          <div class="sl-label"><span class="sl-name">Churn %/md</span><span class="sl-val" id="v-churn">5%</span></div>
+          <input type="range" id="sl-churn" min="0.5" max="20" step="0.5" value="5" oninput="onSlide('churn',this.value)">
+        </div>
+        <div class="sl-group">
+          <div class="sl-label"><span class="sl-name">Affiliate provision %</span><span class="sl-val" id="v-affiliate">25%</span></div>
+          <input type="range" id="sl-affiliate" min="0" max="50" step="5" value="25" oninput="onSlide('affiliate',this.value)">
+        </div>
+        <div class="sl-group">
+          <div class="sl-label"><span class="sl-name">Meta Ads/md ($)</span><span class="sl-val" id="v-adSpend">$2,000</span></div>
+          <input type="range" id="sl-adSpend" min="0" max="20000" step="100" value="2000" oninput="onSlide('adSpend',this.value)">
+        </div>
+        <div class="sl-group">
+          <div class="sl-label"><span class="sl-name">CAC ($)</span><span class="sl-val" id="v-cac">$50</span></div>
+          <input type="range" id="sl-cac" min="10" max="500" step="5" value="50" oninput="onSlide('cac',this.value)">
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- ─── 2. KPI CARDS ─── -->
+    <div class="fin-sec" id="sec-kpi">
+      <div class="sec-title" style="margin-bottom:14px">KPI Overblik</div>
+      <div class="kpi-grid">
+        <div class="kpi-card" id="kc-mrr">
+          <div class="kpi-lbl">MRR</div>
+          <div class="kpi-val" id="kv-mrr">—</div>
+          <div class="kpi-sub" id="ks-mrr">—</div>
+          <div class="kpi-bar"><div class="kpi-fill" id="kb-mrr" style="width:0%"></div></div>
+        </div>
+        <div class="kpi-card" id="kc-arr">
+          <div class="kpi-lbl">ARR</div>
+          <div class="kpi-val" id="kv-arr">—</div>
+          <div class="kpi-sub" id="ks-arr">—</div>
+        </div>
+        <div class="kpi-card" id="kc-gm">
+          <div class="kpi-lbl">Gross Margin</div>
+          <div class="kpi-val" id="kv-gm">—</div>
+          <div class="kpi-sub" id="ks-gm">—</div>
+        </div>
+        <div class="kpi-card" id="kc-nm">
+          <div class="kpi-lbl">Net Margin</div>
+          <div class="kpi-val" id="kv-nm">—</div>
+          <div class="kpi-sub" id="ks-nm">—</div>
+        </div>
+        <div class="kpi-card" id="kc-cust">
+          <div class="kpi-lbl">Total kunder</div>
+          <div class="kpi-val" id="kv-cust">—</div>
+          <div class="kpi-sub" id="ks-cust">—</div>
+        </div>
+        <div class="kpi-card" id="kc-arpu">
+          <div class="kpi-lbl">ARPU</div>
+          <div class="kpi-val" id="kv-arpu">—</div>
+          <div class="kpi-sub" id="ks-arpu">—</div>
+        </div>
+        <div class="kpi-card" id="kc-net">
+          <div class="kpi-lbl">Nettoresultat/md</div>
+          <div class="kpi-val" id="kv-net">—</div>
+          <div class="kpi-sub" id="ks-net">—</div>
+        </div>
+        <div class="kpi-card" id="kc-ltvcac">
+          <div class="kpi-lbl">LTV : CAC</div>
+          <div class="kpi-val" id="kv-ltvcac">—</div>
+          <div class="kpi-sub" id="ks-ltvcac">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- ─── 3. P&L ─── -->
+    <div class="fin-sec" id="sec-pl">
+      <div class="sec-title" style="margin-bottom:14px">P&amp;L — Månedlig</div>
+      <div class="pl-wrap">
+        <div class="pl-table">
+          <table>
+            <thead><tr><th>Post</th><th>Beløb</th></tr></thead>
+            <tbody id="plBody"></tbody>
+          </table>
+        </div>
+        <div class="pl-chart-box">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:12px">Omsætning vs omkostninger</div>
+          <div class="pl-canvas-wrap"><canvas id="plChart"></canvas></div>
+          <div id="plLegend" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- ─── 4. 12-MONTH CASHFLOW ─── -->
+    <div class="fin-sec" id="sec-cf">
+      <div class="sec-title" style="margin-bottom:14px">12 Måneders Projektion</div>
+      <div class="cf-canvas-wrap"><canvas id="cfChart"></canvas></div>
+      <div class="cf-table">
+        <table>
+          <thead>
+            <tr>
+              <th style="text-align:left">Måned</th>
+              <th>Kunder</th>
+              <th>MRR</th>
+              <th>COGS</th>
+              <th>Gross Profit</th>
+              <th>OpEx</th>
+              <th>Net</th>
+            </tr>
+          </thead>
+          <tbody id="cfBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- ─── 5. UNIT ECONOMICS ─── -->
+    <div class="fin-sec" id="sec-ue">
+      <div class="sec-title" style="margin-bottom:14px">Unit Economics</div>
+      <div class="ue-grid">
+        <div class="ue-card">
+          <div class="ue-lbl">ARPU</div>
+          <div class="ue-val" id="ue-arpu">—</div>
+          <div class="ue-sub">Gennemsnitlig MRR per kunde</div>
+        </div>
+        <div class="ue-card">
+          <div class="ue-lbl">LTV</div>
+          <div class="ue-val" id="ue-ltv">—</div>
+          <div class="ue-sub">ARPU ÷ churn%</div>
+        </div>
+        <div class="ue-card">
+          <div class="ue-lbl">CAC</div>
+          <div class="ue-val" id="ue-cac">—</div>
+          <div class="ue-sub">Kundeanskaffelsesomkostning</div>
+        </div>
+        <div class="ue-card">
+          <div class="ue-lbl">LTV : CAC</div>
+          <div class="ue-val" id="ue-ltvcac">—</div>
+          <div class="ue-sub">Mål: &gt;3× er sundt</div>
+        </div>
+        <div class="ue-card">
+          <div class="ue-lbl">Payback Period</div>
+          <div class="ue-val" id="ue-payback">—</div>
+          <div class="ue-sub">Måneder til CAC er tjent ind</div>
+        </div>
+        <div class="ue-card">
+          <div class="ue-lbl">Netto ny/md</div>
+          <div class="ue-val" id="ue-netnew">—</div>
+          <div class="ue-sub">Nye kunder minus churn</div>
+        </div>
+        <div class="ue-card">
+          <div class="ue-lbl">Kostpris/min</div>
+          <div class="ue-val" style="font-size:22px">$0.011</div>
+          <div class="ue-sub">OpenAI + Deepgram pr. voice-min</div>
+        </div>
+        <div class="ue-card">
+          <div class="ue-lbl">ElevenLabs tier</div>
+          <div class="ue-val" id="ue-eltier" style="font-size:22px">—</div>
+          <div class="ue-sub" id="ue-elinfo">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- ─── 6. META & CAC ─── -->
+    <div class="fin-sec" id="sec-meta">
+      <div class="sec-title" style="margin-bottom:14px">Meta Ads &amp; CAC Analyse</div>
+      <div class="meta-wrap">
+        <div class="meta-tbl">
+          <table>
+            <thead><tr><th>Metric</th><th>Værdi</th></tr></thead>
+            <tbody id="metaBody"></tbody>
+          </table>
+        </div>
+        <div class="funnel-box">
+          <div style="font-size:12px;color:var(--text2);font-weight:500;margin-bottom:16px">Anskaffelsestragt</div>
+          <div id="funnelBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- ─── 7. SCENARIO ANALYSIS TABLE ─── -->
+    <div class="fin-sec" id="sec-scen">
+      <div class="sec-title" style="margin-bottom:14px">Scenarie-analyse</div>
+      <div class="scen-tbl">
+        <table>
+          <thead>
+            <tr>
+              <th style="text-align:left">Scenarie</th>
+              <th>Kunder</th>
+              <th>MRR</th>
+              <th>Gross Margin</th>
+              <th>Net/md</th>
+              <th>LTV:CAC</th>
+              <th>ARR</th>
+            </tr>
+          </thead>
+          <tbody id="scenBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- ─── 8. API CONCURRENT RISK ─── -->
+    <div class="fin-sec" id="sec-risk">
+      <div class="sec-title">API Concurrent Risk</div>
+      <div class="sec-sub">Peak-forbrug estimeret til 5% samtidige kald pr. total antal kunder</div>
+      <div class="risk-box" id="riskBody"></div>
+      <div class="ref-tbl">
+        <table>
+          <thead>
+            <tr>
+              <th style="text-align:left">ElevenLabs Plan</th>
+              <th>Pris/md</th>
+              <th>Concurrent streams</th>
+              <th>Maks kunder (5%)</th>
+            </tr>
+          </thead>
+          <tbody id="refBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+/* ═══════════════════════════════════
+   CONSTANTS
+═══════════════════════════════════ */
+const PLANS = {
+  starter:    { price: 79,   incl: 100,  label: 'Starter' },
+  growth:     { price: 299,  incl: 500,  label: 'Growth' },
+  scale:      { price: 799,  incl: 2000, label: 'Scale' },
+  enterprise: { price: 1999, incl: 5000, label: 'Enterprise' }
+};
+
+const EL_TIERS = [
+  { tier: 'Creator',    cost: 22,  concurrent: 5,   maxCust: 100  },
+  { tier: 'Pro',        cost: 99,  concurrent: 15,  maxCust: 300  },
+  { tier: 'Scale',      cost: 330, concurrent: 50,  maxCust: 1000 },
+  { tier: 'Enterprise', cost: 800, concurrent: 150, maxCust: 3000 }
+];
+
+const SCENARIOS = {
+  pessimistic: { label:'Pessimistisk', color:'red',
+    starter:5, growth:1, scale:0, enterprise:0,
+    avgMins:100, churn:10, affiliate:15, adSpend:500, cac:80 },
+  base: { label:'Base Case', color:'gold',
+    starter:10, growth:3, scale:1, enterprise:0,
+    avgMins:200, churn:5, affiliate:25, adSpend:2000, cac:50 },
+  optimistic: { label:'Optimistisk', color:'green',
+    starter:20, growth:8, scale:3, enterprise:1,
+    avgMins:250, churn:3, affiliate:30, adSpend:3000, cac:40 },
+  aggressive: { label:'Aggressiv', color:'purple',
+    starter:40, growth:15, scale:5, enterprise:2,
+    avgMins:300, churn:4, affiliate:35, adSpend:8000, cac:35 }
+};
+
+/* ═══════════════════════════════════
+   STATE
+═══════════════════════════════════ */
+let M = { starter:10, growth:3, scale:1, enterprise:0,
+          avgMins:200, churn:5, affiliate:25, adSpend:2000, cac:50 };
+let currentScen = 'base';
+let chartPL = null, chartCF = null;
+
+/* ═══════════════════════════════════
+   MODEL
+═══════════════════════════════════ */
+function getElTier(n) {
+  for (const t of EL_TIERS) { if (n <= t.maxCust) return t; }
+  return EL_TIERS[EL_TIERS.length - 1];
+}
+
+function calcOverageMins(m) {
+  return Math.max(0, m.avgMins - PLANS.starter.incl) * m.starter
+       + Math.max(0, m.avgMins - PLANS.growth.incl)  * m.growth
+       + Math.max(0, m.avgMins - PLANS.scale.incl)   * m.scale
+       + Math.max(0, m.avgMins - PLANS.enterprise.incl) * m.enterprise;
+}
+
+function calc(m) {
+  const total = m.starter + m.growth + m.scale + m.enterprise;
+  const planRev = m.starter*79 + m.growth*299 + m.scale*799 + m.enterprise*1999;
+  const overMins = calcOverageMins(m);
+  const overRev  = overMins * 0.05;
+  const mrr = planRev + overRev;
+  const arr = mrr * 12;
+
+  const totalMins = total * m.avgMins;
+  const apiCost   = totalMins * 0.011;
+  const elTier    = getElTier(total);
+  const infra     = 50;
+  const cogs      = apiCost + elTier.cost + infra;
+
+  const grossP  = mrr - cogs;
+  const grossM  = mrr > 0 ? grossP / mrr * 100 : 0;
+  const affPay  = mrr * m.affiliate / 100;
+  const opex    = m.adSpend + affPay;
+  const netP    = grossP - opex;
+  const netM    = mrr > 0 ? netP / mrr * 100 : 0;
+
+  const arpu    = total > 0 ? mrr / total : 0;
+  const ltv     = m.churn > 0 ? arpu / (m.churn / 100) : 9999;
+  const ltvCac  = m.cac > 0 ? ltv / m.cac : 0;
+  const payback = arpu > 0 ? m.cac / arpu : 999;
+  const newCust = m.cac > 0 ? m.adSpend / m.cac : 0;
+  const churnN  = total * m.churn / 100;
+  const netNew  = newCust - churnN;
+  const peak    = Math.ceil(total * 0.05);
+
+  return { total, planRev, overMins, overRev, mrr, arr,
+           apiCost, elTier, infra, cogs, grossP, grossM,
+           affPay, opex, netP, netM,
+           arpu, ltv, ltvCac, payback, newCust, churnN, netNew,
+           peak, totalMins };
+}
+
+function buildProjection(m, n=12) {
+  let s=m.starter, g=m.growth, sc=m.scale, e=m.enterprise;
+  const churnR = m.churn/100;
+  const newPM  = m.cac>0 ? m.adSpend/m.cac : 0;
+  const now    = new Date();
+  return Array.from({length:n}, (_,i) => {
+    const cm = {...m, starter:Math.round(s), growth:Math.round(g), scale:Math.round(sc), enterprise:Math.round(e)};
+    const r  = calc(cm);
+    const dt = new Date(now.getFullYear(), now.getMonth()+i, 1);
+    const lb = dt.toLocaleDateString('da-DK',{month:'short',year:'2-digit'});
+    s = s*(1-churnR)+newPM; g=g*(1-churnR); sc=sc*(1-churnR); e=e*(1-churnR);
+    return {...r, label:lb};
+  });
+}
+
+/* ═══════════════════════════════════
+   FORMAT
+═══════════════════════════════════ */
+function f$(n) {
+  const a=Math.abs(n);
+  const s=a>=1000 ? '$'+(a/1000).toFixed(1)+'k' : '$'+Math.round(a);
+  return n<0 ? '−'+s : s;
+}
+function ff$(n) { return (n<0?'−':'')+'$'+Math.abs(Math.round(n)).toLocaleString('en-US'); }
+function fp(n) { return n.toFixed(1)+'%'; }
+function fx(n) { return n.toFixed(1)+'×'; }
+
+/* ═══════════════════════════════════
+   RENDER
+═══════════════════════════════════ */
+function update() {
+  const r = calc(M);
+  renderKPI(r);
+  renderPL(r);
+  renderCF();
+  renderUE(r);
+  renderMeta(r);
+  renderScenTable();
+  renderRisk(r);
+  document.getElementById('updatedAt').textContent =
+    new Date().toLocaleTimeString('da-DK',{hour:'2-digit',minute:'2-digit'});
+}
+
+function set(id,v){ const e=document.getElementById(id); if(e) e.textContent=v; }
+function cls(id,c){ const e=document.getElementById(id); if(e) e.className=c; }
+
+function renderKPI(r) {
+  set('kv-mrr', f$(r.mrr));
+  set('ks-mrr', r.total+' kunder · '+ff$(r.arr)+'/år');
+  document.getElementById('kb-mrr').style.width = Math.min(100, r.mrr/5000*100)+'%';
+
+  set('kv-arr', f$(r.arr));
+  set('ks-arr', f$(r.mrr)+'/md');
+
+  set('kv-gm', fp(r.grossM));
+  set('ks-gm', ff$(r.grossP)+'/md · COGS '+f$(r.cogs));
+  cls('kc-gm', 'kpi-card'+(r.grossM>60?' pos':r.grossM>30?' warn':' neg'));
+
+  set('kv-nm', fp(r.netM));
+  set('ks-nm', ff$(r.netP)+'/md');
+  cls('kc-nm', 'kpi-card'+(r.netM>20?' pos':r.netM>0?' warn':' neg'));
+
+  set('kv-cust', r.total);
+  set('ks-cust', 'S:'+M.starter+' G:'+M.growth+' Sc:'+M.scale+' E:'+M.enterprise);
+
+  set('kv-arpu', f$(r.arpu));
+  set('ks-arpu', r.totalMins.toLocaleString()+' min/md total');
+
+  set('kv-net', ff$(r.netP));
+  set('ks-net', 'OpEx '+f$(r.opex));
+  cls('kc-net', 'kpi-card'+(r.netP>0?' pos':' neg'));
+
+  set('kv-ltvcac', fx(r.ltvCac));
+  set('ks-ltvcac', 'LTV '+f$(r.ltv)+' · CAC $'+M.cac);
+  cls('kc-ltvcac', 'kpi-card'+(r.ltvCac>=3?' pos':r.ltvCac>=1?' warn':' neg'));
+}
+
+function renderPL(r) {
+  const rows = [
+    {h:'Omsætning'},
+    {l:'Plan-abonnementer', v:r.planRev},
+    {l:'Overforbrugsgebyr ('+r.overMins.toLocaleString()+' min)', v:r.overRev},
+    {l:'MRR', v:r.mrr, t:'row-total'},
+    {h:'Vareforbrug (COGS)'},
+    {l:'API-kost ('+r.totalMins.toLocaleString()+' min × $0.011)', v:-r.apiCost},
+    {l:'ElevenLabs ('+r.elTier.tier+')', v:-r.elTier.cost},
+    {l:'Infrastruktur (Railway+misc)', v:-r.infra},
+    {l:'Bruttofortjeneste', v:r.grossP, t:r.grossP>=0?'row-pos':'row-neg'},
+    {h:'Driftsomkostninger (OpEx)'},
+    {l:'Meta Ads', v:-M.adSpend},
+    {l:'Affiliate-provision ('+M.affiliate+'%)', v:-r.affPay},
+    {l:'Nettoresultat', v:r.netP, t:r.netP>=0?'row-pos':'row-neg'}
+  ];
+  document.getElementById('plBody').innerHTML = rows.map(row => {
+    if (row.h) return `<tr class="row-hdr"><td colspan="2">${row.h}</td></tr>`;
+    const disp = (row.v<0?'−':'')+ff$(Math.abs(row.v));
+    const col  = row.v<0&&!row.t ? 'color:var(--red)' : '';
+    return `<tr class="${row.t||''}"><td>${row.l}</td><td style="${col}">${disp}</td></tr>`;
+  }).join('');
+
+  const colors = ['rgba(74,124,89,0.75)','rgba(74,124,89,0.4)','rgba(155,58,47,0.65)','rgba(155,58,47,0.45)','rgba(155,58,47,0.3)','rgba(176,141,91,0.65)','rgba(176,141,91,0.45)'];
+  const labels = ['Plan rev','Overage','API cost','ElevenLabs','Infra','Ads','Affiliate'];
+  const data   = [r.planRev, r.overRev, r.apiCost, r.elTier.cost, r.infra, M.adSpend, r.affPay];
+
+  if (!chartPL) {
+    chartPL = new Chart(document.getElementById('plChart'), {
+      type:'doughnut',
+      data:{ labels, datasets:[{data, backgroundColor:colors, borderWidth:1, borderColor:'rgba(244,240,232,0.5)'}] },
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{display:false},
+          tooltip:{ callbacks:{ label:c=>` ${c.label}: ${ff$(c.raw)}` } }
+        }, cutout:'60%' }
+    });
+  } else {
+    chartPL.data.datasets[0].data = data;
+    chartPL.update('none');
+  }
+
+  document.getElementById('plLegend').innerHTML = labels.map((l,i)=>
+    `<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text3)">
+      <div style="width:8px;height:8px;border-radius:2px;flex-shrink:0;background:${colors[i]}"></div>${l}</div>`
+  ).join('');
+}
+
+function renderCF() {
+  const proj   = buildProjection(M);
+  const labels = proj.map(r=>r.label);
+  const mrrD   = proj.map(r=>r.mrr);
+  const netD   = proj.map(r=>r.netP);
+
+  if (!chartCF) {
+    chartCF = new Chart(document.getElementById('cfChart'), {
+      type:'bar',
+      data:{ labels, datasets:[
+        {label:'MRR', data:mrrD, backgroundColor:'rgba(176,141,91,0.5)', borderColor:'rgba(176,141,91,0.8)', borderWidth:1, yAxisID:'y'},
+        {label:'Net Profit', type:'line', data:netD, borderColor:'rgba(74,124,89,0.9)', backgroundColor:'rgba(74,124,89,0.08)',
+         borderWidth:2, tension:0.35, fill:true, yAxisID:'y', pointRadius:3, pointBackgroundColor:'rgba(74,124,89,0.9)'}
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{labels:{font:{family:"'DM Sans',sans-serif",size:11},color:'rgba(107,95,78,0.9)'}},
+          tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${ff$(c.raw)}`}} },
+        scales:{
+          x:{grid:{color:'rgba(60,45,30,0.06)'},ticks:{font:{size:10},color:'rgba(168,152,128,0.9)'}},
+          y:{grid:{color:'rgba(60,45,30,0.06)'},ticks:{font:{size:10},color:'rgba(168,152,128,0.9)',callback:v=>f$(v)}}
+        }
+      }
+    });
+  } else {
+    chartCF.data.labels            = labels;
+    chartCF.data.datasets[0].data  = mrrD;
+    chartCF.data.datasets[1].data  = netD;
+    chartCF.update('none');
+  }
+
+  document.getElementById('cfBody').innerHTML = proj.map(r =>
+    `<tr>
+      <td>${r.label}</td>
+      <td>${r.total}</td>
+      <td>${ff$(r.mrr)}</td>
+      <td style="color:var(--red)">−${ff$(r.cogs)}</td>
+      <td class="${r.grossP>=0?'pos':'neg'}">${ff$(r.grossP)}</td>
+      <td style="color:var(--text3)">−${ff$(r.opex)}</td>
+      <td class="${r.netP>=0?'pos':'neg'}">${r.netP>=0?'':'-'}${ff$(Math.abs(r.netP))}</td>
+    </tr>`
+  ).join('');
+}
+
+function renderUE(r) {
+  set('ue-arpu', f$(r.arpu));
+  set('ue-ltv',  f$(r.ltv<9999?r.ltv:0));
+  set('ue-cac',  '$'+M.cac);
+
+  const ltvcEl = document.getElementById('ue-ltvcac');
+  ltvcEl.textContent = fx(r.ltvCac);
+  ltvcEl.className = 'ue-val '+(r.ltvCac>=3?'ue-good':r.ltvCac>=1?'ue-warn':'ue-bad');
+
+  const pbEl = document.getElementById('ue-payback');
+  pbEl.textContent = r.payback<200 ? r.payback.toFixed(1)+' mdr' : '∞';
+  pbEl.className = 'ue-val '+(r.payback<=12?'ue-good':r.payback<=24?'ue-warn':'ue-bad');
+
+  const nnEl = document.getElementById('ue-netnew');
+  nnEl.textContent = (r.netNew>=0?'+':'')+r.netNew.toFixed(1)+'/md';
+  nnEl.className = 'ue-val '+(r.netNew>0?'ue-good':r.netNew===0?'ue-warn':'ue-bad');
+
+  set('ue-eltier', r.elTier.tier);
+  set('ue-elinfo', '$'+r.elTier.cost+'/md · '+r.elTier.concurrent+' concurrent streams');
+}
+
+function renderMeta(r) {
+  const CPM=12, CTR=0.015, LR=0.05, CR=0.20;
+  const impr = M.adSpend/CPM*1000;
+  const clks = impr*CTR;
+  const leads = clks*LR;
+  const custs = leads*CR;
+  const calcCAC = custs>0 ? M.adSpend/custs : M.cac;
+  document.getElementById('metaBody').innerHTML = [
+    ['Budget/md', ff$(M.adSpend)],
+    ['CPM (B2B est.)', '$12.00'],
+    ['Visninger/md', Math.round(impr).toLocaleString('da-DK')],
+    ['CTR', '1.5%'],
+    ['Klik/md', Math.round(clks).toLocaleString('da-DK')],
+    ['Lead rate', '5%'],
+    ['Leads/md', Math.round(leads).toLocaleString('da-DK')],
+    ['Booking conversion', '20%'],
+    ['Nye kunder/md', custs.toFixed(1)],
+    ['Beregnet CAC', ff$(calcCAC)],
+    ['Indsat CAC', '$'+M.cac],
+  ].map(([l,v])=>`<tr><td>${l}</td><td>${v}</td></tr>`).join('');
+
+  const steps = [
+    {l:'Visninger', v:impr,  c:'rgba(176,141,91,0.7)', ref:impr},
+    {l:'Klik',      v:clks,  c:'rgba(176,141,91,0.55)',ref:impr},
+    {l:'Leads',     v:leads, c:'rgba(74,124,89,0.6)',  ref:impr},
+    {l:'Kunder',    v:custs, c:'rgba(74,124,89,0.85)', ref:impr}
+  ];
+  document.getElementById('funnelBody').innerHTML = steps.map(s => {
+    const pct = s.ref>0 ? Math.min(100, s.v/s.ref*100) : 0;
+    const disp = s.v>=1000 ? (s.v/1000).toFixed(1)+'k' : s.v.toFixed(1);
+    return `<div class="funnel-item">
+      <div class="funnel-row-lbl"><span>${s.l}</span><span>${disp}</span></div>
+      <div class="funnel-track"><div class="funnel-fill" style="width:${pct}%;background:${s.c}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function renderScenTable() {
+  const rows = Object.entries(SCENARIOS).map(([k,s]) => {
+    const m = {starter:s.starter,growth:s.growth,scale:s.scale,enterprise:s.enterprise,
+               avgMins:s.avgMins,churn:s.churn,affiliate:s.affiliate,adSpend:s.adSpend,cac:s.cac};
+    return {...calc(m), label:s.label, color:s.color, custom:false};
+  });
+  rows.push({...calc(M), label:'Custom', color:'teal', custom:true});
+
+  document.getElementById('scenBody').innerHTML = rows.map(r =>
+    `<tr class="${r.custom?'custom-row':''}">
+      <td><span class="sbadge ${r.color}">${r.label}</span></td>
+      <td>${r.total}</td>
+      <td>${ff$(r.mrr)}</td>
+      <td>${fp(r.grossM)}</td>
+      <td style="color:${r.netP>=0?'var(--green)':'var(--red)'}">${f$(r.netP)}</td>
+      <td>${fx(r.ltvCac)}</td>
+      <td>${f$(r.arr)}</td>
+    </tr>`
+  ).join('');
+}
+
+function renderRisk(r) {
+  const peak = r.peak;
+  document.getElementById('riskBody').innerHTML = EL_TIERS.map((t,i) => {
+    const pct  = Math.min(110, peak/t.concurrent*100);
+    const color = pct>=100?'var(--red)':pct>=70?'var(--gold)':'var(--green)';
+    const status = pct>=100?'⚠ Grænse overskredet':pct>=70?'~ Tæt på grænse':'✓ OK';
+    return `<div class="risk-row">
+        <div class="risk-lbl">${t.tier} <span style="color:var(--text3)">(max ${t.concurrent})</span></div>
+        <div class="risk-track"><div class="risk-fill" style="width:${Math.min(100,pct)}%;background:${color}"></div></div>
+        <div class="risk-pct" style="color:${color}">${Math.round(pct)}%</div>
+      </div>
+      <div class="risk-status" style="color:${color}">${status} — ${peak} estimerede samtidige kald ved ${r.total} kunder</div>`;
+  }).join('');
+
+  const active = r.elTier.tier;
+  document.getElementById('refBody').innerHTML = EL_TIERS.map(t =>
+    `<tr class="${t.tier===active?'active-tier':''}">
+      <td>${t.tier}${t.tier===active?' ← aktiv':''}</td>
+      <td style="text-align:right">$${t.cost}</td>
+      <td style="text-align:right">${t.concurrent}</td>
+      <td style="text-align:right">${t.maxCust.toLocaleString()}</td>
+    </tr>`
+  ).join('');
+}
+
+/* ═══════════════════════════════════
+   EVENTS
+═══════════════════════════════════ */
+function onSlide(key, val) {
+  M[key] = parseFloat(val);
+  const el = document.getElementById('v-'+key);
+  if (key==='churn'||key==='affiliate') el.textContent = val+'%';
+  else if (key==='adSpend'||key==='cac') el.textContent = '$'+parseFloat(val).toLocaleString('en');
+  else el.textContent = val;
+  currentScen = 'custom';
+  document.querySelectorAll('.scen-pill').forEach(p => p.classList.toggle('active', p.dataset.s==='custom'));
+  document.getElementById('scenBadge').textContent = 'Custom';
+  update();
+}
+
+function setScenario(key) {
+  currentScen = key;
+  document.querySelectorAll('.scen-pill').forEach(p => p.classList.toggle('active', p.dataset.s===key));
+  if (key!=='custom' && SCENARIOS[key]) {
+    const s = SCENARIOS[key];
+    document.getElementById('scenBadge').textContent = s.label;
+    M = {starter:s.starter,growth:s.growth,scale:s.scale,enterprise:s.enterprise,
+         avgMins:s.avgMins,churn:s.churn,affiliate:s.affiliate,adSpend:s.adSpend,cac:s.cac};
+    ['starter','growth','scale','enterprise','avgMins','churn','affiliate','adSpend','cac'].forEach(k => {
+      const inp = document.getElementById('sl-'+k);
+      const lbl = document.getElementById('v-'+k);
+      if (inp) inp.value = M[k];
+      if (lbl) {
+        if (k==='churn'||k==='affiliate') lbl.textContent = M[k]+'%';
+        else if (k==='adSpend'||k==='cac') lbl.textContent = '$'+M[k].toLocaleString('en');
+        else lbl.textContent = M[k];
+      }
+    });
+  } else {
+    document.getElementById('scenBadge').textContent = 'Custom';
+  }
+  update();
+}
+
+function scrollSec(id) {
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ═══════════════════════════════════
+   INIT
+═══════════════════════════════════ */
+setScenario('base');
+</script>
+</body>
+</html>
