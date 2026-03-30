@@ -718,10 +718,10 @@ const PLANS = {
 };
 
 const EL_TIERS = [
-  { tier: 'Creator',    cost: 22,  concurrent: 5,   maxCust: 100  },
-  { tier: 'Pro',        cost: 99,  concurrent: 15,  maxCust: 300  },
-  { tier: 'Scale',      cost: 330, concurrent: 50,  maxCust: 1000 },
-  { tier: 'Enterprise', cost: 800, concurrent: 150, maxCust: 3000 }
+  { tier: 'Creator',    cost: 22,  concurrent: 5,   maxCust: 9    },
+  { tier: 'Pro',        cost: 99,  concurrent: 15,  maxCust: 49   },
+  { tier: 'Scale',      cost: 330, concurrent: 50,  maxCust: 199  },
+  { tier: 'Enterprise', cost: 800, concurrent: 150, maxCust: 9999 }
 ];
 
 const SCENARIOS = {
@@ -837,6 +837,25 @@ function fx(n) { return n.toFixed(1)+'×'; }
 /* ═══════════════════════════════════
    RENDER
 ═══════════════════════════════════ */
+/* ─── Single source of truth: reads all sliders → syncs M → renders ─── */
+function calculateAll() {
+  M.starter        = +document.getElementById('sl-starter').value;
+  M.growth         = +document.getElementById('sl-growth').value;
+  M.scale          = +document.getElementById('sl-scale').value;
+  M.enterprise     = +document.getElementById('sl-enterprise').value;
+  M.avgMins        = +document.getElementById('sl-avgMins').value;
+  M.churn          = +document.getElementById('sl-churn').value;
+  const _ltEl = document.getElementById('sl-lifetime');
+  M.lifetime       = _ltEl ? +_ltEl.value : Math.max(1, Math.round(100 / M.churn));
+  M.affiliate      = +document.getElementById('sl-affiliate').value;
+  M.adSpend        = +document.getElementById('sl-adSpend').value;
+  M.cac            = +document.getElementById('sl-cac').value;
+  M.overPctStarter = +document.getElementById('ovsl-pS').value;
+  M.overPctGrowth  = +document.getElementById('ovsl-pG').value;
+  M.overExtraMins  = +document.getElementById('ovsl-em').value;
+  update();
+}
+
 function update() {
   const r = calc(M);
   renderKPI(r);
@@ -848,6 +867,7 @@ function update() {
   renderMeta(r);
   renderScenTable();
   renderRisk(r);
+  updateChurnLifetimeSync();
   document.getElementById('updatedAt').textContent =
     new Date().toLocaleTimeString('da-DK',{hour:'2-digit',minute:'2-digit'});
 }
@@ -1225,41 +1245,39 @@ function updateChurnLifetimeSync() {
 }
 
 function onSlide(key, val) {
-  M[key] = parseFloat(val);
+  // Update display label
   const el = document.getElementById('v-'+key);
-  if (key==='churn'||key==='affiliate') el.textContent = val+'%';
-  else if (key==='adSpend'||key==='cac') el.textContent = '$'+parseFloat(val).toLocaleString('en');
-  else if (key==='lifetime') el.textContent = val+' mdr';
-  else el.textContent = val;
-  // Bidirectional churn <-> lifetime sync
+  if (el) {
+    if (key==='churn'||key==='affiliate') el.textContent = val+'%';
+    else if (key==='adSpend'||key==='cac') el.textContent = '$'+parseFloat(val).toLocaleString('en');
+    else if (key==='lifetime') el.textContent = val+' mdr';
+    else el.textContent = val;
+  }
+  // Bidirectional churn <-> lifetime: update the OTHER slider's DOM before calculateAll reads it
   if (key==='churn') {
     const lt = Math.max(1, Math.min(36, Math.round(100 / parseFloat(val))));
-    M.lifetime = lt;
     const slLt = document.getElementById('sl-lifetime');
     const lblLt = document.getElementById('v-lifetime');
     if (slLt) slLt.value = lt;
     if (lblLt) lblLt.textContent = lt+' mdr';
   } else if (key==='lifetime') {
     const ch = parseFloat(Math.max(0.5, Math.min(20, 100 / parseFloat(val))).toFixed(1));
-    M.churn = ch;
     const slCh = document.getElementById('sl-churn');
     const lblCh = document.getElementById('v-churn');
     if (slCh) slCh.value = ch;
     if (lblCh) lblCh.textContent = ch+'%';
   }
-  updateChurnLifetimeSync();
   currentScen = 'custom';
   document.querySelectorAll('.scen-pill').forEach(p => p.classList.toggle('active', p.dataset.s==='custom'));
   document.getElementById('scenBadge').textContent = 'Custom';
-  update();
+  calculateAll();
 }
 
 function onOvr(key, val) {
-  M[key] = parseFloat(val);
   const ids = {overPctStarter:'ov-pS', overPctGrowth:'ov-pG', overExtraMins:'ov-em'};
   const sfx = key==='overExtraMins' ? ' min' : '%';
   document.getElementById(ids[key]).textContent = val + sfx;
-  update();
+  calculateAll();
 }
 
 function setScenario(key) {
@@ -1291,7 +1309,7 @@ function setScenario(key) {
   } else {
     document.getElementById('scenBadge').textContent = 'Custom';
   }
-  update();
+  calculateAll();
 }
 
 function scrollSec(id) {
