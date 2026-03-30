@@ -296,42 +296,79 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
-/* ── Roadmap ── */
-.rm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
-.rm-col{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:visible}
-.rm-col-bar{height:3px;border-radius:3px 3px 0 0}
-.rm-col-bar.green{background:#22C55E}
-.rm-col-bar.amber{background:#F97316}
-.rm-col-bar.blue{background:#3B82F6}
-.rm-col-inner{padding:16px 18px}
-.rm-col-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.rm-col-title{font-size:13px;font-weight:600;color:var(--text)}
-.rm-badge{font-size:9px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;padding:3px 9px;border-radius:20px;flex-shrink:0}
-.rm-badge.live{background:rgba(34,197,94,0.12);color:#22C55E;border:1px solid rgba(34,197,94,0.25)}
-.rm-badge.inprog{background:rgba(249,115,22,0.12);color:#F97316;border:1px solid rgba(249,115,22,0.25)}
-.rm-badge.plan{background:rgba(59,130,246,0.12);color:#3B82F6;border:1px solid rgba(59,130,246,0.25)}
-.rm-section-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);font-weight:600;margin:14px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--border)}
-.rm-section-lbl:first-of-type{margin-top:2px}
-.rm-item{display:flex;align-items:flex-start;gap:9px;padding:6px 4px;cursor:pointer;border-radius:6px;transition:background 100ms;user-select:none}
-.rm-item:hover{background:var(--hover)}
-.rm-chk{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--border2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:background 150ms,border-color 150ms}
-.rm-chk.done{background:#22C55E;border-color:#22C55E}
+/* ── Roadmap v2 ── */
+/* Phase timeline */
+.rm-tl{display:flex;align-items:center;margin-bottom:28px;padding:0 4px}
+.rm-tl-node{display:flex;flex-direction:column;align-items:center;gap:7px;flex-shrink:0}
+.rm-tl-dot{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:0.5px;border:2px solid}
+.rm-tl-dot.green{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.rm-tl-dot.amber{background:var(--gold-bg);border-color:var(--gold);color:var(--gold)}
+.rm-tl-dot.blue{background:var(--teal-bg);border-color:var(--teal);color:var(--teal)}
+.rm-tl-lbl{font-size:10px;font-weight:500;color:var(--text2);white-space:nowrap;letter-spacing:0.2px}
+.rm-tl-seg{flex:1;height:1px;background:var(--border2);margin-bottom:24px;position:relative}
+.rm-tl-seg::after{content:'';position:absolute;right:-3px;top:-3px;width:7px;height:7px;border-top:1px solid var(--border2);border-right:1px solid var(--border2);transform:rotate(45deg)}
+/* Grid */
+.rm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+/* Column */
+.rm-col{border-radius:10px;overflow:hidden;border:1px solid var(--border2);background:var(--surface);display:flex;flex-direction:column}
+/* Column header */
+.rm-col-head{padding:20px 20px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;border-bottom:1px solid var(--border)}
+.rm-col-head.green{background:linear-gradient(135deg,rgba(74,124,89,0.1) 0%,rgba(74,124,89,0.02) 100%);border-bottom-color:var(--green-border)}
+.rm-col-head.amber{background:linear-gradient(135deg,rgba(176,141,91,0.12) 0%,rgba(176,141,91,0.02) 100%);border-bottom-color:var(--gold-border)}
+.rm-col-head.blue{background:linear-gradient(135deg,rgba(58,122,122,0.12) 0%,rgba(58,122,122,0.02) 100%);border-bottom-color:var(--teal-border)}
+.rm-col-phase{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;opacity:0.7}
+.rm-col-head.green .rm-col-phase{color:var(--green)}
+.rm-col-head.amber .rm-col-phase{color:var(--gold)}
+.rm-col-head.blue .rm-col-phase{color:var(--teal)}
+.rm-col-title{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--text);letter-spacing:0.3px;line-height:1.2}
+.rm-col-meta{font-size:10px;color:var(--text3);margin-top:6px}
+.rm-col-prog{height:2px;background:var(--border2);border-radius:1px;margin-top:10px;overflow:hidden}
+.rm-col-prog-fill{height:100%;border-radius:1px;transition:width 0.6s ease}
+.rm-col-head.green .rm-col-prog-fill{background:var(--green)}
+.rm-col-head.amber .rm-col-prog-fill{background:var(--gold)}
+.rm-col-head.blue .rm-col-prog-fill{background:var(--teal)}
+/* Badge */
+.rm-badge{font-size:9px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;padding:3px 9px;border-radius:20px;flex-shrink:0;white-space:nowrap}
+.rm-badge.live{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.rm-badge.inprog{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-border)}
+.rm-badge.plan{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-border)}
+/* Column body */
+.rm-col-body{flex:1;padding:14px 16px 16px}
+/* Category divider */
+.rm-cat{display:flex;align-items:center;gap:7px;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.rm-cat:first-child{margin-top:0}
+.rm-cat-ico{width:14px;height:14px;flex-shrink:0;color:var(--text3)}
+.rm-cat-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3)}
+/* Items */
+.rm-item{display:flex;align-items:flex-start;gap:9px;padding:5px 3px;cursor:pointer;border-radius:5px;transition:background 100ms;user-select:none}
+.rm-item:hover{background:var(--surface3)}
+.rm-chk{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--border2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 150ms}
+.rm-chk.done{background:var(--green);border-color:var(--green)}
 .rm-chk.done::after{content:'';display:block;width:6px;height:3.5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translate(0.5px,-0.5px)}
 .rm-item-txt{font-size:12px;color:var(--text2);line-height:1.5;font-weight:300;transition:color 150ms}
 .rm-item-txt.done{color:var(--text3);text-decoration:line-through}
-.rm-notes-hdr{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px}
-.rm-acc{border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;background:var(--card)}
-.rm-acc-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;cursor:pointer;transition:background 150ms}
-.rm-acc-hdr:hover{background:var(--hover)}
+/* Notes */
+.rm-notes-title{font-family:var(--serif);font-size:20px;font-weight:500;color:var(--text);margin-bottom:16px;letter-spacing:0.3px}
+.rm-acc{border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden;background:var(--surface)}
+.rm-acc-hdr{display:flex;align-items:center;gap:12px;padding:12px 18px;cursor:pointer;transition:background 150ms}
+.rm-acc-hdr:hover{background:var(--surface3)}
+.rm-acc-ico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;line-height:1}
+.rm-acc-ico.gold{background:var(--gold-bg);border:1px solid var(--gold-border)}
+.rm-acc-ico.green{background:var(--green-bg);border:1px solid var(--green-border)}
+.rm-acc-ico.purple{background:var(--purple-bg);border:1px solid var(--purple-border)}
+.rm-acc-ico.teal{background:var(--teal-bg);border:1px solid var(--teal-border)}
+.rm-acc-ico.red{background:var(--red-bg);border:1px solid var(--red-border)}
+.rm-acc-txt{flex:1;min-width:0}
 .rm-acc-title{font-size:13px;font-weight:500;color:var(--text)}
-.rm-acc-arrow{color:var(--text3);transition:transform 300ms ease;font-size:10px;flex-shrink:0;line-height:1}
+.rm-acc-preview{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.rm-acc-arrow{color:var(--text3);transition:transform 300ms ease;font-size:9px;flex-shrink:0}
 .rm-acc-arrow.open{transform:rotate(180deg)}
 .rm-acc-body{max-height:0;overflow:hidden;transition:max-height 320ms ease}
 .rm-acc-body.open{max-height:600px}
 .rm-acc-inner{padding:4px 18px 16px;font-size:12.5px;color:var(--text2);line-height:1.75;font-weight:300;border-top:1px solid var(--border)}
 .rm-acc-inner strong{color:var(--text);font-weight:500}
-.rm-acc-inner code{font-family:var(--mono,monospace);font-size:11px;background:var(--hover);padding:1px 5px;border-radius:3px}
-@media(max-width:900px){.rm-grid{grid-template-columns:1fr}}
+.rm-acc-inner code{font-family:monospace;font-size:11px;background:var(--surface3);padding:1px 5px;border-radius:3px;color:var(--text2)}
+@media(max-width:900px){.rm-grid{grid-template-columns:1fr}.rm-tl-seg{display:none}}
 </style>
 </head>
 <body>
@@ -963,80 +1000,145 @@ function toggleRmAcc(id){
 
 function renderRoadmap(){
   const C=getRmChecks();
+  const v1ids=['v1-t1','v1-t2','v1-t3','v1-t4','v1-t5','v1-t6','v1-t7','v1-t8','v1-t9','v1-g1','v1-g2','v1-g3','v1-g4'];
+  const q2ids=['q2-t1','q2-t2','q2-t3','q2-t4','q2-t5','q2-t6','q2-t7','q2-t8','q2-t9','q2-t10','q2-g1','q2-g2','q2-g3','q2-g4','q2-g5','q2-g6'];
+  const q34ids=['q34-t1','q34-t2','q34-t3','q34-t4','q34-t5','q34-t6','q34-g1','q34-g2','q34-g3','q34-g4','q34-g5','q34-g6'];
+  const v1d=v1ids.filter(id=>!!C[id]).length, v1p=Math.round(v1d/v1ids.length*100);
+  const q2d=q2ids.filter(id=>!!C[id]).length, q2p=Math.round(q2d/q2ids.length*100);
+  const q34d=q34ids.filter(id=>!!C[id]).length, q34p=Math.round(q34d/q34ids.length*100);
+
   function item(text,id){
     const done=!!C[id];
     return`<div class="rm-item" onclick="toggleRmItem('${id}')"><div class="rm-chk${done?' done':''}"></div><span class="rm-item-txt${done?' done':''}">${text}</span></div>`;
   }
-  function sl(t){return`<div class="rm-section-lbl">${t}</div>`;}
-  function acc(id,title,html){
-    return`<div class="rm-acc"><div class="rm-acc-hdr" onclick="toggleRmAcc('${id}')"><span class="rm-acc-title">${title}</span><span class="rm-acc-arrow" id="rm-arrow-${id}">▼</span></div><div class="rm-acc-body" id="rm-body-${id}"><div class="rm-acc-inner">${html}</div></div></div>`;
+  function cat(label,icon){
+    return`<div class="rm-cat"><svg class="rm-cat-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">${icon}</svg><span class="rm-cat-lbl">${label}</span></div>`;
   }
+  function ring(pct,color){
+    const r=17,circ=(2*Math.PI*r).toFixed(1),off=(circ*(1-pct/100)).toFixed(1);
+    return`<svg width="50" height="50" viewBox="0 0 48 48"><circle cx="24" cy="24" r="${r}" fill="none" stroke="${color}" stroke-width="2.5" opacity="0.18"/><circle cx="24" cy="24" r="${r}" fill="none" stroke="${color}" stroke-width="2.5" stroke-dasharray="${circ}" stroke-dashoffset="${off}" stroke-linecap="round" transform="rotate(-90 24 24)"/><text x="24" y="28" text-anchor="middle" fill="${color}" font-size="11" font-weight="600" font-family="DM Sans,sans-serif">${pct}%</text></svg>`;
+  }
+  function acc(id,title,ico,cls,preview,html){
+    return`<div class="rm-acc"><div class="rm-acc-hdr" onclick="toggleRmAcc('${id}')"><div class="rm-acc-ico ${cls}">${ico}</div><div class="rm-acc-txt"><div class="rm-acc-title">${title}</div><div class="rm-acc-preview">${preview}</div></div><span class="rm-acc-arrow" id="rm-arrow-${id}">▼</span></div><div class="rm-acc-body" id="rm-body-${id}"><div class="rm-acc-inner">${html}</div></div></div>`;
+  }
+  const icoT='<rect x="1" y="1" width="5" height="5" rx="1"/><rect x="10" y="1" width="5" height="5" rx="1"/><rect x="5.5" y="10" width="5" height="5" rx="1"/><path d="M3.5 6v2h9V6M8 8v2"/>';
+  const icoG='<path d="M2 12l3-4 3 2 3-5 3 3"/><rect x="1" y="1" width="14" height="14" rx="1.5"/>';
+
+  // ── Timeline ──
+  const tl=`<div class="rm-tl">
+    <div class="rm-tl-node"><div class="rm-tl-dot green">v1</div><div class="rm-tl-lbl">Nu — Live</div></div>
+    <div class="rm-tl-seg"></div>
+    <div class="rm-tl-node"><div class="rm-tl-dot amber">Q2</div><div class="rm-tl-lbl">Q2 2026</div></div>
+    <div class="rm-tl-seg"></div>
+    <div class="rm-tl-node"><div class="rm-tl-dot blue">Q3</div><div class="rm-tl-lbl">Q3–Q4 2026</div></div>
+  </div>`;
 
   // ── Kolonne 1: Nu — v1 ──
-  const col1=`<div class="rm-col"><div class="rm-col-bar green"></div><div class="rm-col-inner">
-    <div class="rm-col-hdr"><span class="rm-col-title">Nu — v1</span><span class="rm-badge live">● LIVE</span></div>
-    ${sl('Teknisk')}
-    ${item('Voice pipeline (Groq STT → GPT-4o-mini → ElevenLabs Flash v2.5)','v1-t1')}
-    ${item('Matterport iframe navigation via sweepId','v1-t2')}
-    ${item('Room mappings og navigate_to_room tool','v1-t3')}
-    ${item('Conversation state machine (greeting → qualifying → recommending → closing)','v1-t4')}
-    ${item('trigger_conversion booking flow','v1-t5')}
-    ${item('Client portal med analytics, data upload og embed kode','v1-t6')}
-    ${item('Affiliate system med ref-links og kommission','v1-t7')}
-    ${item('Stripe billing med pakker og overage','v1-t8')}
-    ${item('Provider broker dashboard','v1-t9')}
-    ${sl('Go-to-market')}
-    ${item('Proof of concept på Park Lane Hotel','v1-g1')}
-    ${item('Iframe-baseret integration (ingen SDK)','v1-g2')}
-    ${item('Direkte outreach til Matterport brokers via LinkedIn','v1-g3')}
-    ${item('Affiliate model — broker sender link, tjener 25% recurring','v1-g4')}
-  </div></div>`;
+  const col1=`<div class="rm-col">
+    <div class="rm-col-head green">
+      <div style="flex:1;min-width:0">
+        <div class="rm-col-phase">Fase 1</div>
+        <div class="rm-col-title">Nu — v1</div>
+        <div class="rm-col-meta">${v1d} af ${v1ids.length} færdige</div>
+        <div class="rm-col-prog"><div class="rm-col-prog-fill" style="width:${v1p}%"></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span class="rm-badge live">● LIVE</span>
+        ${ring(v1p,'var(--green)')}
+      </div>
+    </div>
+    <div class="rm-col-body">
+      ${cat('Teknisk',icoT)}
+      ${item('Voice pipeline (Groq STT → GPT-4o-mini → ElevenLabs Flash v2.5)','v1-t1')}
+      ${item('Matterport iframe navigation via sweepId','v1-t2')}
+      ${item('Room mappings og navigate_to_room tool','v1-t3')}
+      ${item('Conversation state machine (greeting → qualifying → recommending → closing)','v1-t4')}
+      ${item('trigger_conversion booking flow','v1-t5')}
+      ${item('Client portal med analytics, data upload og embed kode','v1-t6')}
+      ${item('Affiliate system med ref-links og kommission','v1-t7')}
+      ${item('Stripe billing med pakker og overage','v1-t8')}
+      ${item('Provider broker dashboard','v1-t9')}
+      ${cat('Go-to-market',icoG)}
+      ${item('Proof of concept på Park Lane Hotel','v1-g1')}
+      ${item('Iframe-baseret integration (ingen SDK)','v1-g2')}
+      ${item('Direkte outreach til Matterport brokers via LinkedIn','v1-g3')}
+      ${item('Affiliate model — broker sender link, tjener 25% recurring','v1-g4')}
+    </div>
+  </div>`;
 
   // ── Kolonne 2: Q2 2026 ──
-  const col2=`<div class="rm-col"><div class="rm-col-bar amber"></div><div class="rm-col-inner">
-    <div class="rm-col-hdr"><span class="rm-col-title">Q2 2026</span><span class="rm-badge inprog">● I GANG</span></div>
-    ${sl('Teknisk')}
-    ${item('Dobbeltsvar bug permanent fix','q2-t1')}
-    ${item('Silence timer der trigger after 20s','q2-t2')}
-    ${item('Per-user API keys (BYOK for enterprise)','q2-t3')}
-    ${item('Europæisk Railway hosting (Frankfurt)','q2-t4')}
-    ${item('White-label support per broker','q2-t5')}
-    ${item('Matterport SDK integration til pilot-broker','q2-t6')}
-    ${item('Conversation replay i dashboard','q2-t7')}
-    ${item('PDF rapport download','q2-t8')}
-    ${item('Lead capture CSV export','q2-t9')}
-    ${item('Webhook til broker CRM','q2-t10')}
-    ${sl('Go-to-market')}
-    ${item('10 betalende kunder','q2-g1')}
-    ${item('Første broker-partner onboardet','q2-g2')}
-    ${item('Affiliate landing page live med demo video','q2-g3')}
-    ${item('Kontakt Matterport partnerships@matterport.com med proof of concept og data','q2-g4')}
-    ${item('Årsabonnement tilbud (2 mdr gratis)','q2-g5')}
-    ${item('Overage monetisering aktivt','q2-g6')}
-  </div></div>`;
+  const col2=`<div class="rm-col">
+    <div class="rm-col-head amber">
+      <div style="flex:1;min-width:0">
+        <div class="rm-col-phase">Fase 2</div>
+        <div class="rm-col-title">Q2 2026</div>
+        <div class="rm-col-meta">${q2d} af ${q2ids.length} færdige</div>
+        <div class="rm-col-prog"><div class="rm-col-prog-fill" style="width:${q2p}%"></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span class="rm-badge inprog">● I GANG</span>
+        ${ring(q2p,'var(--gold)')}
+      </div>
+    </div>
+    <div class="rm-col-body">
+      ${cat('Teknisk',icoT)}
+      ${item('Dobbeltsvar bug permanent fix','q2-t1')}
+      ${item('Silence timer der trigger after 20s','q2-t2')}
+      ${item('Per-user API keys (BYOK for enterprise)','q2-t3')}
+      ${item('Europæisk Railway hosting (Frankfurt)','q2-t4')}
+      ${item('White-label support per broker','q2-t5')}
+      ${item('Matterport SDK integration til pilot-broker','q2-t6')}
+      ${item('Conversation replay i dashboard','q2-t7')}
+      ${item('PDF rapport download','q2-t8')}
+      ${item('Lead capture CSV export','q2-t9')}
+      ${item('Webhook til broker CRM','q2-t10')}
+      ${cat('Go-to-market',icoG)}
+      ${item('10 betalende kunder','q2-g1')}
+      ${item('Første broker-partner onboardet','q2-g2')}
+      ${item('Affiliate landing page live med demo video','q2-g3')}
+      ${item('Kontakt Matterport partnerships@matterport.com med proof of concept og data','q2-g4')}
+      ${item('Årsabonnement tilbud (2 mdr gratis)','q2-g5')}
+      ${item('Overage monetisering aktivt','q2-g6')}
+    </div>
+  </div>`;
 
-  // ── Kolonne 3: Q3-Q4 2026 ──
-  const col3=`<div class="rm-col"><div class="rm-col-bar blue"></div><div class="rm-col-inner">
-    <div class="rm-col-hdr"><span class="rm-col-title">Q3–Q4 2026</span><span class="rm-badge plan">● PLANLAGT</span></div>
-    ${sl('Teknisk')}
-    ${item('Matterport marketplace listing','q34-t1')}
-    ${item('Multi-sprog system prompt (DA/DE/FR)','q34-t2')}
-    ${item('Conversation quality scoring','q34-t3')}
-    ${item('A/B test af system prompt varianter','q34-t4')}
-    ${item('ElevenLabs concurrent limit håndtering ved scale','q34-t5')}
-    ${item('Webhook system til PMS integration (Opera, Mews)','q34-t6')}
-    ${sl('Go-to-market')}
-    ${item('50+ betalende kunder','q34-g1')}
-    ${item('Nordisk ekspansion (SE, NO, FI)','q34-g2')}
-    ${item('UK marked','q34-g3')}
-    ${item('Revenue share aftale med Matterport','q34-g4')}
-    ${item('Case studies og testimonials fra tidlige kunder','q34-g5')}
-    ${item('Meta ads skaleres op baseret på bevist CAC','q34-g6')}
-  </div></div>`;
+  // ── Kolonne 3: Q3–Q4 2026 ──
+  const col3=`<div class="rm-col">
+    <div class="rm-col-head blue">
+      <div style="flex:1;min-width:0">
+        <div class="rm-col-phase">Fase 3</div>
+        <div class="rm-col-title">Q3–Q4 2026</div>
+        <div class="rm-col-meta">${q34d} af ${q34ids.length} færdige</div>
+        <div class="rm-col-prog"><div class="rm-col-prog-fill" style="width:${q34p}%"></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span class="rm-badge plan">● PLANLAGT</span>
+        ${ring(q34p,'var(--teal)')}
+      </div>
+    </div>
+    <div class="rm-col-body">
+      ${cat('Teknisk',icoT)}
+      ${item('Matterport marketplace listing','q34-t1')}
+      ${item('Multi-sprog system prompt (DA/DE/FR)','q34-t2')}
+      ${item('Conversation quality scoring','q34-t3')}
+      ${item('A/B test af system prompt varianter','q34-t4')}
+      ${item('ElevenLabs concurrent limit håndtering ved scale','q34-t5')}
+      ${item('Webhook system til PMS integration (Opera, Mews)','q34-t6')}
+      ${cat('Go-to-market',icoG)}
+      ${item('50+ betalende kunder','q34-g1')}
+      ${item('Nordisk ekspansion (SE, NO, FI)','q34-g2')}
+      ${item('UK marked','q34-g3')}
+      ${item('Revenue share aftale med Matterport','q34-g4')}
+      ${item('Case studies og testimonials fra tidlige kunder','q34-g5')}
+      ${item('Meta ads skaleres op baseret på bevist CAC','q34-g6')}
+    </div>
+  </div>`;
 
   // ── Strategiske noter ──
-  const notes=`<div><div class="rm-notes-hdr">Strategiske overvejelser</div>
-    ${acc('gtm','Go-to-market: Affiliate model',
+  const notes=`<div>
+    <div class="rm-notes-title">Strategiske overvejelser</div>
+    ${acc('gtm','Go-to-market: Affiliate model','🤝','gold',
+      'Broker sender ét link — vi håndterer alt. 25% recurring passivt.',
       `Primær kanal er Matterport brokers som affiliates. Brokeren sender ét link til deres hotelkunde — vi håndterer alt: betaling, support, onboarding.<br>
       Brokeren tjener <strong>25% recurring kommission</strong> passivt.<br><br>
       En broker med 20 hotelkunder på Growth-pakken tjener <strong>~$1.495/md</strong> uden aktiv indsats.<br><br>
@@ -1045,20 +1147,23 @@ function renderRoadmap(){
       · Hotel skifter broker — vi mister kunden<br><br>
       <strong>Løsning:</strong> Hotellet er vores direkte kunde. Brokeren mister kun kommission, ikke kunden.`
     )}
-    ${acc('sdk','Matterport SDK og licensing',
+    ${acc('sdk','Matterport SDK og licensing','🗺️','green',
+      'Iframe-integration kræver ingen SDK-licens. Kontakt partnerships fra en position af styrke.',
       `Nuværende integration bruger offentlig iframe embed og sweepId URL-parameter. Kræver <strong>ingen SDK-licens</strong>.<br>
       SDK ville give programmatisk kamera-styring og overlays — men er ikke nødvendigt for v1.<br><br>
       <strong>Strategi:</strong> Byg proof of concept uden SDK. Når vi har betalende kunder og data, kontakt <code>partnerships@matterport.com</code> fra en position af styrke.<br><br>
       Matterport kræver revenue share for kommerciel SDK-brug — typisk <strong>10–20% af omsætning</strong>.<br>
       <strong>Upside:</strong> Matterport marketplace listing og eksponering mod ~600.000 brugere.`
     )}
-    ${acc('konkurrence','Konkurrencesituation',
+    ${acc('konkurrence','Konkurrencesituation','🎯','purple',
+      'Ingen konkurrent navigerer i Matterport. Moat = integrationen, ikke teknologien.',
       `Generiske voice agent platforme (ElevenLabs Agents, Bland AI, Synthflow, Retell) kan ikke navigere i Matterport, har ingen room mappings og ingen booking-flow integration.<br><br>
       <strong>Vores moat er ikke teknologien men integrationen</strong> — vi er den eneste voice agent der lever inde i en Matterport tour og handler i den.<br><br>
       <strong>Primær risiko:</strong> Matterport bygger det selv. De har platformen, distributionen og SDK-nøglerne.<br>
       <strong>Mitigation:</strong> Kom til markedet hurtigt og byg broker-relationer inden Matterport eventuelt lancerer konkurrerende produkt.`
     )}
-    ${acc('scaling','API skalering og concurrent limits',
+    ${acc('scaling','API skalering og concurrent limits','⚡','teal',
+      'Creator: 5 streams → ~10 kunder. BYOK løser enterprise. Ikke et problem nu.',
       `<strong>ElevenLabs Flash v2.5 concurrent streams:</strong><br>
       · Creator (nu): 5 streams — dækker til ~10 kunder<br>
       · Pro $99: 10 streams — dækker til ~50 kunder<br>
@@ -1068,7 +1173,8 @@ function renderRoadmap(){
       BYOK (bring your own key) løser problemet for enterprise brokers — de skalerer selv.<br>
       <strong>Ikke et problem ved nuværende stadie.</strong>`
     )}
-    ${acc('ue','Økonomi og unit economics',
+    ${acc('ue','Økonomi og unit economics','📊','gold',
+      'Margin ~97% · LTV:CAC 52x · Breakeven ved 3–4 kunder.',
       `Cost per voice minut: <strong>$0.011</strong> (GPT + Groq + ElevenLabs)<br>
       Salgspris Starter: 1.000 kr / 300 min = 3.33 kr/min<br>
       Margin på basisabonnement: <strong>~97%</strong><br>
@@ -1078,7 +1184,8 @@ function renderRoadmap(){
       LTV ved 5% churn og $130 avg MRR: <strong>~$2.600</strong><br>
       LTV:CAC ved $50 CAC: <strong>52x</strong>`
     )}
-    ${acc('juridisk','Juridisk og compliance',
+    ${acc('juridisk','Juridisk og compliance','⚖️','red',
+      'Privatlivspolitik, DPA, TOS og GDPR inden første betalende kunde.',
       `<strong>Prioritet inden første betalende kunde:</strong><br>
       · Privatlivspolitik på plads<br>
       · Databehandleraftale template til brokers<br>
@@ -1090,7 +1197,7 @@ function renderRoadmap(){
     )}
   </div>`;
 
-  return`<div class="rm-grid">${col1}${col2}${col3}</div>${notes}`;
+  return`${tl}<div class="rm-grid">${col1}${col2}${col3}</div>${notes}`;
 }
 
 init();
