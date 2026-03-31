@@ -296,57 +296,22 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
-/* ── Roadmap v2 ── */
-/* Phase timeline */
-.rm-tl{display:flex;align-items:center;margin-bottom:28px;padding:0 4px}
-.rm-tl-node{display:flex;flex-direction:column;align-items:center;gap:7px;flex-shrink:0}
-.rm-tl-dot{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:0.5px;border:2px solid}
-.rm-tl-dot.green{background:var(--green-bg);border-color:var(--green);color:var(--green)}
-.rm-tl-dot.amber{background:var(--gold-bg);border-color:var(--gold);color:var(--gold)}
-.rm-tl-dot.blue{background:var(--teal-bg);border-color:var(--teal);color:var(--teal)}
-.rm-tl-lbl{font-size:10px;font-weight:500;color:var(--text2);white-space:nowrap;letter-spacing:0.2px}
-.rm-tl-seg{flex:1;height:1px;background:var(--border2);margin-bottom:24px;position:relative}
-.rm-tl-seg::after{content:'';position:absolute;right:-3px;top:-3px;width:7px;height:7px;border-top:1px solid var(--border2);border-right:1px solid var(--border2);transform:rotate(45deg)}
-/* Grid */
-.rm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
-/* Column */
-.rm-col{border-radius:10px;overflow:hidden;border:1px solid var(--border2);background:var(--surface);display:flex;flex-direction:column}
-/* Column header */
-.rm-col-head{padding:20px 20px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;border-bottom:1px solid var(--border)}
-.rm-col-head.green{background:linear-gradient(135deg,rgba(74,124,89,0.1) 0%,rgba(74,124,89,0.02) 100%);border-bottom-color:var(--green-border)}
-.rm-col-head.amber{background:linear-gradient(135deg,rgba(176,141,91,0.12) 0%,rgba(176,141,91,0.02) 100%);border-bottom-color:var(--gold-border)}
-.rm-col-head.blue{background:linear-gradient(135deg,rgba(58,122,122,0.12) 0%,rgba(58,122,122,0.02) 100%);border-bottom-color:var(--teal-border)}
-.rm-col-phase{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;opacity:0.7}
-.rm-col-head.green .rm-col-phase{color:var(--green)}
-.rm-col-head.amber .rm-col-phase{color:var(--gold)}
-.rm-col-head.blue .rm-col-phase{color:var(--teal)}
-.rm-col-title{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--text);letter-spacing:0.3px;line-height:1.2}
-.rm-col-meta{font-size:10px;color:var(--text3);margin-top:6px}
-.rm-col-prog{height:2px;background:var(--border2);border-radius:1px;margin-top:10px;overflow:hidden}
-.rm-col-prog-fill{height:100%;border-radius:1px;transition:width 0.6s ease}
-.rm-col-head.green .rm-col-prog-fill{background:var(--green)}
-.rm-col-head.amber .rm-col-prog-fill{background:var(--gold)}
-.rm-col-head.blue .rm-col-prog-fill{background:var(--teal)}
-/* Badge */
-.rm-badge{font-size:9px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;padding:3px 9px;border-radius:20px;flex-shrink:0;white-space:nowrap}
-.rm-badge.live{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
-.rm-badge.inprog{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-border)}
-.rm-badge.plan{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-border)}
-/* Column body */
-.rm-col-body{flex:1;padding:14px 16px 16px}
-/* Category divider */
-.rm-cat{display:flex;align-items:center;gap:7px;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.rm-cat:first-child{margin-top:0}
-.rm-cat-ico{width:14px;height:14px;flex-shrink:0;color:var(--text3)}
-.rm-cat-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3)}
-/* Items */
-.rm-item{display:flex;align-items:flex-start;gap:9px;padding:5px 3px;cursor:pointer;border-radius:5px;transition:background 100ms;user-select:none}
-.rm-item:hover{background:var(--surface3)}
-.rm-chk{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--border2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 150ms}
-.rm-chk.done{background:var(--green);border-color:var(--green)}
-.rm-chk.done::after{content:'';display:block;width:6px;height:3.5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translate(0.5px,-0.5px)}
-.rm-item-txt{font-size:12px;color:var(--text2);line-height:1.5;font-weight:300;transition:color 150ms}
-.rm-item-txt.done{color:var(--text3);text-decoration:line-through}
+/* ── Roadmap Snake ── */
+.rm-snake-outer{max-width:700px;margin:0 auto 40px}
+.rm-snake-wrap{position:relative;padding-top:197.14%}
+.rm-snake-svg{position:absolute;top:0;left:0;width:100%;height:100%;overflow:visible}
+.rm-ms-card{position:absolute;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:15px 18px;width:65%;transform:translateY(-50%);box-shadow:0 1px 4px rgba(60,45,30,0.06)}
+.rm-ms-card.right{left:2%}
+.rm-ms-card.left{right:2%}
+.rm-ms-time{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1.8px;margin-bottom:6px}
+.rm-ms-title{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--text);line-height:1.2;margin-bottom:8px;letter-spacing:0.2px}
+.rm-ms-text{font-size:12px;color:var(--text2);line-height:1.65;font-weight:300;margin-bottom:12px}
+.rm-ms-badge{display:inline-flex;align-items:center;font-size:9px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid}
+.rm-ms-badge.live{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.rm-ms-badge.inprog{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-border)}
+.rm-ms-badge.plan{background:var(--teal-bg);color:var(--teal);border-color:var(--teal-border)}
+.rm-ms-badge.plan2{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-border)}
+.rm-ms-badge.goal{background:var(--pink-bg);color:var(--pink);border-color:var(--pink-border)}
 /* Notes */
 .rm-notes-title{font-family:var(--serif);font-size:20px;font-weight:500;color:var(--text);margin-bottom:16px;letter-spacing:0.3px}
 .rm-acc{border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden;background:var(--surface)}
@@ -368,7 +333,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .rm-acc-inner{padding:4px 18px 16px;font-size:12.5px;color:var(--text2);line-height:1.75;font-weight:300;border-top:1px solid var(--border)}
 .rm-acc-inner strong{color:var(--text);font-weight:500}
 .rm-acc-inner code{font-family:monospace;font-size:11px;background:var(--surface3);padding:1px 5px;border-radius:3px;color:var(--text2)}
-@media(max-width:900px){.rm-grid{grid-template-columns:1fr}.rm-tl-seg{display:none}}
+@media(max-width:600px){.rm-ms-card{width:72%}.rm-snake-outer{max-width:100%}}
 </style>
 </head>
 <body>
@@ -999,142 +964,82 @@ function toggleRmAcc(id){
 }
 
 function renderRoadmap(){
-  const C=getRmChecks();
-  const v1ids=['v1-t1','v1-t2','v1-t3','v1-t4','v1-t5','v1-t6','v1-t7','v1-t8','v1-t9','v1-g1','v1-g2','v1-g3','v1-g4'];
-  const q2ids=['q2-t1','q2-t2','q2-t3','q2-t4','q2-t5','q2-t6','q2-t7','q2-t8','q2-t9','q2-t10','q2-g1','q2-g2','q2-g3','q2-g4','q2-g5','q2-g6'];
-  const q34ids=['q34-t1','q34-t2','q34-t3','q34-t4','q34-t5','q34-t6','q34-g1','q34-g2','q34-g3','q34-g4','q34-g5','q34-g6'];
-  const v1d=v1ids.filter(id=>!!C[id]).length, v1p=Math.round(v1d/v1ids.length*100);
-  const q2d=q2ids.filter(id=>!!C[id]).length, q2p=Math.round(q2d/q2ids.length*100);
-  const q34d=q34ids.filter(id=>!!C[id]).length, q34p=Math.round(q34d/q34ids.length*100);
+  // SVG canvas: 700 wide, 1380 tall
+  const W=700, H=1380, xR=530, xL=170, xC=350, R=30;
 
-  function item(text,id){
-    const done=!!C[id];
-    return`<div class="rm-item" onclick="toggleRmItem('${id}')"><div class="rm-chk${done?' done':''}"></div><span class="rm-item-txt${done?' done':''}">${text}</span></div>`;
-  }
-  function cat(label,icon){
-    return`<div class="rm-cat"><svg class="rm-cat-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">${icon}</svg><span class="rm-cat-lbl">${label}</span></div>`;
-  }
-  function ring(pct,color){
-    const r=17,circ=(2*Math.PI*r).toFixed(1),off=(circ*(1-pct/100)).toFixed(1);
-    return`<svg width="50" height="50" viewBox="0 0 48 48"><circle cx="24" cy="24" r="${r}" fill="none" stroke="${color}" stroke-width="2.5" opacity="0.18"/><circle cx="24" cy="24" r="${r}" fill="none" stroke="${color}" stroke-width="2.5" stroke-dasharray="${circ}" stroke-dashoffset="${off}" stroke-linecap="round" transform="rotate(-90 24 24)"/><text x="24" y="28" text-anchor="middle" fill="${color}" font-size="11" font-weight="600" font-family="DM Sans,sans-serif">${pct}%</text></svg>`;
-  }
+  const ms=[
+    {y:220, x:xR, side:'right', c:'#4A7C59',
+     time:'Nu · Live',     title:'Proof of Concept',
+     text:'Voice agent på Park Lane Hotel. Iframe-integration uden SDK. Første samtaler og bookings i gang.',
+     badge:'live', btxt:'● LIVE'},
+    {y:480, x:xL, side:'left',  c:'#B08D5B',
+     time:'Q2 2026',       title:'Første betalende kunder',
+     text:'10 betalende kunder via LinkedIn og affiliate outreach til Matterport brokers. Affiliate system og client portal live. Bevis at modellen virker kommercielt.',
+     badge:'inprog', btxt:'● I GANG'},
+    {y:740, x:xR, side:'right', c:'#3A7A7A',
+     time:'Q2–Q3 2026',    title:'Matterport Partnership',
+     text:'Kontakt partnerships@matterport.com med bevist data — samtaler, konverteringer, kunder. Forhandl revenue share og SDK-adgang. Potentiel marketplace listing mod 600.000 brugere.',
+     badge:'plan', btxt:'● PLANLAGT'},
+    {y:1000,x:xL, side:'left',  c:'#6B5B8A',
+     time:'Q3 2026',       title:'Nordisk Skalering',
+     text:'50+ kunder. Officiel SDK-integration der giver dybere Matterport-kontrol. White-label til brokers. Ekspansion til Sverige, Norge og UK.',
+     badge:'plan2', btxt:'● PLANLAGT'},
+    {y:1260,x:xR, side:'right', c:'#9B5A6A',
+     time:'Q4 2026',       title:'Profitabilitet & Vækst',
+     text:'100+ kunder. Meta ads skaleres baseret på bevist CAC. Revenue share aftale aktiv med Matterport. Case studies og testimonials fra tidlige kunder. Nordisk markedsleder.',
+     badge:'goal', btxt:'● MÅL'},
+  ];
+
+  // Snake path: start at top center, curve to each milestone
+  const path=[
+    `M ${xC},0`,
+    `C ${xC},110 ${xR},130 ${xR},${ms[0].y}`,   // → M1 right
+    `C ${xR},310 ${xL},370 ${xL},${ms[1].y}`,   // M1 → M2 left
+    `C ${xL},590 ${xR},650 ${xR},${ms[2].y}`,   // M2 → M3 right
+    `C ${xR},830 ${xL},890 ${xL},${ms[3].y}`,   // M3 → M4 left
+    `C ${xL},1110 ${xR},1170 ${xR},${ms[4].y}`, // M4 → M5 right
+    `C ${xR},1330 ${xC},${H} ${xC},${H}`,       // M5 → end
+  ].join(' ');
+
+  let svg=`<svg class="rm-snake-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">`;
+  svg+=`<defs><filter id="rshadow"><feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="rgba(60,45,30,0.12)"/></filter></defs>`;
+  // Road: dark edge, then fill
+  svg+=`<path d="${path}" stroke="rgba(60,45,30,0.07)" stroke-width="96" fill="none" stroke-linecap="round"/>`;
+  svg+=`<path d="${path}" stroke="#E8E4DC" stroke-width="88" fill="none" stroke-linecap="round" filter="url(#rshadow)"/>`;
+  // Dashed centre line
+  svg+=`<path d="${path}" stroke="rgba(255,255,255,0.8)" stroke-width="2.5" fill="none" stroke-dasharray="10 7" stroke-linecap="round"/>`;
+
+  ms.forEach((m,i)=>{
+    // Glow rings
+    svg+=`<circle cx="${m.x}" cy="${m.y}" r="${R+16}" fill="${m.c}" opacity="0.1"/>`;
+    svg+=`<circle cx="${m.x}" cy="${m.y}" r="${R+7}" fill="${m.c}" opacity="0.18"/>`;
+    // Circle
+    svg+=`<circle cx="${m.x}" cy="${m.y}" r="${R}" fill="${m.c}"/>`;
+    // Number
+    svg+=`<text x="${m.x}" y="${m.y+5}" text-anchor="middle" fill="white" font-size="15" font-weight="700" font-family="DM Sans,sans-serif">${i+1}</text>`;
+    // Short dashed connector from circle to card edge
+    const cx1=m.side==='right'?m.x-R-2:m.x+R+2;
+    const cx2=m.side==='right'?W*0.655:W*0.345;
+    svg+=`<line x1="${cx1}" y1="${m.y}" x2="${cx2}" y2="${m.y}" stroke="${m.c}" stroke-width="1.5" opacity="0.35" stroke-dasharray="4 3"/>`;
+  });
+  svg+=`</svg>`;
+
+  // Absolutely positioned content cards (% coords match SVG viewBox ratio)
+  let cards='';
+  ms.forEach(m=>{
+    const topPct=((m.y/H)*100).toFixed(2);
+    cards+=`<div class="rm-ms-card ${m.side}" style="top:${topPct}%">
+      <div class="rm-ms-time" style="color:${m.c}">${m.time}</div>
+      <div class="rm-ms-title">${m.title}</div>
+      <div class="rm-ms-text">${m.text}</div>
+      <span class="rm-ms-badge ${m.badge}">${m.btxt}</span>
+    </div>`;
+  });
+
+  // Strategic notes accordion
   function acc(id,title,ico,cls,preview,html){
     return`<div class="rm-acc"><div class="rm-acc-hdr" onclick="toggleRmAcc('${id}')"><div class="rm-acc-ico ${cls}">${ico}</div><div class="rm-acc-txt"><div class="rm-acc-title">${title}</div><div class="rm-acc-preview">${preview}</div></div><span class="rm-acc-arrow" id="rm-arrow-${id}">▼</span></div><div class="rm-acc-body" id="rm-body-${id}"><div class="rm-acc-inner">${html}</div></div></div>`;
   }
-  const icoT='<rect x="1" y="1" width="5" height="5" rx="1"/><rect x="10" y="1" width="5" height="5" rx="1"/><rect x="5.5" y="10" width="5" height="5" rx="1"/><path d="M3.5 6v2h9V6M8 8v2"/>';
-  const icoG='<path d="M2 12l3-4 3 2 3-5 3 3"/><rect x="1" y="1" width="14" height="14" rx="1.5"/>';
-
-  // ── Timeline ──
-  const tl=`<div class="rm-tl">
-    <div class="rm-tl-node"><div class="rm-tl-dot green">v1</div><div class="rm-tl-lbl">Nu — Live</div></div>
-    <div class="rm-tl-seg"></div>
-    <div class="rm-tl-node"><div class="rm-tl-dot amber">Q2</div><div class="rm-tl-lbl">Q2 2026</div></div>
-    <div class="rm-tl-seg"></div>
-    <div class="rm-tl-node"><div class="rm-tl-dot blue">Q3</div><div class="rm-tl-lbl">Q3–Q4 2026</div></div>
-  </div>`;
-
-  // ── Kolonne 1: Nu — v1 ──
-  const col1=`<div class="rm-col">
-    <div class="rm-col-head green">
-      <div style="flex:1;min-width:0">
-        <div class="rm-col-phase">Fase 1</div>
-        <div class="rm-col-title">Nu — v1</div>
-        <div class="rm-col-meta">${v1d} af ${v1ids.length} færdige</div>
-        <div class="rm-col-prog"><div class="rm-col-prog-fill" style="width:${v1p}%"></div></div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-        <span class="rm-badge live">● LIVE</span>
-        ${ring(v1p,'var(--green)')}
-      </div>
-    </div>
-    <div class="rm-col-body">
-      ${cat('Teknisk',icoT)}
-      ${item('Voice pipeline (Groq STT → GPT-4o-mini → ElevenLabs Flash v2.5)','v1-t1')}
-      ${item('Matterport iframe navigation via sweepId','v1-t2')}
-      ${item('Room mappings og navigate_to_room tool','v1-t3')}
-      ${item('Conversation state machine (greeting → qualifying → recommending → closing)','v1-t4')}
-      ${item('trigger_conversion booking flow','v1-t5')}
-      ${item('Client portal med analytics, data upload og embed kode','v1-t6')}
-      ${item('Affiliate system med ref-links og kommission','v1-t7')}
-      ${item('Stripe billing med pakker og overage','v1-t8')}
-      ${item('Provider broker dashboard','v1-t9')}
-      ${cat('Go-to-market',icoG)}
-      ${item('Proof of concept på Park Lane Hotel','v1-g1')}
-      ${item('Iframe-baseret integration (ingen SDK)','v1-g2')}
-      ${item('Direkte outreach til Matterport brokers via LinkedIn','v1-g3')}
-      ${item('Affiliate model — broker sender link, tjener 25% recurring','v1-g4')}
-    </div>
-  </div>`;
-
-  // ── Kolonne 2: Q2 2026 ──
-  const col2=`<div class="rm-col">
-    <div class="rm-col-head amber">
-      <div style="flex:1;min-width:0">
-        <div class="rm-col-phase">Fase 2</div>
-        <div class="rm-col-title">Q2 2026</div>
-        <div class="rm-col-meta">${q2d} af ${q2ids.length} færdige</div>
-        <div class="rm-col-prog"><div class="rm-col-prog-fill" style="width:${q2p}%"></div></div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-        <span class="rm-badge inprog">● I GANG</span>
-        ${ring(q2p,'var(--gold)')}
-      </div>
-    </div>
-    <div class="rm-col-body">
-      ${cat('Teknisk',icoT)}
-      ${item('Dobbeltsvar bug permanent fix','q2-t1')}
-      ${item('Silence timer der trigger after 20s','q2-t2')}
-      ${item('Per-user API keys (BYOK for enterprise)','q2-t3')}
-      ${item('Europæisk Railway hosting (Frankfurt)','q2-t4')}
-      ${item('White-label support per broker','q2-t5')}
-      ${item('Matterport SDK integration til pilot-broker','q2-t6')}
-      ${item('Conversation replay i dashboard','q2-t7')}
-      ${item('PDF rapport download','q2-t8')}
-      ${item('Lead capture CSV export','q2-t9')}
-      ${item('Webhook til broker CRM','q2-t10')}
-      ${cat('Go-to-market',icoG)}
-      ${item('10 betalende kunder','q2-g1')}
-      ${item('Første broker-partner onboardet','q2-g2')}
-      ${item('Affiliate landing page live med demo video','q2-g3')}
-      ${item('Kontakt Matterport partnerships@matterport.com med proof of concept og data','q2-g4')}
-      ${item('Årsabonnement tilbud (2 mdr gratis)','q2-g5')}
-      ${item('Overage monetisering aktivt','q2-g6')}
-    </div>
-  </div>`;
-
-  // ── Kolonne 3: Q3–Q4 2026 ──
-  const col3=`<div class="rm-col">
-    <div class="rm-col-head blue">
-      <div style="flex:1;min-width:0">
-        <div class="rm-col-phase">Fase 3</div>
-        <div class="rm-col-title">Q3–Q4 2026</div>
-        <div class="rm-col-meta">${q34d} af ${q34ids.length} færdige</div>
-        <div class="rm-col-prog"><div class="rm-col-prog-fill" style="width:${q34p}%"></div></div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-        <span class="rm-badge plan">● PLANLAGT</span>
-        ${ring(q34p,'var(--teal)')}
-      </div>
-    </div>
-    <div class="rm-col-body">
-      ${cat('Teknisk',icoT)}
-      ${item('Matterport marketplace listing','q34-t1')}
-      ${item('Multi-sprog system prompt (DA/DE/FR)','q34-t2')}
-      ${item('Conversation quality scoring','q34-t3')}
-      ${item('A/B test af system prompt varianter','q34-t4')}
-      ${item('ElevenLabs concurrent limit håndtering ved scale','q34-t5')}
-      ${item('Webhook system til PMS integration (Opera, Mews)','q34-t6')}
-      ${cat('Go-to-market',icoG)}
-      ${item('50+ betalende kunder','q34-g1')}
-      ${item('Nordisk ekspansion (SE, NO, FI)','q34-g2')}
-      ${item('UK marked','q34-g3')}
-      ${item('Revenue share aftale med Matterport','q34-g4')}
-      ${item('Case studies og testimonials fra tidlige kunder','q34-g5')}
-      ${item('Meta ads skaleres op baseret på bevist CAC','q34-g6')}
-    </div>
-  </div>`;
-
-  // ── Strategiske noter ──
   const notes=`<div>
     <div class="rm-notes-title">Strategiske overvejelser</div>
     ${acc('gtm','Go-to-market: Affiliate model','🤝','gold',
@@ -1197,7 +1102,7 @@ function renderRoadmap(){
     )}
   </div>`;
 
-  return`${tl}<div class="rm-grid">${col1}${col2}${col3}</div>${notes}`;
+  return`<div class="rm-snake-outer"><div class="rm-snake-wrap">${svg}${cards}</div></div>${notes}`;
 }
 
 init();
