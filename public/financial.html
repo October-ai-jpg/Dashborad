@@ -380,7 +380,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
           <div class="kpi-sub" id="ks-arr">—</div>
         </div>
         <div class="kpi-card" id="kc-gm">
-          <div class="kpi-lbl">Gross Margin <span class="tip">?<span class="tip-box">Omsætning minus direkte variable costs: API, ElevenLabs og infrastruktur. Eksklusive salg og marketing.</span></span></div>
+          <div class="kpi-lbl">Gross Margin <span class="tip">?<span class="tip-box">Omsætning minus direkte variable costs: API (GPT+Deepgram+Cartesia) og infrastruktur. Eksklusive salg og marketing.</span></span></div>
           <div class="kpi-val" id="kv-gm">—</div>
           <div class="kpi-sub" id="ks-gm">—</div>
         </div>
@@ -400,7 +400,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
           <div class="kpi-sub" id="ks-arpu">—</div>
         </div>
         <div class="kpi-card" id="kc-net">
-          <div class="kpi-lbl">Nettoresultat/md <span class="tip">?<span class="tip-box">Omsætning minus alle variable og faste udgifter: affiliate-kommission, AI costs, ElevenLabs, Stripe-gebyr og infrastruktur.</span></span></div>
+          <div class="kpi-lbl">Nettoresultat/md <span class="tip">?<span class="tip-box">Omsætning minus alle variable og faste udgifter: affiliate-kommission, AI costs (GPT+Deepgram+Cartesia), Stripe-gebyr og infrastruktur.</span></span></div>
           <div class="kpi-val" id="kv-net">—</div>
           <div class="kpi-sub" id="ks-net">—</div>
         </div>
@@ -454,7 +454,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
     <!-- ─── A. COST SCALE ─── -->
     <div class="fin-sec" id="sec-costscale">
       <div class="sec-title" style="margin-bottom:6px">Omkostningsoverblik ved Scale</div>
-      <div class="sec-sub" style="margin-bottom:14px">AI cost = $0.011/min × <span id="scaleMinsLbl">200</span> min × kunder · ElevenLabs tier skifter automatisk · Affiliate baseret på aktive sliders</div>
+      <div class="sec-sub" style="margin-bottom:14px">AI cost = $0.014/min × <span id="scaleMinsLbl">200</span> min × kunder · Cartesia per-minut (ingen tiers) · Affiliate baseret på aktive sliders</div>
       <div class="scale-tbl">
         <table>
           <thead>
@@ -462,7 +462,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
               <th style="text-align:left">Kunder</th>
               <th>MRR</th>
               <th>AI cost</th>
-              <th>ElevenLabs</th>
+              <th>Cartesia</th>
               <th>Infra</th>
               <th>Affiliate</th>
               <th>Stripe 2.9%</th>
@@ -499,19 +499,19 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
             </thead>
             <tbody>
               <tr>
-                <td>Starter</td><td>200</td><td>$0.011</td><td>$0.10</td>
+                <td>Starter</td><td>200</td><td>$0.014</td><td>$0.10</td>
                 <td style="color:var(--green);font-weight:500">$0.089 (89%)</td>
               </tr>
               <tr>
-                <td>Growth</td><td>300</td><td>$0.011</td><td>$0.08</td>
+                <td>Growth</td><td>300</td><td>$0.014</td><td>$0.08</td>
                 <td style="color:var(--green);font-weight:500">$0.069 (87%)</td>
               </tr>
               <tr>
-                <td>Scale</td><td>400</td><td>$0.011</td><td>$0.06</td>
+                <td>Scale</td><td>400</td><td>$0.014</td><td>$0.06</td>
                 <td style="color:var(--green);font-weight:500">$0.049 (80%)</td>
               </tr>
               <tr>
-                <td>Enterprise</td><td>500</td><td>$0.011</td><td>$0.05</td>
+                <td>Enterprise</td><td>500</td><td>$0.014</td><td>$0.05</td>
                 <td style="color:var(--gold);font-weight:500">$0.039 (78%)</td>
               </tr>
             </tbody>
@@ -612,12 +612,12 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
           <div class="ue-sub">Nye kunder minus churn</div>
         </div>
         <div class="ue-card">
-          <div class="ue-lbl">Kostpris/min <span class="tip">?<span class="tip-box">Samlede udgift til AI voice pipeline. Beregnes som $0.011 per voice-minut × antal minutter per måned.</span></span></div>
-          <div class="ue-val" style="font-size:22px">$0.011</div>
-          <div class="ue-sub">OpenAI + Deepgram pr. voice-min</div>
+          <div class="ue-lbl">Kostpris/min <span class="tip">?<span class="tip-box">Samlede udgift til AI voice pipeline. Beregnes som $0.014 per voice-minut × antal minutter per måned.</span></span></div>
+          <div class="ue-val" style="font-size:22px">$0.014</div>
+          <div class="ue-sub">OpenAI + Deepgram + Cartesia pr. voice-min</div>
         </div>
         <div class="ue-card">
-          <div class="ue-lbl">ElevenLabs tier <span class="tip">?<span class="tip-box">Fast månedlig udgift til ElevenLabs Flash v2.5 TTS. Stiger i trin: Creator $22 (0-100 kunder), Pro $99 (101-300), Scale $330 (301-1000), Enterprise $800 (1001+).</span></span></div>
+          <div class="ue-lbl">Cartesia TTS <span class="tip">?<span class="tip-box">Cartesia Flash TTS er per-tegn ($0.000015/tegn). Ved gns. 150 tegn per turn ≈ $0.002/min. Ingen faste tiers — omkostning er inkluderet i $0.014/min.</span></span></div>
           <div class="ue-val" id="ue-eltier" style="font-size:22px">—</div>
           <div class="ue-sub" id="ue-elinfo">—</div>
         </div>
@@ -691,7 +691,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
         <table>
           <thead>
             <tr>
-              <th style="text-align:left">ElevenLabs Plan</th>
+              <th style="text-align:left">Cartesia Plan</th>
               <th>Pris/md</th>
               <th>Concurrent streams</th>
               <th>Maks kunder (5%)</th>
@@ -717,11 +717,10 @@ const PLANS = {
   enterprise: { price: 1999, incl: 5000, label: 'Enterprise' }
 };
 
+/* Cartesia Flash TTS is per-minute — no tiered plans. Cost baked into $0.014/min.
+   Single entry so getElTier() still works everywhere. */
 const EL_TIERS = [
-  { tier: 'Creator',    cost: 22,  concurrent: 5,   maxCust: 9    },
-  { tier: 'Pro',        cost: 99,  concurrent: 15,  maxCust: 49   },
-  { tier: 'Scale',      cost: 330, concurrent: 50,  maxCust: 199  },
-  { tier: 'Enterprise', cost: 800, concurrent: 150, maxCust: 9999 }
+  { tier: 'Cartesia Flash', cost: 0, concurrent: Infinity, maxCust: Infinity }
 ];
 
 const SCENARIOS = {
@@ -773,7 +772,7 @@ function calc(m) {
   const arr = mrr * 12;
 
   const totalMins = total * m.avgMins;
-  const apiCost   = totalMins * 0.011;
+  const apiCost   = totalMins * 0.014;
   const elTier    = getElTier(total);
   const infra     = 50;
   const cogs      = apiCost + elTier.cost + infra;
@@ -789,7 +788,7 @@ function calc(m) {
   const lifetime   = m.lifetime || (m.churn > 0 ? Math.round(100 / m.churn) : 12);
   const ltvSimple  = arpu * lifetime;
   const ltv        = ltvSimple; // kept for backwards compat
-  const netArpuMo  = arpu * (1 - (m.affiliate||0)/100) * (1 - 0.029) - m.avgMins * 0.011;
+  const netArpuMo  = arpu * (1 - (m.affiliate||0)/100) * (1 - 0.029) - m.avgMins * 0.014;
   const ltvNet     = netArpuMo * lifetime;
   const ltvAfterCAC = ltvNet - m.cac;
   const ltvCac     = m.cac > 0 ? ltvNet / m.cac : 0;
@@ -924,8 +923,8 @@ function renderPL(r) {
     {l:'Overforbrugsgebyr ('+r.overMins.toLocaleString()+' min)', v:r.overRev},
     {l:'MRR', v:r.mrr, t:'row-total'},
     {h:'Vareforbrug (COGS)'},
-    {l:'API-kost ('+r.totalMins.toLocaleString()+' min × $0.011)', v:-r.apiCost},
-    {l:'ElevenLabs ('+r.elTier.tier+')', v:-r.elTier.cost},
+    {l:'API-kost ('+r.totalMins.toLocaleString()+' min × $0.014)', v:-r.apiCost},
+    {l:'Cartesia ('+r.elTier.tier+')', v:-r.elTier.cost},
     {l:'Infrastruktur (Railway+misc)', v:-r.infra},
     {l:'Bruttofortjeneste', v:r.grossP, t:r.grossP>=0?'row-pos':'row-neg'},
     {h:'Driftsomkostninger (OpEx)'},
@@ -941,7 +940,7 @@ function renderPL(r) {
   }).join('');
 
   const colors = ['rgba(74,124,89,0.75)','rgba(74,124,89,0.4)','rgba(155,58,47,0.65)','rgba(155,58,47,0.45)','rgba(155,58,47,0.3)','rgba(176,141,91,0.65)','rgba(176,141,91,0.45)'];
-  const labels = ['Plan rev','Overage','API cost','ElevenLabs','Infra','Ads','Affiliate'];
+  const labels = ['Plan rev','Overage','API cost','Cartesia','Infra','Ads','Affiliate'];
   const data   = [r.planRev, r.overRev, r.apiCost, r.elTier.cost, r.infra, M.adSpend, r.affPay];
 
   if (!chartPL) {
@@ -1043,12 +1042,12 @@ function renderUE(r) {
     ['Levetid (mdr)', p => M.lifetime+' mdr'],
     ['Simpel LTV',    p => f$(p.price * M.lifetime)],
     ['Netto LTV',     p => {
-      const na = p.price * (1 - M.affiliate/100) * (1 - 0.029) - M.avgMins * 0.011;
+      const na = p.price * (1 - M.affiliate/100) * (1 - 0.029) - M.avgMins * 0.014;
       return f$(na * M.lifetime);
     }],
     ['CAC',           p => '$'+M.cac],
     ['LTV:CAC',       p => {
-      const na = p.price * (1 - M.affiliate/100) * (1 - 0.029) - M.avgMins * 0.011;
+      const na = p.price * (1 - M.affiliate/100) * (1 - 0.029) - M.avgMins * 0.014;
       return M.cac > 0 ? fx(na * M.lifetime / M.cac) : '∞';
     }],
     ['Payback (mdr)', p => (p.price > 0 ? (M.cac / p.price).toFixed(1) : '∞')+' mdr']
@@ -1162,7 +1161,7 @@ function renderCostScale() {
     } else { s = n; }
 
     const mrr  = s*79 + g*299 + sc*799 + e*1999;
-    const aiC  = n * M.avgMins * 0.011;
+    const aiC  = n * M.avgMins * 0.014;
     const elT  = getElTier(n);
     const infr = 20;
     const aff  = mrr * M.affiliate / 100;
@@ -1190,13 +1189,13 @@ function renderCostScale() {
   // Summary sentence
   if (currTotal > 0) {
     const mrr = M.starter*79 + M.growth*299 + M.scale*799 + M.enterprise*1999;
-    const aiC = currTotal * M.avgMins * 0.011;
+    const aiC = currTotal * M.avgMins * 0.014;
     const elT = getElTier(currTotal);
     const aff = mrr * M.affiliate / 100;
     const strp = mrr * 0.029;
     const totC = aiC + elT.cost + 20 + aff + strp;
     let bigL='AI-kost', bigV=aiC;
-    if (elT.cost>bigV){bigL='ElevenLabs';bigV=elT.cost;}
+    if (elT.cost>bigV){bigL='Cartesia';bigV=elT.cost;}
     if (aff>bigV){bigL='Affiliate';bigV=aff;}
     const pct = totC > 0 ? Math.round(bigV/totC*100) : 0;
     document.getElementById('scaleSummary').innerHTML =
@@ -1214,7 +1213,7 @@ function renderOverage() {
   const eRev  = M.enterprise * (pG/100) * xM * 0.05;
   const total = sRev + gRev + scRev + eRev;
   const ovrMins = (M.starter*(pS/100) + M.growth*(pG/100) + M.scale*(pG/100) + M.enterprise*(pG/100)) * xM;
-  const apiOvr  = ovrMins * 0.011;
+  const apiOvr  = ovrMins * 0.014;
   const profit  = total - apiOvr;
   const margin  = total > 0 ? profit / total * 100 : 0;
 
