@@ -756,58 +756,46 @@ async function doUploadMonth(){
    TO-DO LISTE — October AI launch checklist
    ════════════════════════════════════════ */
 const TODO_CATS=[
-{name:'Kritisk',color:'var(--red)',items:[
-'Dobbeltsvar bug verificeret løst efter rollback',
-'VAD_SILENCE_FRAMES_TO_STOP sat til 45',
-'Session limit hævet til 50 GPT kald',
-'Stripe webhook håndterer plan-skift korrekt',
-'Minutforbrug trackes korrekt per tenant',
-'Agent stopper når minutkvote er opbrugt',
-'Overage system implementeret',
-'Email verificering fungerer',
-'HTTPS verificeret på alle endpoints',
-'Data isolation verificeret mellem brokers',
-'Privatlivspolitik og Terms of Service',
-'Databehandleraftale template',
-'GDPR: gæste-data kan slettes',
-'Stripe Tax aktiveret'
+{name:'Færdig',color:'var(--green)',done:true,items:[
+'Client portal til slutkunder',
+'Wizard med onboarding flow',
+'Paywall (10 min gratis prøve)',
+'Custom domæne (www.october-ai.com)',
+'Første kunde onboardet (DIS Stockholm)',
+'Embed kode i client portal',
+'Space mappings fra client portal',
+'Analytics reset og korrekt tracking',
+'PDF rapport på engelsk'
 ]},
-{name:'Vigtigt',color:'var(--gold)',items:[
-'Analytics: konverteringsrate',
-'Analytics: rum-statistik (vist vs. booket)',
-'Analytics: lead capture gemmes korrekt',
-'CSV export af leads',
-'PDF rapport genereres',
-'Client portal: token-baseret adgang',
-'Client portal: property data kan redigeres',
-'Client portal: conversation replay',
-'"Del med kunde" knap i provider dashboard',
-'Embed: pulserende ikon',
-'Embed: custom logo upload',
-'Booking åbner direkte i ny tab',
-'Conversation replay i provider dashboard',
-'Per-user API keys (openai + elevenlabs på users tabel)',
-'Fallback hvis ElevenLabs concurrent limit nås',
-'Railway region skift til Frankfurt',
-'PostgreSQL backup strategi',
-'White-labeling: October AI branding kan skjules'
+{name:'Næste sprint',color:'var(--gold)',items:[
+'Affiliate landing page og signup flow',
+'Affiliate dashboard med kommission overblik',
+'Kunde-vendt landingsside (www.october-ai.com)',
+'GDPR databehandleraftale template',
+'Stripe live mode verificeret'
 ]},
-{name:'Affiliate',color:'var(--purple)',items:[
-'Affiliate signup flow selvkørende',
-'Ref-link tracking fungerer',
-'Kommission beregnes korrekt',
-'Stripe Connect til automatisk udbetaling',
-'Affiliate dashboard',
-'Velkomst-email med materialer',
-'Affiliate landing page live',
-'Demo video indlejret'
+{name:'Verticals',color:'var(--purple)',items:[
+'Real estate USA vertical',
+'  · MLS data integration',
+'  · Plantegning og teknisk data support',
+'  · Måle-op funktion via Matterport',
+'  · Qualifying: budget, m², nabolag, skoledistrikt',
+'  · Scraping af Zillow/Realtor.com data',
+'Retail/showroom vertical',
+'  · Produkt-katalog integration',
+'  · Pris og tilgængelighed data',
+'  · Kurv/checkout trigger',
+'  · Tættest på hotel — bygges først',
+'Restaurant vertical',
+'Venue/event vertical',
+'Museum vertical'
 ]},
-{name:'Nice to have',color:'var(--text3)',items:[
-'Matterport SDK integration',
-'Webhook system til broker CRM',
-'Multi-sprog system prompt',
-'Conversation quality scoring',
-'Favicon og meta tags på alle sider'
+{name:'Post-launch sikkerhed',color:'var(--text3)',items:[
+'SQL injection fix i analytics',
+'CORS whitelist specifikke domæner',
+'console.log PII fjernes',
+'CSRF beskyttelse',
+'SSL cert verifikation på DB'
 ]}
 ];
 
@@ -816,9 +804,11 @@ function setTodoState(s){localStorage.setItem('oct-todo',JSON.stringify(s));}
 function toggleTodo(key){const s=getTodoState();s[key]=!s[key];setTodoState(s);render();updateTodoPill();}
 function resetTodo(){localStorage.removeItem('oct-todo');render();updateTodoPill();}
 
+function isTodoChecked(cat,i,s){return cat.done||!!s[cat.name+'-'+i];}
+
 function updateTodoPill(){
   const s=getTodoState();const total=TODO_CATS.reduce((a,c)=>a+c.items.length,0);
-  const done=TODO_CATS.reduce((a,c)=>a+c.items.filter((_,i)=>s[c.name+'-'+i]).length,0);
+  const done=TODO_CATS.reduce((a,c)=>a+c.items.filter((_,i)=>isTodoChecked(c,i,s)).length,0);
   const el=document.getElementById('pill-todo');
   if(el)el.textContent=total?Math.round(done/total*100)+'%':'0%';
 }
@@ -826,18 +816,18 @@ function updateTodoPill(){
 function renderTodo(){
   const s=getTodoState();
   const total=TODO_CATS.reduce((a,c)=>a+c.items.length,0);
-  const done=TODO_CATS.reduce((a,c)=>a+c.items.filter((_,i)=>s[c.name+'-'+i]).length,0);
+  const done=TODO_CATS.reduce((a,c)=>a+c.items.filter((_,i)=>isTodoChecked(c,i,s)).length,0);
   const pctVal=total?Math.round(done/total*100):0;
 
   let html=`<div class="todo-summary"><div><div class="todo-summary-val">${done}<span style="font-size:14px;color:var(--text3);font-family:var(--sans)"> / ${total}</span></div><div class="todo-summary-lbl">opgaver færdige</div></div><div class="todo-summary-bar"><div class="todo-summary-fill" style="width:${pctVal}%"></div></div><div style="font-family:var(--serif);font-size:22px;font-weight:500">${pctVal}%</div><button class="todo-reset" onclick="resetTodo()">Reset alle</button></div>`;
 
   TODO_CATS.forEach(cat=>{
-    const catDone=cat.items.filter((_,i)=>s[cat.name+'-'+i]).length;
+    const catDone=cat.items.filter((_,i)=>isTodoChecked(cat,i,s)).length;
     const catPct=cat.items.length?Math.round(catDone/cat.items.length*100):0;
     html+=`<div class="todo-cat"><div class="todo-cat-hdr"><div class="todo-cat-title"><div class="todo-cat-dot" style="background:${cat.color}"></div>${cat.name}</div><div class="todo-cat-cnt">${catDone}/${cat.items.length}</div></div><div class="todo-cat-bar"><div class="todo-cat-fill" style="width:${catPct}%;background:${cat.color}"></div></div><div class="todo-items">`;
     cat.items.forEach((item,i)=>{
-      const key=cat.name+'-'+i;const checked=!!s[key];
-      html+=`<div class="todo-item${checked?' checked':''}" onclick="toggleTodo('${key}')"><div class="todo-chk${checked?' on':''}"></div><div class="todo-txt${checked?' struck':''}">${item}</div></div>`;
+      const key=cat.name+'-'+i;const checked=isTodoChecked(cat,i,s);
+      html+=`<div class="todo-item${checked?' checked':''}" onclick="${cat.done?'':`toggleTodo('${key}')`}"><div class="todo-chk${checked?' on':''}"></div><div class="todo-txt${checked?' struck':''}">${item}</div></div>`;
     });
     html+=`</div></div>`;
   });
@@ -970,19 +960,19 @@ function renderRoadmap(){
   const ms=[
     {y:220, x:xR, side:'right', c:'#4A7C59',
      time:'Nu · Live',     title:'Proof of Concept',
-     text:'Voice agent på Park Lane Hotel. Iframe-integration uden SDK. Første samtaler og bookings i gang.',
+     text:'Voice agent live på DIS Stockholm og Park Lane Hotel. Første kunde onboardet. Client portal, wizard og paywall aktivt. Custom domæne www.october-ai.com live.',
      badge:'live', btxt:'● LIVE'},
     {y:480, x:xL, side:'left',  c:'#B08D5B',
-     time:'Q2 2026',       title:'Første betalende kunder',
-     text:'10 betalende kunder via LinkedIn og affiliate outreach til Matterport brokers. Affiliate system og client portal live. Bevis at modellen virker kommercielt.',
+     time:'April/Maj 2026', title:'Første betalende kunder',
+     text:'Første betalende kunder via hotel vertical. Affiliate system og landingsside live. Retail vertical bygges som vertikal #2 — tættest på eksisterende hotel-setup. GDPR databehandleraftaler på plads.',
      badge:'inprog', btxt:'● I GANG'},
     {y:740, x:xR, side:'right', c:'#3A7A7A',
-     time:'Q2–Q3 2026',    title:'Matterport Partnership',
-     text:'Kontakt partnerships@matterport.com med bevist data — samtaler, konverteringer, kunder. Forhandl revenue share og SDK-adgang. Potentiel marketplace listing mod 600.000 brugere.',
+     time:'Q2–Q3 2026',    title:'Real Estate USA',
+     text:'Real estate USA vertical lanceres. MLS data integration, plantegning support og tekniske måle-funktioner. Primær målgruppe: amerikanske mæglere og developers med Matterport tours. Kontakt Matterport partnerships med data.',
      badge:'plan', btxt:'● PLANLAGT'},
     {y:1000,x:xL, side:'left',  c:'#6B5B8A',
      time:'Q3 2026',       title:'Nordisk Skalering',
-     text:'50+ kunder. Officiel SDK-integration der giver dybere Matterport-kontrol. White-label til brokers. Ekspansion til Sverige, Norge og UK.',
+     text:'Nordisk skalering. Alle verticals aktive: hotel, retail, real estate, restaurant, venue. White-label til brokers. 50+ betalende kunder.',
      badge:'plan2', btxt:'● PLANLAGT'},
     {y:1260,x:xR, side:'right', c:'#9B5A6A',
      time:'Q4 2026',       title:'Profitabilitet & Vækst',
@@ -1068,23 +1058,19 @@ function renderRoadmap(){
       <strong>Mitigation:</strong> Kom til markedet hurtigt og byg broker-relationer inden Matterport eventuelt lancerer konkurrerende produkt.`
     )}
     ${acc('scaling','API skalering og concurrent limits','⚡','teal',
-      'Creator: 5 streams → ~10 kunder. BYOK løser enterprise. Ikke et problem nu.',
-      `<strong>ElevenLabs Flash v2.5 concurrent streams:</strong><br>
-      · Creator (nu): 5 streams — dækker til ~10 kunder<br>
-      · Pro $99: 10 streams — dækker til ~50 kunder<br>
-      · Scale $330: 20 streams — dækker til ~200 kunder<br>
-      · Enterprise $800: 50 streams — dækker til ~500 kunder<br><br>
-      Minutlimits per pakke beskytter mod spike-traffic.<br>
+      'Cartesia: ingen stream-begrænsning. Deepgram: per-minut. Skalerer frit.',
+      `<strong>Cartesia Flash TTS:</strong> Ingen concurrent stream-begrænsning — per-minut prissætning.<br>
+      <strong>Deepgram Nova-2 STT:</strong> Per-minut prissætning, ingen stream-limits.<br><br>
+      Minutlimits per tenant beskytter mod spike-traffic.<br>
       BYOK (bring your own key) løser problemet for enterprise brokers — de skalerer selv.<br>
-      <strong>Ikke et problem ved nuværende stadie.</strong>`
+      <strong>Ingen stream-bottleneck ved nuværende setup.</strong>`
     )}
     ${acc('ue','Økonomi og unit economics','📊','gold',
-      'Margin ~97% · LTV:CAC 52x · Breakeven ved 3–4 kunder.',
-      `Cost per voice minut: <strong>$0.011</strong> (GPT + Groq + ElevenLabs)<br>
+      'Margin ~86% · LTV:CAC 52x · Breakeven ved 3–4 kunder.',
+      `Cost per voice minut: <strong>$0.014</strong> (GPT $0.008 + Deepgram $0.004 + Cartesia $0.002)<br>
       Salgspris Starter: 1.000 kr / 300 min = 3.33 kr/min<br>
-      Margin på basisabonnement: <strong>~97%</strong><br>
-      Margin på overage: <strong>~97%</strong><br>
-      Variable margin efter affiliate: <strong>~72–87%</strong><br><br>
+      Margin på basisabonnement: <strong>~86%</strong><br>
+      Variable margin efter affiliate: <strong>~72–86%</strong><br><br>
       Breakeven ved <strong>~3–4 kunder</strong> (dækker infra $40/md).<br>
       LTV ved 5% churn og $130 avg MRR: <strong>~$2.600</strong><br>
       LTV:CAC ved $50 CAC: <strong>52x</strong>`
@@ -1099,6 +1085,13 @@ function renderRoadmap(){
       · Stripe Tax for automatisk moms-håndtering<br>
       · VAT: DKK kunder opkræves dansk moms, EU B2B: reverse charge, USA: ingen moms<br><br>
       Matterport licensing: afklar inden SDK-brug, brug iframe indtil da.`
+    )}
+    ${acc('realestate','Real estate USA — størst potentiale','🏠','purple',
+      'USA har over 3 mio. aktive ejendomsmæglere og Matterport er standard i premium-segmentet.',
+      `USA har over 3 millioner aktive ejendomsmæglere og Matterport er standard i premium-segmentet.<br><br>
+      Agenten skal kunne svare på tekniske spørgsmål fra plantegninger, integrere MLS-data og føre købere til visning eller kontakt med mægleren.<br><br>
+      Det er et anderledes datalag end hotel men samme tekniske pipeline.<br><br>
+      <strong>Størst marked, mest kompleks build</strong> — prioriteres efter retail er bevist.`
     )}
   </div>`;
 
