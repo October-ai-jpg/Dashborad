@@ -242,56 +242,49 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .todo-txt{font-size:12px;line-height:1.5;color:var(--text);font-weight:300}
 .todo-txt.struck{text-decoration:line-through;color:var(--text3)}
 
-/* ── Arkitektur diagram v2 ── */
-.arch-wrap{background:#0F1117;border:1px solid rgba(255,255,255,0.06);border-radius:12px;overflow:auto;padding:28px 24px 20px}
-.arch-row{display:flex;align-items:stretch;gap:0;min-width:820px}
-.arch-col{display:flex;flex-direction:column;gap:10px}
-.arch-col.col-1{width:188px;flex-shrink:0}
-.arch-col.col-server{flex:1;min-width:320px}
-.arch-col.col-ext{width:228px;flex-shrink:0}
-.arch-col-hdr{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(96,165,250,0.65);font-weight:600;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(96,165,250,0.12)}
-.arch-server-box{background:rgba(22,27,50,0.55);border:1px dashed rgba(255,255,255,0.09);border-radius:10px;padding:10px;flex:1;overflow:visible}
-.arch-server-lbl{font-size:8px;color:rgba(255,255,255,0.22);text-transform:uppercase;letter-spacing:1.5px;text-align:center;margin-bottom:8px}
-.arch-server-inner{display:grid;grid-template-columns:1fr 1fr;gap:7px;overflow:visible}
-.arch-card{background:#1A1D2E;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 12px;position:relative;cursor:default;transition:transform 150ms ease,border-color 150ms ease,box-shadow 150ms ease;overflow:visible}
-.arch-card:hover{transform:translateY(-2px)}
-.arch-card.stable{border-color:#22C55E;box-shadow:0 0 12px rgba(34,197,94,0.13)}
-.arch-card.dev{border-color:#F97316;box-shadow:0 0 12px rgba(249,115,22,0.13)}
-.arch-card.issue{border-color:#EF4444;box-shadow:0 0 12px rgba(239,68,68,0.13)}
-.arch-card:hover.stable{border-color:#4ADE80!important;box-shadow:0 0 20px rgba(34,197,94,0.24)!important}
-.arch-card:hover.dev{border-color:#FB923C!important;box-shadow:0 0 20px rgba(249,115,22,0.24)!important}
-.arch-card:hover.issue{border-color:#F87171!important;box-shadow:0 0 20px rgba(239,68,68,0.24)!important}
-.arch-card-name{font-size:11px;font-weight:500;color:#E2E8F0;font-family:'Courier New',monospace;margin-bottom:3px;letter-spacing:0.2px}
-.arch-card-sub{font-size:9px;color:rgba(255,255,255,0.3);line-height:1.45}
-.arch-tip{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);background:#2A2D3E;color:#f0f0f0;font-size:11px;line-height:1.55;padding:10px 13px;border-radius:8px;max-width:260px;width:max-content;border:1px solid rgba(255,255,255,0.1);box-shadow:0 4px 24px rgba(0,0,0,0.55);visibility:hidden;opacity:0;transition:opacity 150ms,visibility 150ms;z-index:300;white-space:normal;text-align:left;font-weight:300;pointer-events:none;font-family:var(--sans)}
-.arch-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#2A2D3E}
-.arch-card:hover .arch-tip,.arch-db-card:hover .arch-tip{visibility:visible;opacity:1}
-.arch-conn{width:68px;flex-shrink:0;display:flex;flex-direction:column;justify-content:space-around;align-items:stretch;padding:30px 6px 30px}
-.arch-arrow{display:flex;align-items:center;gap:0;margin-bottom:5px}
-.arch-arrow-line{flex:1;height:1px;background:rgba(71,85,105,0.75);position:relative}
-.arch-ah{width:0;height:0;border-top:3.5px solid transparent;border-bottom:3.5px solid transparent;border-left:5.5px solid rgba(100,116,139,0.8);flex-shrink:0}
-.arch-ah.left{border-left:none;border-right:5.5px solid rgba(100,116,139,0.8)}
-.arch-arrow-lbl{position:absolute;top:-12px;left:0;right:0;text-align:center;font-size:7px;color:rgba(255,255,255,0.2);white-space:nowrap;font-family:'Courier New',monospace}
-@keyframes flow-r{0%{left:2px;opacity:0}20%{opacity:1}80%{opacity:1}100%{left:calc(100% - 7px);opacity:0}}
-@keyframes flow-l{0%{left:calc(100% - 7px);opacity:0}20%{opacity:1}80%{opacity:1}100%{left:2px;opacity:0}}
-.arch-dot{width:5px;height:5px;border-radius:50%;position:absolute;top:50%;transform:translateY(-50%);animation:flow-r 2.2s ease-in-out infinite}
-.arch-dot.c-g{background:rgba(34,197,94,0.9)}
-.arch-dot.c-b{background:rgba(96,165,250,0.9)}
-.arch-dot.c-o{background:rgba(249,115,22,0.9)}
-.arch-dot.rev{animation:flow-l 2.2s ease-in-out infinite}
-.arch-db-arrow{text-align:center;font-size:14px;color:rgba(255,255,255,0.12);line-height:1;margin:3px 0 2px}
-.arch-db-card{background:#1A1D2E;border:1px solid #22C55E;border-radius:10px;padding:10px 12px;position:relative;cursor:default;box-shadow:0 0 12px rgba(34,197,94,0.13);transition:transform 150ms ease,box-shadow 150ms ease;overflow:visible}
-.arch-db-card:hover{transform:translateY(-2px);border-color:#4ADE80;box-shadow:0 0 20px rgba(34,197,94,0.24)}
-.latency-card{background:#1A1D2E;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px 14px;margin-top:8px}
-.latency-hdr{font-size:8px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.28);margin-bottom:10px}
-.latency-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px}
-.latency-row:last-child{margin-bottom:0;padding-top:5px;border-top:1px solid rgba(255,255,255,0.05)}
-.latency-lbl{color:rgba(255,255,255,0.35)}
-.latency-val{font-family:'Courier New',monospace;font-weight:600;font-size:11px}
-.arch-legend{display:flex;gap:20px;padding:16px 0 4px;justify-content:center}
-.arch-leg{display:flex;align-items:center;gap:7px;font-size:11px;color:rgba(255,255,255,0.45)}
-.arch-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-@media(max-width:900px){.arch-row{flex-direction:column;min-width:unset;gap:20px}.arch-conn{display:none}.arch-col.col-1,.arch-col.col-ext{width:auto}}
+/* ── Arkitektur — accordion-baseret systemoversigt ── */
+.arch-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.arch-header h2{font-family:var(--serif);font-size:26px;font-weight:500;letter-spacing:0.3px}
+.arch-updated{font-size:11px;color:var(--text3)}
+.arch-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.arch-acc{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;transition:box-shadow 0.15s}
+.arch-acc:hover{box-shadow:0 2px 12px rgba(60,45,30,0.06)}
+.arch-acc-head{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;user-select:none;transition:background 0.1s}
+.arch-acc-head:hover{background:var(--surface2)}
+.arch-acc-head .arch-ico{font-size:16px;flex-shrink:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--surface3);border-radius:var(--r)}
+.arch-acc-head .arch-title{font-size:14px;font-weight:500;color:var(--text);flex:1}
+.arch-acc-head .arch-badge{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid;letter-spacing:0.3px}
+.arch-acc-head .arch-arrow{font-size:11px;color:var(--text3);transition:transform 0.2s;flex-shrink:0}
+.arch-acc.open .arch-arrow{transform:rotate(180deg)}
+.arch-acc-body{display:none;padding:0 20px 18px;border-top:1px solid var(--border)}
+.arch-acc.open .arch-acc-body{display:block;padding-top:16px}
+.arch-sub{font-size:12px;color:var(--text2);line-height:1.7;font-weight:300}
+.arch-sub strong{font-weight:500;color:var(--text)}
+.arch-sub code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--surface3);padding:1px 6px;border-radius:3px;color:var(--text)}
+.arch-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12px}
+.arch-table th{text-align:left;padding:7px 12px;background:var(--surface2);color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:0.8px;font-weight:500;border-bottom:1px solid var(--border2)}
+.arch-table td{padding:7px 12px;border-bottom:1px solid var(--border);color:var(--text2);font-weight:300;vertical-align:top}
+.arch-table tr:last-child td{border-bottom:none}
+.arch-table td:first-child{color:var(--text);font-weight:400}
+.arch-table code{font-family:'SF Mono',Menlo,monospace;font-size:11px;background:var(--surface3);padding:1px 5px;border-radius:3px}
+.arch-flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0;padding:14px 16px;background:var(--surface2);border-radius:var(--r);border:1px solid var(--border)}
+.arch-flow-step{font-size:11px;font-weight:500;color:var(--text);background:var(--surface);padding:5px 12px;border-radius:20px;border:1px solid var(--border2);white-space:nowrap}
+.arch-flow-arrow{color:var(--text3);font-size:12px;flex-shrink:0}
+.arch-flow-label{font-size:10px;color:var(--text3);display:block;margin-top:2px;text-align:center}
+.arch-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid;margin:2px 3px 2px 0;letter-spacing:0.2px}
+.arch-tag.green{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.arch-tag.gold{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-border)}
+.arch-tag.purple{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-border)}
+.arch-tag.teal{background:var(--teal-bg);color:var(--teal);border-color:var(--teal-border)}
+.arch-tag.red{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
+.arch-tag.pink{background:var(--pink-bg);color:var(--pink);border-color:var(--pink-border)}
+.arch-mini-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin:10px 0}
+.arch-mini-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px}
+.arch-mini-card .amc-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px}
+.arch-mini-card .amc-val{font-size:13px;font-weight:400;color:var(--text)}
+.arch-mini-card .amc-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.arch-divider{height:1px;background:var(--border);margin:14px 0}
+.arch-section-title{font-size:11px;font-weight:500;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
@@ -656,6 +649,7 @@ async function render(){
   }else if(currentSec==='arch'){
     tbTitle.textContent='Arkitektur';
     content.innerHTML=renderArch();
+    document.querySelectorAll('.arch-acc-head').forEach(h=>{h.addEventListener('click',()=>{h.parentElement.classList.toggle('open');});});
 
   }else if(currentSec==='roadmap'){
     tbTitle.textContent='Roadmap';
@@ -839,106 +833,450 @@ function renderTodo(){
    ARKITEKTUR DIAGRAM — October AI stack
    ════════════════════════════════════════ */
 function renderArch(){
-  function card(name,sub,status,tip,extra=''){
-    return`<div class="arch-card ${status}" ${extra}>
-      <div class="arch-card-name">${name}</div>
-      ${sub?`<div class="arch-card-sub">${sub}</div>`:''}
-      <div class="arch-tip">${tip}</div>
-    </div>`;
-  }
-  function arrowR(lbl,dotClass,delay){
-    return`<div class="arch-arrow">
-      <div class="arch-arrow-line">
-        <span class="arch-arrow-lbl">${lbl}</span>
-        <span class="arch-dot ${dotClass}" style="animation-delay:${delay}s"></span>
-      </div><div class="arch-ah"></div>
-    </div>`;
-  }
-  function arrowL(lbl,dotClass,delay){
-    return`<div class="arch-arrow">
-      <div class="arch-ah left"></div>
-      <div class="arch-arrow-line">
-        <span class="arch-arrow-lbl">${lbl}</span>
-        <span class="arch-dot ${dotClass} rev" style="animation-delay:${delay}s"></span>
+  const updated = '7. april 2026';
+
+  const sec1 = `
+    <div class="arch-sub">
+      <div class="arch-section-title">Runtime</div>
+      <table class="arch-table">
+        <tr><td><strong>Framework</strong></td><td>Express.js (ESM) med <code>http.createServer</code></td></tr>
+        <tr><td><strong>Hosting</strong></td><td>Railway (auto-deploy fra GitHub)</td></tr>
+        <tr><td><strong>Database</strong></td><td>PostgreSQL (Railway managed eller lokal socket)</td></tr>
+        <tr><td><strong>WebSocket</strong></td><td><code>ws</code> library &mdash; voice sessions via <code>/ws/voice</code></td></tr>
+        <tr><td><strong>Port</strong></td><td><code>process.env.PORT || 3000</code></td></tr>
+        <tr><td><strong>HTTPS</strong></td><td>Auto-redirect i production via <code>x-forwarded-proto</code></td></tr>
+      </table>
+      <div class="arch-section-title">Environment Variables</div>
+      <table class="arch-table">
+        <tr><th>Variabel</th><th>P&aring;kr&aelig;vet</th><th>Bruges til</th></tr>
+        <tr><td><code>OPENAI_API_KEY</code></td><td>Ja</td><td>GPT-5.4-mini (voice LLM) + GPT-4o-mini (context compiler)</td></tr>
+        <tr><td><code>DEEPGRAM_API_KEY</code></td><td>Ja</td><td>Nova-3 speech-to-text</td></tr>
+        <tr><td><code>CARTESIA_API_KEY</code></td><td>Ja</td><td>Sonic-2 text-to-speech</td></tr>
+        <tr><td><code>GROQ_API_KEY</code></td><td>Ja</td><td>Llama 3.3 70B (scraper) + Whisper backup STT</td></tr>
+        <tr><td><code>DATABASE_URL</code></td><td>Ja</td><td>PostgreSQL connection string</td></tr>
+        <tr><td><code>JWT_SECRET</code></td><td>Ja</td><td>Session token signering</td></tr>
+        <tr><td><code>STRIPE_SECRET_KEY</code></td><td>Nej</td><td>Billing, checkout, affiliate payouts</td></tr>
+        <tr><td><code>STRIPE_WEBHOOK_SECRET</code></td><td>Nej</td><td>Stripe webhook verification</td></tr>
+        <tr><td><code>RESEND_API_KEY</code></td><td>Nej</td><td>Transaktionelle emails (noreply@october-ai.dk)</td></tr>
+        <tr><td><code>CARTESIA_VOICE_ID</code></td><td>Nej</td><td>Custom TTS voice (default: Sonic-2 standard)</td></tr>
+        <tr><td><code>APP_URL</code></td><td>Nej</td><td>Base URL for links (default: https://www.october-ai.com)</td></tr>
+      </table>
+      <div class="arch-section-title">Dependencies</div>
+      <div class="arch-mini-grid">
+        <div class="arch-mini-card"><div class="amc-label">Server</div><div class="amc-val">express, ws, cookie-parser, dotenv</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Database</div><div class="amc-val">pg (node-postgres)</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Auth</div><div class="amc-val">jsonwebtoken, scrypt (native crypto)</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Billing</div><div class="amc-val">stripe</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Scraping</div><div class="amc-val">puppeteer-core, puppeteer-extra, stealth-plugin</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Uploads</div><div class="amc-val">multer, pdf-parse, mammoth (DOCX)</div></div>
+        <div class="arch-mini-card"><div class="amc-label">PDF Reports</div><div class="amc-val">pdfkit</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Email</div><div class="amc-val">resend (via REST)</div></div>
       </div>
     </div>`;
-  }
 
-  // ── LAG 1: Browser ──
-  const col1=`<div class="arch-col col-1">
-    <div class="arch-col-hdr">LAG 1 — BROWSER</div>
-    ${card('Browser / Embed','AudioWorklet VAD · PCM16 capture<br>Gapless PCM16 playback · Matterport iframe','stable','Frontend-laget der kører i besøgendes browser. Bruger AudioWorklet til at fange mikrofon-PCM16 binært og afspille svar-audio. Embedded via iframe på kundens hjemmeside.')}
-  </div>`;
+  const sec2 = `
+    <div class="arch-sub">
+      <div class="arch-section-title">Migreringshistorik</div>
+      <p style="margin-bottom:10px">Database bootstrapper via <code>db/index.js</code> &mdash; k&oslash;rer <code>schema.sql</code> + 9 migrationer sekventielt ved opstart.</p>
+      <table class="arch-table">
+        <tr><th>Fil</th><th>Indhold</th></tr>
+        <tr><td><code>schema.sql</code></td><td>Base: users, tenants, sessions, conversations, conversation_messages, conversion_events, email_tokens, followups. pgcrypto extension.</td></tr>
+        <tr><td><code>migration-v1</code></td><td>Stripe-kolonner p&aring; users (stripe_customer_id, plan_active, plan_name, trial_ends_at)</td></tr>
+        <tr><td><code>migration-v2</code></td><td>voice_usage + monthly_usage tabeller (minut-tracking pr. tenant)</td></tr>
+        <tr><td><code>migration-v3</code></td><td>Scraper-felter p&aring; tenants (scraped_data, scrape_status, property_data, hotel_data)</td></tr>
+        <tr><td><code>migration-v4</code></td><td>Manual data + context compiler (manual_data, compiled_context p&aring; tenants)</td></tr>
+        <tr><td><code>migration-v5</code></td><td>Client portal (clients tabel + client_id FK + portal_token p&aring; tenants)</td></tr>
+        <tr><td><code>migration-v6</code></td><td>Auto-scrape (auto_scrape_enabled, scrape_interval_days, next_scrape_at)</td></tr>
+        <tr><td><code>migration-v7</code></td><td>Samtaledata (language, user_location p&aring; conversations)</td></tr>
+        <tr><td><code>migration-v8</code></td><td>Real estate vertical (vertical p&aring; clients, property_details + spaces JSONB p&aring; tenants)</td></tr>
+        <tr><td><code>migration-v9</code></td><td>Affiliate system (affiliates + affiliate_commissions tabeller)</td></tr>
+      </table>
+      <div class="arch-section-title">Vigtige tabeller</div>
+      <table class="arch-table">
+        <tr><th>Tabel</th><th>N&oslash;gle</th><th>Beskrivelse</th></tr>
+        <tr><td><code>users</code></td><td>UUID</td><td>Admin-brugere, login, Stripe, plan, trial, affiliate_ref</td></tr>
+        <tr><td><code>tenants</code></td><td>UUID</td><td>AI-agenter med al data (scraped, manual, compiled, rooms, spaces)</td></tr>
+        <tr><td><code>clients</code></td><td>UUID</td><td>Kunder under en provider. company, vertical, notes</td></tr>
+        <tr><td><code>sessions</code></td><td>UUID</td><td>Voice-sessioner (started_at, ended_at, duration)</td></tr>
+        <tr><td><code>conversations</code></td><td>UUID</td><td>Samtaler med metadata (language, user_location)</td></tr>
+        <tr><td><code>conversation_messages</code></td><td>UUID</td><td>Individuelle beskeder (role, content, tool_calls)</td></tr>
+        <tr><td><code>conversion_events</code></td><td>UUID</td><td>Konverteringer (booking, inquiry, etc.)</td></tr>
+        <tr><td><code>voice_usage</code></td><td>UUID</td><td>Detaljeret TTS-forbrug pr. session</td></tr>
+        <tr><td><code>monthly_usage</code></td><td>UUID</td><td>Aggregeret m&aring;nedsforbrug pr. tenant</td></tr>
+        <tr><td><code>affiliates</code></td><td>UUID</td><td>Partnere (ref_code, commission_rate, stripe_account_id)</td></tr>
+        <tr><td><code>affiliate_commissions</code></td><td>UUID</td><td>Kommissioner (amount, status, eligible_for_payout_at)</td></tr>
+      </table>
+    </div>`;
 
-  // ── Connector 1→2 ──
-  const conn12=`<div class="arch-conn">
-    ${arrowR('PCM16 WS →','c-b',0)}
-    ${arrowL('← PCM16 audio','c-g',0.45)}
-    ${arrowR('REST →','c-b',0.9)}
-  </div>`;
+  const sec3 = `
+    <div class="arch-sub">
+      <div class="arch-section-title">Komplet flow</div>
+      <div class="arch-flow">
+        <div class="arch-flow-step">Browser<div class="arch-flow-label">PCM16 24kHz</div></div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">WebSocket<div class="arch-flow-label">/ws/voice</div></div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">Deepgram Nova-3<div class="arch-flow-label">STT</div></div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">GPT-5.4-mini<div class="arch-flow-label">Streaming LLM</div></div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">Cartesia Sonic-2<div class="arch-flow-label">TTS WebSocket</div></div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">Browser<div class="arch-flow-label">PCM s16le 24kHz</div></div>
+      </div>
+      <div class="arch-section-title">Filer</div>
+      <table class="arch-table">
+        <tr><th>Fil</th><th>Ansvar</th><th>Detaljer</th></tr>
+        <tr><td><code>voice/index.js</code></td><td>WebSocket server</td><td>Session lifecycle, silence timer (20s), idle timeout (5 min), max session (20 min), usage tracking, 100 msg/sec rate limit</td></tr>
+        <tr><td><code>voice/pipeline.js</code></td><td>STT &rarr; LLM &rarr; TTS</td><td>processTurn(): noise filter &rarr; echo detection &rarr; GPT streaming &rarr; TTS. Greeting generation. TTS cooldown (1500ms).</td></tr>
+        <tr><td><code>voice/llm.js</code></td><td>GPT-5.4-mini</td><td>SSE parser, 200 max tokens, 12s timeout, max 50 calls/session, tool call leak suppressor</td></tr>
+        <tr><td><code>voice/stt.js</code></td><td>Deepgram Nova-3</td><td>PCM16 &rarr; WAV, filterNoise(): hallucination detection, confidence 0.65, min 24000 bytes</td></tr>
+        <tr><td><code>voice/stt.groq-whisper.js</code></td><td>Backup STT</td><td>Groq Whisper large-v3-turbo fallback</td></tr>
+        <tr><td><code>voice/session.js</code></td><td>Session factory</td><td>State: GREETING &rarr; QUALIFYING &rarr; RECOMMENDING &rarr; CLOSING &rarr; CONVERTED &rarr; ENDED</td></tr>
+        <tr><td><code>voice/ttsNormalize.js</code></td><td>Valuta-normalisering</td><td>10 sprog: $500 &rarr; "500 dollars". Streaming wrapper.</td></tr>
+      </table>
+      <div class="arch-section-title">GPT Tool Calls</div>
+      <table class="arch-table">
+        <tr><th>Tool</th><th>Beskrivelse</th></tr>
+        <tr><td><code>navigate_to_room</code></td><td>Navigerer Matterport til specifikt rum</td></tr>
+        <tr><td><code>trigger_conversion</code></td><td>Logger konvertering (booking/inquiry/brochure/viewing/contact/signup)</td></tr>
+        <tr><td><code>update_user_profile</code></td><td>Gemmer brugerinfo (navn, email, telefon, pr&aelig;ferencer)</td></tr>
+        <tr><td><code>update_conversation_state</code></td><td>Opdaterer samtale-state maskinen</td></tr>
+        <tr><td><code>set_view_mode</code></td><td>Skifter Matterport-visning (kun real estate)</td></tr>
+      </table>
+      <div class="arch-section-title">Session Limits</div>
+      <div class="arch-mini-grid">
+        <div class="arch-mini-card"><div class="amc-label">Idle timeout</div><div class="amc-val">5 minutter</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Max session</div><div class="amc-val">20 minutter</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Max GPT calls</div><div class="amc-val">50 pr. session</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Silence follow-up</div><div class="amc-val">20 sek (max 1)</div></div>
+        <div class="arch-mini-card"><div class="amc-label">TTS cooldown</div><div class="amc-val">1500ms</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Rate limit</div><div class="amc-val">100 msg/sec</div></div>
+      </div>
+    </div>`;
 
-  // ── LAG 2: Server ──
-  const serverCards=`
-    ${card('voice/stt.js','Groq Whisper','stable','Modtager rå PCM16 fra WebSocket, sender til Groq Whisper og returnerer transkription. Typisk latency ~200ms.','style="grid-column:1"')}
-    ${card('services/tts.js','ElevenLabs Flash v2.5','dev','Konverterer LLM-tekst til PCM16 audio via ElevenLabs streaming API. Flash v2.5 er optimeret til lav latency. Under aktiv optimering.','style="grid-column:2"')}
-    ${card('voice/llm.js','GPT-4o-mini streaming','stable','Sender transkription + system-prompt til OpenAI GPT-4o-mini. Streamer tokens direkte videre til TTS-pipeline for minimal latency.','style="grid-column:1"')}
-    ${card('services/agentPersona.js','Persona config','stable','Loader og cacher agent-persona fra database. Bygger system-prompt med navn, tone, viden og instrukser for hver tenant.','style="grid-column:2"')}
-    ${card('voice/pipeline.js','Orkestrering','dev','Koordinerer hele STT→LLM→TTS pipeline. Håndterer interrupts, turn-taking og gapless audio-queue. Stadig under finjustering.','style="grid-column:1"')}
-    ${card('routes/','auth · tenants · billing · analytics','stable','Express REST API med JWT-auth, tenant-onboarding, Stripe-billing-hooks og analytics-endpoints. Alle ruter valideres med middleware.','style="grid-column:2;grid-row:span 2"')}
-    ${card('voice/index.js','WebSocket server','stable','Håndterer WS-forbindelser fra browser. Authenticerer tenant, initialiserer pipeline og streamer PCM16 binært bidirektionelt.','style="grid-column:1"')}
-  `;
-  const col2=`<div class="arch-col col-server">
-    <div class="arch-col-hdr">LAG 2 — SERVER</div>
-    <div class="arch-server-box">
-      <div class="arch-server-lbl">Railway · Node.js</div>
-      <div class="arch-server-inner">${serverCards}</div>
+  const sec4 = `
+    <div class="arch-sub">
+      <div class="arch-section-title">Auth (routes/auth.js)</div>
+      <table class="arch-table">
+        <tr><th>Metode</th><th>Endpoint</th><th>Beskrivelse</th></tr>
+        <tr><td>POST</td><td><code>/auth/signup</code></td><td>Opret bruger (14-dages trial), affiliate ref tracking</td></tr>
+        <tr><td>POST</td><td><code>/auth/login</code></td><td>Login med email+password, JWT i cookie</td></tr>
+        <tr><td>POST</td><td><code>/auth/logout</code></td><td>Slet auth cookie</td></tr>
+        <tr><td>GET</td><td><code>/auth/me</code></td><td>Hent nuv&aelig;rende bruger</td></tr>
+        <tr><td>GET</td><td><code>/auth/verify</code></td><td>Email-verifikation via token</td></tr>
+        <tr><td>POST</td><td><code>/auth/forgot-password</code></td><td>Send password reset link</td></tr>
+        <tr><td>POST</td><td><code>/auth/reset-password</code></td><td>Nulstil password med token</td></tr>
+      </table>
+      <div class="arch-section-title">Tenants / Agents (routes/tenants.js)</div>
+      <table class="arch-table">
+        <tr><th>Metode</th><th>Endpoint</th><th>Beskrivelse</th></tr>
+        <tr><td>GET/POST/PUT/DELETE</td><td><code>/api/my/tenants</code></td><td>CRUD for agenter</td></tr>
+        <tr><td>POST</td><td><code>/api/my/tenants/:id/scrape</code></td><td>Start scraping</td></tr>
+        <tr><td>POST</td><td><code>/api/my/tenants/:id/rooms</code></td><td>Gem rum-mappings</td></tr>
+        <tr><td>POST</td><td><code>/api/my/tenants/:id/manual-data</code></td><td>Gem manuel data</td></tr>
+        <tr><td>GET</td><td><code>/api/tour/:id/config</code></td><td>Public: agent config til embed.js</td></tr>
+        <tr><td>POST</td><td><code>/api/tour/:id/activate</code></td><td>Public: aktiver voice session</td></tr>
+        <tr><td>POST</td><td><code>/api/tour/checkout</code></td><td>Start page Stripe checkout ($149/md)</td></tr>
+        <tr><td>GET</td><td><code>/api/tour/checkout-success</code></td><td>Post-checkout: opret bruger + tenant + token</td></tr>
+      </table>
+      <div class="arch-section-title">Client Portal (routes/clientPortal.js)</div>
+      <table class="arch-table">
+        <tr><th>Metode</th><th>Endpoint</th><th>Beskrivelse</th></tr>
+        <tr><td>GET</td><td><code>/client/:token/data</code></td><td>Fuld portal-data med analytics</td></tr>
+        <tr><td>POST</td><td><code>/client/:token/update</code></td><td>Opdater agent-indstillinger</td></tr>
+        <tr><td>POST</td><td><code>/client/:token/upload-file</code></td><td>Upload PDF/DOCX/TXT</td></tr>
+        <tr><td>PUT</td><td><code>/client/:token/property-details</code></td><td>Property details (real estate)</td></tr>
+        <tr><td>POST</td><td><code>/client/:token/scrape</code></td><td>Start scraping</td></tr>
+        <tr><td>POST/PUT/DELETE</td><td><code>/client/:token/spaces/*</code></td><td>Rum/spaces CRUD</td></tr>
+        <tr><td>POST</td><td><code>/client/:token/purchase-minutes</code></td><td>K&oslash;b ekstra minutter</td></tr>
+        <tr><td>GET</td><td><code>/client/:token/report</code></td><td>PDF rapport (pdfkit)</td></tr>
+      </table>
+      <div class="arch-section-title">Analytics (routes/analytics.js)</div>
+      <table class="arch-table">
+        <tr><th>Endpoint</th><th>Beskrivelse</th></tr>
+        <tr><td><code>/api/analytics/overview</code></td><td>Dashboard-overblik</td></tr>
+        <tr><td><code>/api/analytics/conversations</code></td><td>Samtaler med filtrering</td></tr>
+        <tr><td><code>/api/analytics/popular-questions</code></td><td>Mest stillede sp&oslash;rgsm&aring;l</td></tr>
+        <tr><td><code>/api/analytics/voice-usage</code></td><td>Voice-forbrug over tid</td></tr>
+        <tr><td><code>/api/analytics/conversion-rate</code></td><td>Konverteringsrate</td></tr>
+        <tr><td><code>/api/analytics/leads</code></td><td>Lead-liste + CSV export</td></tr>
+        <tr><td><code>/api/analytics/report</code></td><td>PDF-rapport</td></tr>
+      </table>
+      <div class="arch-section-title">Billing + Affiliates</div>
+      <table class="arch-table">
+        <tr><th>Endpoint</th><th>Beskrivelse</th></tr>
+        <tr><td><code>/api/billing/plans</code></td><td>Tilg&aelig;ngelige planer</td></tr>
+        <tr><td><code>/api/billing/checkout</code></td><td>Start Stripe checkout</td></tr>
+        <tr><td><code>/api/webhook/stripe</code></td><td>Stripe webhooks (raw body)</td></tr>
+        <tr><td><code>/affiliate/signup</code></td><td>Partner-tilmelding (3/time rate limit)</td></tr>
+        <tr><td><code>/affiliate/:ref/stats</code></td><td>Dashboard data</td></tr>
+        <tr><td><code>/affiliate/connect-bank</code></td><td>Stripe Connect onboarding</td></tr>
+        <tr><td><code>/affiliate/payout</code></td><td>Admin: trigger payouts</td></tr>
+      </table>
+    </div>`;
+
+  const sec5 = `
+    <div class="arch-sub">
+      <div class="arch-section-title">Tre portaler</div>
+      <div class="arch-mini-grid">
+        <div class="arch-mini-card" style="border-left:2px solid var(--gold)"><div class="amc-label">Admin Dashboard</div><div class="amc-val">Cookie-baseret auth</div><div class="amc-sub">/dashboard, /rooms, /admin/*</div></div>
+        <div class="arch-mini-card" style="border-left:2px solid var(--green)"><div class="amc-label">Client Portal</div><div class="amc-val">Token-baseret (ingen login)</div><div class="amc-sub">/client/:token</div></div>
+        <div class="arch-mini-card" style="border-left:2px solid var(--purple)"><div class="amc-label">Affiliate Dashboard</div><div class="amc-val">Ref code-baseret</div><div class="amc-sub">/affiliate/:ref_code</div></div>
+      </div>
+      <div class="arch-section-title">Alle HTML-sider</div>
+      <table class="arch-table">
+        <tr><th>URL</th><th>Fil</th><th>Type</th></tr>
+        <tr><td><code>/</code></td><td><code>public/landing/index.html</code></td><td>Landing page</td></tr>
+        <tr><td><code>/start</code></td><td><code>public/start/index.html</code></td><td>Demo + aktiver</td></tr>
+        <tr><td><code>/pricing</code></td><td><code>public/landing/pricing.html</code></td><td>Priser</td></tr>
+        <tr><td><code>/how-it-works</code></td><td><code>public/landing/how-it-works.html</code></td><td>S&aring;dan virker det</td></tr>
+        <tr><td><code>/partners</code></td><td><code>public/landing/partners.html</code></td><td>Partner-program</td></tr>
+        <tr><td><code>/industries/*</code></td><td><code>public/landing/industries/*.html</code></td><td>Hotels, real estate, retail, education</td></tr>
+        <tr><td><code>/login</code></td><td><code>public/admin/login.html</code></td><td>Admin login</td></tr>
+        <tr><td><code>/dashboard</code></td><td><code>public/admin/dashboard.html</code></td><td>Admin dashboard</td></tr>
+        <tr><td><code>/tour/:id</code></td><td><code>public/kunde/index.html</code></td><td>Tour viewer (embed)</td></tr>
+        <tr><td><code>/client/:token</code></td><td><code>public/client/index.html</code></td><td>Client portal SPA</td></tr>
+        <tr><td><code>/affiliate/:ref</code></td><td><code>public/affiliate/dashboard.html</code></td><td>Affiliate dashboard SPA</td></tr>
+      </table>
+      <div class="arch-section-title">Static assets</div>
+      <table class="arch-table">
+        <tr><td><code>/css/public.css</code></td><td>Shared CSS for alle offentlige sider</td></tr>
+        <tr><td><code>/embed.js</code></td><td>Embed script &mdash; Matterport + voice widget</td></tr>
+        <tr><td><code>/images/*</code></td><td>Billeder inkl. logo-leaf.svg</td></tr>
+      </table>
+    </div>`;
+
+  const sec6 = `
+    <div class="arch-sub">
+      <p style="margin-bottom:12px">Vertikaler styrer agentens systemprompt, konverteringstyper og tilg&aelig;ngelige tools. Defineret i <code>services/agentPersona.js</code>.</p>
+      <table class="arch-table">
+        <tr><th>Vertikal</th><th>Rolle</th><th>Konvertering</th><th>Special</th></tr>
+        <tr><td><span class="arch-tag gold">hotel</span></td><td>Concierge</td><td>Booking, inquiry</td><td>Rum-navigation, pris-info</td></tr>
+        <tr><td><span class="arch-tag green">real_estate_sale</span></td><td>Ejendomsm&aelig;gler</td><td>Viewing, inquiry</td><td>Property details, spaces, set_view_mode</td></tr>
+        <tr><td><span class="arch-tag green">real_estate_rental</span></td><td>Udlejningsagent</td><td>Viewing, inquiry</td><td>Samme som sale + udlejning</td></tr>
+        <tr><td><span class="arch-tag purple">venue</span></td><td>Event coordinator</td><td>Inquiry, booking</td><td>Kapacitet, faciliteter</td></tr>
+        <tr><td><span class="arch-tag teal">showroom</span></td><td>Showroom guide</td><td>Inquiry, contact</td><td>Produkt-pr&aelig;sentation</td></tr>
+        <tr><td><span class="arch-tag pink">retail</span></td><td>Butiksassistent</td><td>Purchase, inquiry</td><td>Produktkatalog</td></tr>
+        <tr><td><span class="arch-tag green">development</span></td><td>Projektsalg</td><td>Viewing, contact</td><td>Nybyggeri-fokus</td></tr>
+        <tr><td><span class="arch-tag purple">education</span></td><td>Campus guide</td><td>Signup, inquiry</td><td>Rundvisning</td></tr>
+        <tr><td><span class="arch-tag gold">museum</span></td><td>Museumsfører</td><td>Visit, inquiry</td><td>Udstillinger</td></tr>
+        <tr><td><span class="arch-tag red">restaurant</span></td><td>V&aelig;rt</td><td>Booking, inquiry</td><td>Menu, reservering</td></tr>
+        <tr><td><span class="arch-tag teal">other</span></td><td>Generel guide</td><td>Inquiry, contact</td><td>Standard</td></tr>
+      </table>
+      <p style="margin-top:10px;font-size:11px;color:var(--text3)">Auto-detekteres under scraping eller s&aelig;ttes manuelt i client-portalen.</p>
+    </div>`;
+
+  const sec7 = `
+    <div class="arch-sub">
+      <div class="arch-section-title">Scraper (services/scraper.js)</div>
+      <p style="margin-bottom:10px">3-tier fetching: Direkte fetch &rarr; Jina Reader &rarr; Puppeteer stealth. Op til 100 sider via sitemap.</p>
+      <table class="arch-table">
+        <tr><th>#</th><th>Kilde</th><th>Beskrivelse</th></tr>
+        <tr><td>1</td><td>Egen hjemmeside</td><td>Op til 100 sider via sitemap/crawl</td></tr>
+        <tr><td>2</td><td>Google Search</td><td>Supplerende info</td></tr>
+        <tr><td>3</td><td>TripAdvisor</td><td>Anmeldelser og ratings</td></tr>
+        <tr><td>4</td><td>Booking.com</td><td>Priser, faciliteter</td></tr>
+        <tr><td>5</td><td>Hotels.com</td><td>Supplerende hotelinfo</td></tr>
+        <tr><td>6</td><td>Google Maps</td><td>Lokation, &aring;bningstider</td></tr>
+        <tr><td>7</td><td>Facebook</td><td>Social media</td></tr>
+        <tr><td>8</td><td>Nyheder</td><td>Seneste nyheder</td></tr>
+        <tr><td>9</td><td>Konkurrenter</td><td>Kontekst</td></tr>
+        <tr><td>10</td><td>Yelp + Google Reviews</td><td>Anmeldelser</td></tr>
+        <tr><td>11</td><td>Events</td><td>Kommende events</td></tr>
+        <tr><td>12</td><td>Vertikal-specifik</td><td>Retail produkter, real estate detaljer</td></tr>
+      </table>
+      <p style="margin-top:8px">Syntese: <strong>Groq Llama 3.3 70B</strong> (6000 max tokens). Post-scrape: <strong>GPT-4o-mini</strong> context compilation (2500 tokens).</p>
+      <div class="arch-section-title">Schedulers</div>
+      <div class="arch-mini-grid">
+        <div class="arch-mini-card"><div class="amc-label">Auto-Scrape</div><div class="amc-val">Hvert 60. minut</div><div class="amc-sub">Tenants med next_scrape_at &lt; NOW()</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Kommission</div><div class="amc-val">Dagligt</div><div class="amc-sub">Promoverer forbi 30-dages hold</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Inaktiv cleanup</div><div class="amc-val">M&aring;nedligt</div><div class="amc-sub">Deaktiverer 90+ dage inaktive</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Auto-payout</div><div class="amc-val">1. i m&aring;neden</div><div class="amc-sub">Stripe transfers kl. 9</div></div>
+      </div>
+    </div>`;
+
+  const sec8 = `
+    <div class="arch-sub">
+      <div class="arch-section-title">Planer (Admin Dashboard)</div>
+      <table class="arch-table">
+        <tr><th>Plan</th><th>Pris</th><th>Agenter</th><th>Minutter</th></tr>
+        <tr><td><strong>Starter</strong></td><td>$49/md</td><td>1</td><td>200</td></tr>
+        <tr><td><strong>Growth</strong></td><td>$250/md</td><td>10</td><td>1.000</td></tr>
+        <tr><td><strong>Scale</strong></td><td>$500/md</td><td>25</td><td>3.000</td></tr>
+        <tr><td><strong>Enterprise</strong></td><td>$1.500/md</td><td>100</td><td>Ubegr.</td></tr>
+      </table>
+      <div class="arch-section-title">Tour Paywall (Start Page): $149/md for 1.000 min</div>
+      <div class="arch-section-title">Ekstra minut-pakker (Client Portal)</div>
+      <table class="arch-table">
+        <tr><td>Small: 200 min &mdash; $29</td><td>Medium: 500 min &mdash; $59</td><td>Large: 1.000 min &mdash; $99</td></tr>
+      </table>
+      <div class="arch-section-title">Stripe Webhook Events</div>
+      <table class="arch-table">
+        <tr><th>Event</th><th>Handling</th></tr>
+        <tr><td><code>checkout.session.completed</code></td><td>4 typer: minute_purchase, tour_activation, start_page_signup, plan subscription</td></tr>
+        <tr><td><code>customer.subscription.updated</code></td><td>Opdater plan_name, plan_active</td></tr>
+        <tr><td><code>customer.subscription.deleted</code></td><td>Deaktiver plan + annuller pending affiliate commissions</td></tr>
+        <tr><td><code>invoice.paid</code></td><td>Opret affiliate commission (25%, 30d hold) + velocity check</td></tr>
+      </table>
+      <div class="arch-section-title">Checkout flow</div>
+      <div class="arch-flow">
+        <div class="arch-flow-step">/start</div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">POST /api/tour/checkout</div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">Stripe</div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">checkout-success</div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">user+tenant+token</div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">/client/:token</div>
+      </div>
+    </div>`;
+
+  const sec9 = `
+    <div class="arch-sub">
+      <div class="arch-flow">
+        <div class="arch-flow-step">Partner signup</div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">Ref link</div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">Kunde klikker</div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">Cookie 30d</div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">K&oslash;b</div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">25% kommission</div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">30d hold</div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step">Payout</div>
+      </div>
+      <div class="arch-section-title">Anti-fraud</div>
+      <table class="arch-table">
+        <tr><td><strong>Self-referral</strong></td><td>Email-match blokering ved signup + webhook</td></tr>
+        <tr><td><strong>Velocity</strong></td><td>3+ kommissioner/24t &rarr; status 'review'</td></tr>
+        <tr><td><strong>Churn</strong></td><td>30d hold + annullering ved subscription.deleted</td></tr>
+        <tr><td><strong>Inaktiv</strong></td><td>90d cleanup scheduler</td></tr>
+        <tr><td><strong>Rate limit</strong></td><td>3 signups/time/IP</td></tr>
+      </table>
+      <div class="arch-mini-grid">
+        <div class="arch-mini-card"><div class="amc-label">Kommission</div><div class="amc-val">25% recurring</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Hold</div><div class="amc-val">30 dage</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Payout</div><div class="amc-val">1. i m&aring;neden</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Ref code</div><div class="amc-val">6 tegn (A-Z, 2-9)</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Metode</div><div class="amc-val">Stripe Connect Express</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Cookie</div><div class="amc-val">30 dage</div></div>
+      </div>
+    </div>`;
+
+  const sec10 = `
+    <div class="arch-sub">
+      <div class="arch-section-title">Authentication</div>
+      <table class="arch-table">
+        <tr><td><code>hashPassword</code></td><td>scrypt (native crypto, 32B salt, 64B hash)</td></tr>
+        <tr><td><code>requireAuth</code></td><td>JWT fra cookie eller Bearer header</td></tr>
+        <tr><td><code>requireAdmin</code></td><td>Role check: user.role === 'admin'</td></tr>
+      </table>
+      <div class="arch-section-title">Rate Limiting (in-memory)</div>
+      <table class="arch-table">
+        <tr><th>Navn</th><th>Limit</th><th>Vindue</th><th>Bruges p&aring;</th></tr>
+        <tr><td>authLimiter</td><td>10</td><td>15 min</td><td>/auth/login</td></tr>
+        <tr><td>signupLimiter</td><td>5</td><td>1 time</td><td>/auth/signup</td></tr>
+        <tr><td>apiLimiter</td><td>100</td><td>1 min</td><td>/api/*</td></tr>
+        <tr><td>scrapeLimiter</td><td>3</td><td>10 min</td><td>Scrape endpoints</td></tr>
+        <tr><td>tourApiLimiter</td><td>60</td><td>1 min</td><td>/api/tour/*</td></tr>
+      </table>
+      <div class="arch-section-title">Security Headers (production)</div>
+      <div class="arch-mini-grid">
+        <div class="arch-mini-card"><div class="amc-val">X-Content-Type-Options: nosniff</div></div>
+        <div class="arch-mini-card"><div class="amc-val">X-Frame-Options: SAMEORIGIN</div></div>
+        <div class="arch-mini-card"><div class="amc-val">X-XSS-Protection: 1; mode=block</div></div>
+        <div class="arch-mini-card"><div class="amc-val">Referrer-Policy: strict-origin</div></div>
+      </div>
+      <div class="arch-section-title">CORS</div>
+      <p><code>Access-Control-Allow-Origin: *</code> for: /embed.js, /api/tour/*, /ws/voice, /client/*</p>
+    </div>`;
+
+  const sec11 = `
+    <div class="arch-sub">
+      <pre style="font-family:'SF Mono',Menlo,monospace;font-size:11px;line-height:1.8;color:var(--text2);background:var(--surface2);padding:16px 20px;border-radius:var(--r);border:1px solid var(--border);overflow-x:auto;white-space:pre">platform/
+├── server.js                          ← Entry point
+├── db/
+│   ├── index.js                       ← Pool + migration runner
+│   ├── schema.sql                     ← Base schema
+│   └── migration-v1..v9-*.sql         ← Incremental migrations
+├── voice/
+│   ├── index.js                       ← WebSocket server
+│   ├── pipeline.js                    ← STT → LLM → TTS
+│   ├── llm.js                         ← GPT-5.4-mini streaming
+│   ├── stt.js                         ← Deepgram Nova-3
+│   ├── stt.groq-whisper.js            ← Backup STT
+│   ├── session.js                     ← Session factory
+│   └── ttsNormalize.js                ← Currency normalization
+├── services/
+│   ├── tts.js                         ← Cartesia Sonic-2 TTS
+│   ├── agentPersona.js                ← System prompt (12 vertikaler)
+│   ├── scraper.js                     ← 13-kilde scraper
+│   ├── contextCompiler.js             ← GPT-4o-mini compiler
+│   ├── dataMerger.js                  ← Manual + scraped merger
+│   ├── email.js                       ← Resend email
+│   ├── autoScrapeScheduler.js         ← Hourly auto-scrape
+│   └── affiliatePayout.js             ← Commission scheduler
+├── routes/
+│   ├── auth.js                        ← Signup, login, reset
+│   ├── tenants.js                     ← Agent CRUD, tour API
+│   ├── clients.js                     ← Client CRUD
+│   ├── clientPortal.js                ← Token-based portal
+│   ├── analytics.js                   ← Analytics, reports
+│   ├── billing.js                     ← Stripe + webhooks
+│   └── affiliates.js                  ← Affiliate system
+├── middleware/
+│   ├── auth.js                        ← scrypt, JWT auth
+│   └── rateLimit.js                   ← In-memory rate limits
+└── public/
+    ├── landing/                       ← Public pages
+    ├── admin/                         ← Admin dashboard
+    ├── client/                        ← Client portal
+    ├── affiliate/                     ← Affiliate dashboard
+    ├── kunde/                         ← Tour viewer
+    ├── start/                         ← Start page
+    └── css/public.css                 ← Shared styles</pre>
+    </div>`;
+
+  const sections = [
+    { ico:'⚙️', title:'Infrastruktur', badge:'Railway + PostgreSQL', badgeCls:'green', body:sec1 },
+    { ico:'🗄️', title:'Database', badge:'schema + 9 migrationer', badgeCls:'purple', body:sec2 },
+    { ico:'🎙️', title:'Voice Pipeline', badge:'Deepgram → GPT → Cartesia', badgeCls:'teal', body:sec3 },
+    { ico:'🔌', title:'API Routes', badge:'60+ endpoints', badgeCls:'gold', body:sec4 },
+    { ico:'📄', title:'Frontend & Pages', badge:'3 portaler, 20+ sider', badgeCls:'green', body:sec5 },
+    { ico:'🏨', title:'Vertikaler', badge:'12 industrier', badgeCls:'purple', body:sec6 },
+    { ico:'🔧', title:'Scraper & Services', badge:'13 kilder, 4 schedulers', badgeCls:'teal', body:sec7 },
+    { ico:'💳', title:'Billing & Packages', badge:'Stripe, 4 planer', badgeCls:'gold', body:sec8 },
+    { ico:'🤝', title:'Affiliate System', badge:'25% recurring', badgeCls:'green', body:sec9 },
+    { ico:'🔒', title:'Middleware & Sikkerhed', badge:'Auth, rate limits, CORS', badgeCls:'red', body:sec10 },
+    { ico:'📁', title:'Filstruktur', badge:'Komplet overblik', badgeCls:'purple', body:sec11 },
+  ];
+
+  const accs = sections.map(s => `
+    <div class="arch-acc">
+      <div class="arch-acc-head">
+        <div class="arch-ico">${s.ico}</div>
+        <div class="arch-title">${s.title}</div>
+        <span class="arch-badge arch-tag ${s.badgeCls}">${s.badge}</span>
+        <div class="arch-arrow">▼</div>
+      </div>
+      <div class="arch-acc-body">${s.body}</div>
+    </div>`).join('');
+
+  return `
+    <div class="arch-header">
+      <h2>October AI &mdash; Systemarkitektur</h2>
+      <div class="arch-updated">Sidst opdateret: ${updated}</div>
     </div>
-    <div class="arch-db-arrow">↕</div>
-    <div class="arch-db-card">
-      <div class="arch-card-name">PostgreSQL</div>
-      <div class="arch-card-sub">users · tenants · clients · conversations<br>messages · voice_usage · analytics</div>
-      <div class="arch-tip">Primær database på Railway. Indeholder alle tenant-data, samtalehistorik, voice-forbrug og analytics-data. Tilgås via pg-bibliotek med connection pooling.</div>
-    </div>
-  </div>`;
-
-  // ── Connector 2→3 ──
-  const conn23=`<div class="arch-conn">
-    ${arrowR('WAV →','c-b',0)}
-    ${arrowL('← transcript','c-g',0.3)}
-    ${arrowR('prompt →','c-b',0.65)}
-    ${arrowL('← tokens','c-g',0.95)}
-    ${arrowR('text →','c-o',1.3)}
-    ${arrowL('← PCM16','c-o',1.6)}
-    ${arrowR('billing','c-g',2.0)}
-  </div>`;
-
-  // ── LAG 3: External + Latency ──
-  const latency=`<div class="latency-card">
-    <div class="latency-hdr">Typisk Latency</div>
-    <div class="latency-row"><span class="latency-lbl">STT (Whisper)</span><span class="latency-val" style="color:#22C55E">~200ms</span></div>
-    <div class="latency-row"><span class="latency-lbl">GPT first chunk</span><span class="latency-val" style="color:#F97316">~600ms</span></div>
-    <div class="latency-row"><span class="latency-lbl">TTS first audio</span><span class="latency-val" style="color:#F97316">~200ms</span></div>
-    <div class="latency-row"><span class="latency-lbl">End-to-end</span><span class="latency-val" style="color:#E2E8F0">~1.0s</span></div>
-  </div>`;
-  const col3=`<div class="arch-col col-ext">
-    <div class="arch-col-hdr">LAG 3 — EXTERNE</div>
-    ${card('Groq','Whisper STT · ~200ms','stable','Transcription-API via Groq Cloud. Sender komprimeret WAV-audio og modtager JSON-transkription. Groq\'s hardware-acceleration giver under 200ms latency.')}
-    ${card('OpenAI','GPT-4o-mini · streaming','stable','LLM-inference via OpenAI API. GPT-4o-mini balancerer hastighed og kvalitet. Server-Sent Events streamer tokens direkte til TTS-pipeline.')}
-    ${card('ElevenLabs','Flash v2.5 TTS · streaming','dev','Text-to-Speech via ElevenLabs streaming API. Flash v2.5 er optimeret til lav TTFB. Returnerer PCM16 audio-stream direkte.')}
-    ${card('Stripe','Billing · Webhooks','stable','Betalings-infrastruktur til abonnement og overage-fakturering. Webhook-events håndterer tenant lifecycle og betalingsstatus.')}
-    ${latency}
-  </div>`;
-
-  const legend=`<div class="arch-legend">
-    <div class="arch-leg"><div class="arch-leg-dot" style="background:#22C55E"></div>Virker stabilt</div>
-    <div class="arch-leg"><div class="arch-leg-dot" style="background:#F97316"></div>Under udvikling</div>
-    <div class="arch-leg"><div class="arch-leg-dot" style="background:#EF4444"></div>Known issues</div>
-  </div>`;
-
-  return`<div class="arch-wrap">
-    <div class="arch-row">${col1}${conn12}${col2}${conn23}${col3}</div>
-    ${legend}
-  </div>`;
+    <div class="arch-grid">${accs}</div>`;
 }
 
 /* ════════════════════════════════════════
