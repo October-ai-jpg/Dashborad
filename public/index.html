@@ -285,6 +285,17 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .arch-mini-card .amc-sub{font-size:11px;color:var(--text3);margin-top:2px}
 .arch-divider{height:1px;background:var(--border);margin:14px 0}
 .arch-section-title{font-size:11px;font-weight:500;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px}
+
+/* ── Grafisk arkitektur-diagram ── */
+.arch-diagram{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:24px 20px 20px;margin-bottom:16px;overflow-x:auto}
+.arch-diagram-title{font-family:var(--serif);font-size:18px;font-weight:500;margin-bottom:16px;text-align:center;color:var(--text)}
+.arch-svg-wrap{max-width:900px;margin:0 auto}
+.arch-svg-wrap svg{width:100%;height:auto}
+.arch-svg-wrap text{font-family:'DM Sans',sans-serif}
+.arch-diagram-legend{display:flex;gap:20px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.arch-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)}
+.arch-leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
@@ -1246,6 +1257,182 @@ function renderArch(){
     └── css/public.css                 ← Shared styles</pre>
     </div>`;
 
+  /* ── Grafisk diagram (SVG) ── */
+  const diagram = `
+  <div class="arch-diagram">
+    <div class="arch-diagram-title">Systemdiagram &mdash; Komplet dataflow</div>
+    <div class="arch-svg-wrap">
+      <svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#A89880"/></marker>
+          <marker id="ah-g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#4A7C59"/></marker>
+          <marker id="ah-gold" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#B08D5B"/></marker>
+          <marker id="ah-teal" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#3A7A7A"/></marker>
+          <marker id="ah-purple" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#6B5B8A"/></marker>
+          <filter id="ds"><feDropShadow dx="0" dy="1" stdDeviation="3" flood-color="rgba(60,45,30,0.08)"/></filter>
+        </defs>
+
+        <!-- ═══ LAG 1: BROWSER ═══ -->
+        <rect x="20" y="20" width="200" height="100" rx="8" fill="#F4F0E8" stroke="rgba(60,45,30,0.18)" filter="url(#ds)"/>
+        <text x="120" y="48" text-anchor="middle" font-size="10" fill="#A89880" font-weight="600" letter-spacing="1.5">BROWSER</text>
+        <text x="120" y="68" text-anchor="middle" font-size="12" fill="#1E1A14" font-weight="500">Matterport iframe</text>
+        <text x="120" y="84" text-anchor="middle" font-size="10" fill="#6B5F4E">AudioWorklet · PCM16 24kHz</text>
+        <text x="120" y="98" text-anchor="middle" font-size="10" fill="#6B5F4E">embed.js · Voice widget</text>
+
+        <!-- ═══ LAG 2: SERVER (stor boks) ═══ -->
+        <rect x="280" y="10" width="350" height="440" rx="10" fill="none" stroke="rgba(60,45,30,0.12)" stroke-dasharray="6 3"/>
+        <text x="455" y="32" text-anchor="middle" font-size="9" fill="#A89880" font-weight="600" letter-spacing="2">RAILWAY · EXPRESS.JS</text>
+
+        <!-- Voice Pipeline bokse -->
+        <rect x="300" y="50" width="140" height="50" rx="6" fill="#F4F0E8" stroke="#3A7A7A" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="370" y="72" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">voice/stt.js</text>
+        <text x="370" y="87" text-anchor="middle" font-size="9" fill="#3A7A7A">Deepgram Nova-3</text>
+
+        <rect x="470" y="50" width="140" height="50" rx="6" fill="#F4F0E8" stroke="#3A7A7A" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="540" y="72" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">voice/llm.js</text>
+        <text x="540" y="87" text-anchor="middle" font-size="9" fill="#3A7A7A">GPT-5.4-mini</text>
+
+        <rect x="300" y="115" width="140" height="50" rx="6" fill="#F4F0E8" stroke="#3A7A7A" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="370" y="137" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">services/tts.js</text>
+        <text x="370" y="152" text-anchor="middle" font-size="9" fill="#3A7A7A">Cartesia Sonic-2</text>
+
+        <rect x="470" y="115" width="140" height="50" rx="6" fill="#F4F0E8" stroke="#B08D5B" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="540" y="137" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">voice/pipeline.js</text>
+        <text x="540" y="152" text-anchor="middle" font-size="9" fill="#B08D5B">Orchestration</text>
+
+        <!-- Pipeline pile -->
+        <line x1="440" y1="75" x2="462" y2="75" stroke="#3A7A7A" stroke-width="1.2" marker-end="url(#ah-teal)"/>
+        <line x1="540" y1="100" x2="540" y2="108" stroke="#3A7A7A" stroke-width="1.2" marker-end="url(#ah-teal)"/>
+        <line x1="470" y1="140" x2="448" y2="140" stroke="#3A7A7A" stroke-width="1.2"/>
+        <text x="455" y="70" text-anchor="middle" font-size="7" fill="#A89880">text</text>
+
+        <!-- Services -->
+        <rect x="300" y="185" width="140" height="50" rx="6" fill="#F4F0E8" stroke="#4A7C59" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="370" y="207" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">agentPersona.js</text>
+        <text x="370" y="222" text-anchor="middle" font-size="9" fill="#4A7C59">12 vertikaler</text>
+
+        <rect x="470" y="185" width="140" height="50" rx="6" fill="#F4F0E8" stroke="#4A7C59" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="540" y="207" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">scraper.js</text>
+        <text x="540" y="222" text-anchor="middle" font-size="9" fill="#4A7C59">13 kilder · Groq LLM</text>
+
+        <!-- Routes -->
+        <rect x="300" y="255" width="310" height="50" rx="6" fill="#F4F0E8" stroke="#B08D5B" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="455" y="277" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">routes/ &mdash; auth · tenants · clients · billing · analytics · affiliates</text>
+        <text x="455" y="293" text-anchor="middle" font-size="9" fill="#B08D5B">REST API · 60+ endpoints · JWT auth · rate limiting</text>
+
+        <!-- Middleware -->
+        <rect x="300" y="320" width="310" height="40" rx="6" fill="#F4F0E8" stroke="#6B5B8A" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="455" y="344" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">middleware/ &mdash; auth (scrypt) · rateLimit (in-memory) · CORS</text>
+
+        <!-- Schedulers -->
+        <rect x="300" y="380" width="310" height="50" rx="6" fill="#F4F0E8" stroke="#9B5A6A" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="455" y="402" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">Schedulers</text>
+        <text x="455" y="418" text-anchor="middle" font-size="9" fill="#9B5A6A">Auto-scrape (1t) · Kommission (daglig) · Payout (m&aring;nedlig) · Cleanup (90d)</text>
+
+        <!-- ═══ Browser → Server pil ═══ -->
+        <line x1="220" y1="55" x2="292" y2="55" stroke="#3A7A7A" stroke-width="1.5" marker-end="url(#ah-teal)"/>
+        <text x="256" y="48" text-anchor="middle" font-size="8" fill="#3A7A7A" font-weight="500">WebSocket</text>
+        <text x="256" y="65" text-anchor="middle" font-size="7" fill="#A89880">PCM16 ↕</text>
+
+        <line x1="220" y1="85" x2="292" y2="277" stroke="#B08D5B" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah-gold)"/>
+        <text x="240" y="150" font-size="7" fill="#B08D5B" transform="rotate(55 240 150)">REST API</text>
+
+        <!-- ═══ LAG 3: EXTERNE API'ER ═══ -->
+        <rect x="690" y="45" width="190" height="55" rx="6" fill="#F4F0E8" stroke="#3A7A7A" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="785" y="68" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">Deepgram</text>
+        <text x="785" y="83" text-anchor="middle" font-size="9" fill="#3A7A7A">Nova-3 STT · ~200ms</text>
+
+        <rect x="690" y="115" width="190" height="55" rx="6" fill="#F4F0E8" stroke="#3A7A7A" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="785" y="138" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">OpenAI</text>
+        <text x="785" y="153" text-anchor="middle" font-size="9" fill="#3A7A7A">GPT-5.4-mini · streaming</text>
+
+        <rect x="690" y="185" width="190" height="55" rx="6" fill="#F4F0E8" stroke="#3A7A7A" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="785" y="208" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">Cartesia</text>
+        <text x="785" y="223" text-anchor="middle" font-size="9" fill="#3A7A7A">Sonic-2 TTS · WebSocket</text>
+
+        <rect x="690" y="255" width="190" height="55" rx="6" fill="#F4F0E8" stroke="#4A7C59" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="785" y="278" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">Groq</text>
+        <text x="785" y="293" text-anchor="middle" font-size="9" fill="#4A7C59">Llama 3.3 70B · scraping</text>
+
+        <rect x="690" y="325" width="190" height="55" rx="6" fill="#F4F0E8" stroke="#B08D5B" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="785" y="348" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">Stripe</text>
+        <text x="785" y="363" text-anchor="middle" font-size="9" fill="#B08D5B">Billing · Webhooks · Connect</text>
+
+        <rect x="690" y="395" width="190" height="45" rx="6" fill="#F4F0E8" stroke="#6B5B8A" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="785" y="418" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">Resend</text>
+        <text x="785" y="430" text-anchor="middle" font-size="9" fill="#6B5B8A">Email · noreply@october-ai.dk</text>
+
+        <!-- Server → Externe pile -->
+        <line x1="440" y1="72" x2="440" y2="72" stroke="none"/>
+        <line x1="630" y1="72" x2="682" y2="72" stroke="#3A7A7A" stroke-width="1.2" marker-end="url(#ah-teal)"/>
+        <line x1="610" y1="140" x2="682" y2="140" stroke="#3A7A7A" stroke-width="1.2" marker-end="url(#ah-teal)"/>
+        <line x1="440" y1="140" x2="440" y2="155" stroke="none"/>
+        <line x1="630" y1="210" x2="682" y2="210" stroke="#3A7A7A" stroke-width="1.2" marker-end="url(#ah-teal)"/>
+        <line x1="610" y1="210" x2="682" y2="280" stroke="#4A7C59" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah-g)"/>
+        <line x1="610" y1="280" x2="682" y2="350" stroke="#B08D5B" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah-gold)"/>
+        <line x1="610" y1="405" x2="682" y2="415" stroke="#6B5B8A" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah-purple)"/>
+
+        <!-- ═══ DATABASE ═══ -->
+        <rect x="340" y="470" width="230" height="60" rx="8" fill="#F4F0E8" stroke="#4A7C59" stroke-width="2" filter="url(#ds)"/>
+        <text x="455" y="496" text-anchor="middle" font-size="12" fill="#1E1A14" font-weight="600">PostgreSQL</text>
+        <text x="455" y="514" text-anchor="middle" font-size="9" fill="#4A7C59">users · tenants · clients · conversations · affiliates</text>
+        <!-- Cylinder top -->
+        <ellipse cx="455" cy="471" rx="115" ry="8" fill="#F4F0E8" stroke="#4A7C59" stroke-width="2"/>
+
+        <!-- Server → DB pil -->
+        <line x1="455" y1="430" x2="455" y2="460" stroke="#4A7C59" stroke-width="1.5" marker-end="url(#ah-g)"/>
+        <text x="470" y="450" font-size="8" fill="#4A7C59">SQL</text>
+
+        <!-- ═══ 3 PORTALER ═══ -->
+        <rect x="20" y="160" width="200" height="55" rx="6" fill="#F4F0E8" stroke="#B08D5B" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="120" y="183" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">Admin Dashboard</text>
+        <text x="120" y="200" text-anchor="middle" font-size="9" fill="#B08D5B">/dashboard · Cookie auth</text>
+
+        <rect x="20" y="230" width="200" height="55" rx="6" fill="#F4F0E8" stroke="#4A7C59" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="120" y="253" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">Client Portal</text>
+        <text x="120" y="270" text-anchor="middle" font-size="9" fill="#4A7C59">/client/:token · Token auth</text>
+
+        <rect x="20" y="300" width="200" height="55" rx="6" fill="#F4F0E8" stroke="#6B5B8A" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="120" y="323" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">Affiliate Dashboard</text>
+        <text x="120" y="340" text-anchor="middle" font-size="9" fill="#6B5B8A">/affiliate/:ref · Ref code</text>
+
+        <!-- Portal pile -->
+        <line x1="220" y1="187" x2="292" y2="265" stroke="#B08D5B" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah-gold)"/>
+        <line x1="220" y1="257" x2="292" y2="270" stroke="#4A7C59" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah-g)"/>
+        <line x1="220" y1="327" x2="292" y2="280" stroke="#6B5B8A" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah-purple)"/>
+
+        <!-- ═══ LANDING + START ═══ -->
+        <rect x="20" y="400" width="200" height="55" rx="6" fill="#F4F0E8" stroke="#A89880" stroke-width="1.5" filter="url(#ds)"/>
+        <text x="120" y="423" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="500">Landing + Start page</text>
+        <text x="120" y="440" text-anchor="middle" font-size="9" fill="#A89880">/ · /start · /pricing · /partners</text>
+
+        <line x1="220" y1="427" x2="292" y2="290" stroke="#A89880" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah)"/>
+
+        <!-- ═══ LATENCY BOX ═══ -->
+        <rect x="690" y="470" width="190" height="100" rx="8" fill="#F4F0E8" stroke="rgba(60,45,30,0.18)" filter="url(#ds)"/>
+        <text x="785" y="492" text-anchor="middle" font-size="10" fill="#A89880" font-weight="600" letter-spacing="1">LATENCY</text>
+        <text x="720" y="512" font-size="10" fill="#6B5F4E">STT</text><text x="830" y="512" text-anchor="end" font-size="11" fill="#4A7C59" font-weight="600">~200ms</text>
+        <text x="720" y="528" font-size="10" fill="#6B5F4E">LLM first token</text><text x="830" y="528" text-anchor="end" font-size="11" fill="#B08D5B" font-weight="600">~600ms</text>
+        <text x="720" y="544" font-size="10" fill="#6B5F4E">TTS first audio</text><text x="830" y="544" text-anchor="end" font-size="11" fill="#B08D5B" font-weight="600">~200ms</text>
+        <line x1="710" y1="552" x2="860" y2="552" stroke="rgba(60,45,30,0.1)" stroke-width="1"/>
+        <text x="720" y="567" font-size="10" fill="#1E1A14" font-weight="500">End-to-end</text><text x="830" y="567" text-anchor="end" font-size="13" fill="#1E1A14" font-weight="700">~1.0s</text>
+
+        <!-- ═══ LABELS ═══ -->
+        <text x="455" y="452" text-anchor="middle" font-size="8" fill="#A89880" letter-spacing="1.5">▼ PERSISTENCE</text>
+        <text x="660" y="32" text-anchor="middle" font-size="8" fill="#A89880" letter-spacing="1.5">EXTERNE API'ER ▶</text>
+        <text x="120" y="147" text-anchor="middle" font-size="8" fill="#A89880" letter-spacing="1.5">◀ PORTALER</text>
+        <text x="120" y="388" text-anchor="middle" font-size="8" fill="#A89880" letter-spacing="1.5">◀ PUBLIC PAGES</text>
+      </svg>
+    </div>
+    <div class="arch-diagram-legend">
+      <div class="arch-leg-item"><div class="arch-leg-dot" style="background:#3A7A7A"></div>Voice pipeline</div>
+      <div class="arch-leg-item"><div class="arch-leg-dot" style="background:#4A7C59"></div>Services &amp; data</div>
+      <div class="arch-leg-item"><div class="arch-leg-dot" style="background:#B08D5B"></div>Routes &amp; API</div>
+      <div class="arch-leg-item"><div class="arch-leg-dot" style="background:#6B5B8A"></div>Middleware &amp; auth</div>
+      <div class="arch-leg-item"><div class="arch-leg-dot" style="background:#9B5A6A"></div>Schedulers</div>
+    </div>
+  </div>`;
+
   const sections = [
     { ico:'⚙️', title:'Infrastruktur', badge:'Railway + PostgreSQL', badgeCls:'green', body:sec1 },
     { ico:'🗄️', title:'Database', badge:'schema + 9 migrationer', badgeCls:'purple', body:sec2 },
@@ -1276,6 +1463,7 @@ function renderArch(){
       <h2>October AI &mdash; Systemarkitektur</h2>
       <div class="arch-updated">Sidst opdateret: ${updated}</div>
     </div>
+    ${diagram}
     <div class="arch-grid">${accs}</div>`;
 }
 
