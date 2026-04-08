@@ -286,6 +286,28 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .arch-divider{height:1px;background:var(--border);margin:14px 0}
 .arch-section-title{font-size:11px;font-weight:500;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px}
 
+/* ── IT-sikkerhed health badges ── */
+.sec-health-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.sec-health-card{flex:1;min-width:140px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:12px 16px;display:flex;align-items:center;gap:10px}
+.sec-health-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.sec-health-dot.ok{background:var(--green);box-shadow:0 0 6px rgba(74,124,89,0.45)}
+.sec-health-dot.warn{background:var(--gold);box-shadow:0 0 6px rgba(176,141,91,0.45)}
+.sec-health-dot.err{background:var(--red);box-shadow:0 0 6px rgba(155,58,47,0.45)}
+.sec-health-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px}
+.sec-health-val{font-size:13px;font-weight:500;color:var(--text)}
+
+.sec-layer-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin:12px 0}
+.sec-layer-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;border-top:3px solid var(--green)}
+.sec-layer-card.amber{border-top-color:var(--gold)}
+.sec-layer-card.red{border-top-color:var(--red)}
+.sec-layer-card .slc-ico{font-size:18px;margin-bottom:8px}
+.sec-layer-card .slc-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px}
+.sec-layer-card .slc-desc{font-size:11px;color:var(--text2);line-height:1.65;font-weight:300}
+.sec-layer-card .slc-items{margin-top:8px}
+.sec-layer-card .slc-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);padding:3px 0;font-weight:300}
+.sec-layer-card .slc-check{color:var(--green);font-size:13px;flex-shrink:0}
+.sec-layer-card .slc-warn{color:var(--gold);font-size:13px;flex-shrink:0}
+
 /* ── Grafisk arkitektur-diagram ── */
 .arch-diagram{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:24px 20px 20px;margin-bottom:16px;overflow-x:auto}
 .arch-diagram-title{font-family:var(--serif);font-size:18px;font-weight:500;margin-bottom:16px;text-align:center;color:var(--text)}
@@ -844,7 +866,7 @@ function renderTodo(){
    ARKITEKTUR DIAGRAM — October AI stack
    ════════════════════════════════════════ */
 function renderArch(){
-  const updated = '7. april 2026';
+  const updated = '8. april 2026';
 
   const sec1 = `
     <div class="arch-sub">
@@ -1257,6 +1279,238 @@ function renderArch(){
     └── css/public.css                 ← Shared styles</pre>
     </div>`;
 
+  const sec12 = `
+    <div class="arch-sub">
+      <div class="arch-section-title">Sikkerhedsstatus</div>
+      <div class="sec-health-row">
+        <div class="sec-health-card"><div class="sec-health-dot ok"></div><div><div class="sec-health-label">HTTPS</div><div class="sec-health-val">Aktiv (auto-redirect)</div></div></div>
+        <div class="sec-health-card"><div class="sec-health-dot ok"></div><div><div class="sec-health-label">Auth</div><div class="sec-health-val">JWT + scrypt</div></div></div>
+        <div class="sec-health-card"><div class="sec-health-dot ok"></div><div><div class="sec-health-label">Rate Limit</div><div class="sec-health-val">5 lag aktive</div></div></div>
+        <div class="sec-health-card"><div class="sec-health-dot ok"></div><div><div class="sec-health-label">Headers</div><div class="sec-health-val">4 security headers</div></div></div>
+        <div class="sec-health-card"><div class="sec-health-dot ok"></div><div><div class="sec-health-label">SQL</div><div class="sec-health-val">Parameteriseret</div></div></div>
+        <div class="sec-health-card"><div class="sec-health-dot warn"></div><div><div class="sec-health-label">CORS</div><div class="sec-health-val">Wildcard (public API)</div></div></div>
+      </div>
+
+      <div class="arch-section-title">Request Flow — Sikkerhedslag</div>
+      <div class="arch-flow">
+        <div class="arch-flow-step" style="border-color:var(--teal)">Klient<div class="arch-flow-label">Browser / SDK</div></div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step" style="border-color:var(--green)">HTTPS<div class="arch-flow-label">TLS 1.3</div></div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step" style="border-color:var(--gold)">Rate Limiter<div class="arch-flow-label">IP-baseret</div></div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step" style="border-color:var(--purple)">Security Headers<div class="arch-flow-label">nosniff, XSS, frame</div></div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step" style="border-color:var(--red)">Auth Middleware<div class="arch-flow-label">JWT verify</div></div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step" style="border-color:var(--green)">SQL (parameteriseret)<div class="arch-flow-label">pg prepared</div></div>
+        <div class="arch-flow-arrow">&rarr;</div>
+        <div class="arch-flow-step" style="border-color:var(--teal)">PostgreSQL<div class="arch-flow-label">Railway managed</div></div>
+      </div>
+
+      <div class="arch-section-title">Sikkerhedslag</div>
+      <div class="sec-layer-grid">
+        <div class="sec-layer-card">
+          <div class="slc-ico">🌐</div>
+          <div class="slc-title">Netv&aelig;rk &amp; Transport</div>
+          <div class="slc-desc">Al trafik krypteres med HTTPS. Railway h&aring;ndterer TLS termination og certifikat-fornyelse.</div>
+          <div class="slc-items">
+            <div class="slc-item"><span class="slc-check">&check;</span> HTTPS auto-redirect i produktion</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> TLS 1.3 via Railway proxy</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> WebSocket over WSS (krypteret)</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> x-forwarded-proto check</div>
+          </div>
+        </div>
+        <div class="sec-layer-card">
+          <div class="slc-ico">🛡️</div>
+          <div class="slc-title">Security Headers</div>
+          <div class="slc-desc">Produktions-headers der forhindrer XSS, clickjacking og MIME sniffing.</div>
+          <div class="slc-items">
+            <div class="slc-item"><span class="slc-check">&check;</span> X-Content-Type-Options: nosniff</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> X-Frame-Options: SAMEORIGIN</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> X-XSS-Protection: 1; mode=block</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> Referrer-Policy: strict-origin</div>
+          </div>
+        </div>
+        <div class="sec-layer-card">
+          <div class="slc-ico">🔐</div>
+          <div class="slc-title">Authentication</div>
+          <div class="slc-desc">Scrypt password hashing med 32B salt. JWT tokens i httpOnly cookies med 7-dages udl&oslash;b.</div>
+          <div class="slc-items">
+            <div class="slc-item"><span class="slc-check">&check;</span> scrypt (native crypto, 32B salt, 64B hash)</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> JWT med RS256-signering</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> httpOnly cookie (ingen JS-adgang)</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> Bearer token fallback for API</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> Role-baseret adgang (admin check)</div>
+          </div>
+        </div>
+        <div class="sec-layer-card amber">
+          <div class="slc-ico">⏱️</div>
+          <div class="slc-title">Rate Limiting</div>
+          <div class="slc-desc">In-memory rate limiters pr. IP-adresse p&aring; alle f&oslash;lsomme endpoints.</div>
+          <div class="slc-items">
+            <div class="slc-item"><span class="slc-check">&check;</span> authLimiter: 10 req / 15 min</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> signupLimiter: 5 req / time</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> apiLimiter: 100 req / min</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> scrapeLimiter: 3 req / 10 min</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> tourApiLimiter: 60 req / min</div>
+            <div class="slc-item"><span class="slc-warn">&#9888;</span> In-memory (nulstilles ved redeploy)</div>
+          </div>
+        </div>
+        <div class="sec-layer-card">
+          <div class="slc-ico">💾</div>
+          <div class="slc-title">Data Protection</div>
+          <div class="slc-desc">Parameteriserede SQL queries forhindrer injection. Stripe webhooks valideres med HMAC signatur.</div>
+          <div class="slc-items">
+            <div class="slc-item"><span class="slc-check">&check;</span> Parameteriserede queries ($1, $2…)</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> Stripe webhook HMAC-verifikation</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> File upload size limit (10 MB)</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> Input validering p&aring; alle routes</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> JWT token udl&oslash;b (7 dage)</div>
+          </div>
+        </div>
+        <div class="sec-layer-card">
+          <div class="slc-ico">📋</div>
+          <div class="slc-title">Compliance &amp; Privacy</div>
+          <div class="slc-desc">GDPR-klar arkitektur med sletnings-endpoint og cookie-consent. Email via dedicated noreply-dom&aelig;ne.</div>
+          <div class="slc-items">
+            <div class="slc-item"><span class="slc-check">&check;</span> GDPR data-sletning mulig</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> Privatlivspolitik p&aring; plads</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> Affiliate anti-fraud (velocity check)</div>
+            <div class="slc-item"><span class="slc-check">&check;</span> Email via noreply@october-ai.dk</div>
+            <div class="slc-item"><span class="slc-warn">&#9888;</span> DPA template under udarbejdelse</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-section-title">Adgangspunkter &amp; Autentificering</div>
+      <table class="arch-table">
+        <tr><th>Endpoint / Portal</th><th>Auth-metode</th><th>Rate Limit</th><th>Beskyttelse</th></tr>
+        <tr><td><code>/auth/login</code></td><td>Email + password</td><td>10/15min</td><td>scrypt hash, JWT cookie</td></tr>
+        <tr><td><code>/auth/signup</code></td><td>&Aring;ben + affiliate ref</td><td>5/time</td><td>Email-verifikation, anti-fraud</td></tr>
+        <tr><td><code>/api/*</code></td><td>JWT cookie/Bearer</td><td>100/min</td><td>requireAuth middleware</td></tr>
+        <tr><td><code>/api/tour/*</code></td><td>&Aring;ben (public)</td><td>60/min</td><td>Tenant-validering</td></tr>
+        <tr><td><code>/client/:token</code></td><td>Portal token (URL)</td><td>100/min</td><td>Token-lookup, ingen login</td></tr>
+        <tr><td><code>/affiliate/:ref</code></td><td>Ref code (URL)</td><td>100/min</td><td>Ref code-lookup</td></tr>
+        <tr><td><code>/ws/voice</code></td><td>Session ID</td><td>100 msg/sec</td><td>Idle 5min, max 20min session</td></tr>
+        <tr><td><code>/webhook/stripe</code></td><td>HMAC signatur</td><td>Ingen</td><td>Raw body, sig header check</td></tr>
+      </table>
+
+      <div class="arch-section-title">Voice Session Sikkerhed</div>
+      <div class="arch-mini-grid">
+        <div class="arch-mini-card"><div class="amc-label">Max session</div><div class="amc-val">20 minutter</div><div class="amc-sub">Hard timeout forhindrer misbrug</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Idle timeout</div><div class="amc-val">5 minutter</div><div class="amc-sub">Lukker inaktive sessioner</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Max GPT calls</div><div class="amc-val">50 pr. session</div><div class="amc-sub">Forhindrer cost-abuse</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Msg rate limit</div><div class="amc-val">100 msg/sec</div><div class="amc-sub">WebSocket flood protection</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Noise filter</div><div class="amc-val">Confidence 0.65+</div><div class="amc-sub">Filtrerer hallucinations</div></div>
+        <div class="arch-mini-card"><div class="amc-label">Min audio</div><div class="amc-val">24.000 bytes</div><div class="amc-sub">Ignorerer micro-lyd</div></div>
+      </div>
+    </div>`;
+
+  /* ── Sikkerhedsdiagram (SVG) ── */
+  const secDiagram = `
+  <div class="arch-diagram" style="margin-top:16px">
+    <div class="arch-diagram-title">Sikkerhedsarkitektur &mdash; Request Flow</div>
+    <div class="arch-svg-wrap">
+      <svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="sa" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#4A7C59"/></marker>
+          <marker id="sa-r" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#9B3A2F"/></marker>
+          <marker id="sa-g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#B08D5B"/></marker>
+          <filter id="sd"><feDropShadow dx="0" dy="1" stdDeviation="3" flood-color="rgba(60,45,30,0.08)"/></filter>
+        </defs>
+
+        <!-- Baggrund: sikkerhedszoner -->
+        <rect x="140" y="35" width="620" height="330" rx="12" fill="none" stroke="rgba(74,124,89,0.15)" stroke-width="2" stroke-dasharray="8 4"/>
+        <text x="450" y="28" text-anchor="middle" font-size="9" fill="#4A7C59" font-weight="600" letter-spacing="2">SIKKERHEDSPERIMETER</text>
+
+        <!-- Klient (udenfor) -->
+        <rect x="15" y="150" width="110" height="70" rx="8" fill="#F4F0E8" stroke="rgba(60,45,30,0.18)" filter="url(#sd)"/>
+        <text x="70" y="178" text-anchor="middle" font-size="10" fill="#A89880" font-weight="600" letter-spacing="1">KLIENT</text>
+        <text x="70" y="196" text-anchor="middle" font-size="9" fill="#6B5F4E">Browser / API</text>
+
+        <!-- Lag 1: HTTPS -->
+        <rect x="160" y="80" width="100" height="210" rx="8" fill="rgba(74,124,89,0.06)" stroke="#4A7C59" stroke-width="1.5"/>
+        <text x="210" y="100" text-anchor="middle" font-size="9" fill="#4A7C59" font-weight="600" letter-spacing="1">HTTPS</text>
+        <text x="210" y="170" text-anchor="middle" font-size="22">🔒</text>
+        <text x="210" y="195" text-anchor="middle" font-size="10" fill="#4A7C59" font-weight="500">TLS 1.3</text>
+        <text x="210" y="210" text-anchor="middle" font-size="8" fill="#6B5F4E">Auto-redirect</text>
+        <text x="210" y="225" text-anchor="middle" font-size="8" fill="#6B5F4E">Railway proxy</text>
+
+        <!-- Lag 2: Rate Limit -->
+        <rect x="280" y="80" width="100" height="210" rx="8" fill="rgba(176,141,91,0.06)" stroke="#B08D5B" stroke-width="1.5"/>
+        <text x="330" y="100" text-anchor="middle" font-size="9" fill="#B08D5B" font-weight="600" letter-spacing="1">RATE LIMIT</text>
+        <text x="330" y="170" text-anchor="middle" font-size="22">⏱️</text>
+        <text x="330" y="195" text-anchor="middle" font-size="10" fill="#B08D5B" font-weight="500">5 limiters</text>
+        <text x="330" y="210" text-anchor="middle" font-size="8" fill="#6B5F4E">IP-baseret</text>
+        <text x="330" y="225" text-anchor="middle" font-size="8" fill="#6B5F4E">In-memory</text>
+
+        <!-- Lag 3: Headers -->
+        <rect x="400" y="80" width="100" height="210" rx="8" fill="rgba(107,91,138,0.06)" stroke="#6B5B8A" stroke-width="1.5"/>
+        <text x="450" y="100" text-anchor="middle" font-size="9" fill="#6B5B8A" font-weight="600" letter-spacing="1">HEADERS</text>
+        <text x="450" y="170" text-anchor="middle" font-size="22">🛡️</text>
+        <text x="450" y="195" text-anchor="middle" font-size="10" fill="#6B5B8A" font-weight="500">4 headers</text>
+        <text x="450" y="210" text-anchor="middle" font-size="8" fill="#6B5F4E">XSS, nosniff</text>
+        <text x="450" y="225" text-anchor="middle" font-size="8" fill="#6B5F4E">SAMEORIGIN</text>
+
+        <!-- Lag 4: Auth -->
+        <rect x="520" y="80" width="100" height="210" rx="8" fill="rgba(155,58,47,0.06)" stroke="#9B3A2F" stroke-width="1.5"/>
+        <text x="570" y="100" text-anchor="middle" font-size="9" fill="#9B3A2F" font-weight="600" letter-spacing="1">AUTH</text>
+        <text x="570" y="170" text-anchor="middle" font-size="22">🔐</text>
+        <text x="570" y="195" text-anchor="middle" font-size="10" fill="#9B3A2F" font-weight="500">JWT + scrypt</text>
+        <text x="570" y="210" text-anchor="middle" font-size="8" fill="#6B5F4E">httpOnly cookie</text>
+        <text x="570" y="225" text-anchor="middle" font-size="8" fill="#6B5F4E">Role-baseret</text>
+
+        <!-- Lag 5: SQL -->
+        <rect x="640" y="80" width="100" height="210" rx="8" fill="rgba(74,124,89,0.06)" stroke="#4A7C59" stroke-width="1.5"/>
+        <text x="690" y="100" text-anchor="middle" font-size="9" fill="#4A7C59" font-weight="600" letter-spacing="1">SQL PARAM</text>
+        <text x="690" y="170" text-anchor="middle" font-size="22">💾</text>
+        <text x="690" y="195" text-anchor="middle" font-size="10" fill="#4A7C59" font-weight="500">Prepared</text>
+        <text x="690" y="210" text-anchor="middle" font-size="8" fill="#6B5F4E">$1, $2, $3…</text>
+        <text x="690" y="225" text-anchor="middle" font-size="8" fill="#6B5F4E">Ingen concat</text>
+
+        <!-- Database (bagved) -->
+        <rect x="775" y="145" width="110" height="80" rx="8" fill="#F4F0E8" stroke="#4A7C59" stroke-width="2" filter="url(#sd)"/>
+        <ellipse cx="830" cy="146" rx="55" ry="6" fill="#F4F0E8" stroke="#4A7C59" stroke-width="2"/>
+        <text x="830" y="180" text-anchor="middle" font-size="11" fill="#1E1A14" font-weight="600">PostgreSQL</text>
+        <text x="830" y="198" text-anchor="middle" font-size="9" fill="#4A7C59">Railway managed</text>
+
+        <!-- Pile: Klient → HTTPS → Rate → Headers → Auth → SQL → DB -->
+        <line x1="125" y1="185" x2="152" y2="185" stroke="#4A7C59" stroke-width="2" marker-end="url(#sa)"/>
+        <line x1="260" y1="185" x2="272" y2="185" stroke="#4A7C59" stroke-width="1.5" marker-end="url(#sa)"/>
+        <line x1="380" y1="185" x2="392" y2="185" stroke="#4A7C59" stroke-width="1.5" marker-end="url(#sa)"/>
+        <line x1="500" y1="185" x2="512" y2="185" stroke="#4A7C59" stroke-width="1.5" marker-end="url(#sa)"/>
+        <line x1="620" y1="185" x2="632" y2="185" stroke="#4A7C59" stroke-width="1.5" marker-end="url(#sa)"/>
+        <line x1="740" y1="185" x2="767" y2="185" stroke="#4A7C59" stroke-width="1.5" marker-end="url(#sa)"/>
+
+        <!-- Blokeret request (r&oslash;d linje ned) -->
+        <line x1="330" y1="290" x2="330" y2="350" stroke="#9B3A2F" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#sa-r)"/>
+        <rect x="280" y="355" width="100" height="35" rx="6" fill="rgba(155,58,47,0.08)" stroke="#9B3A2F" stroke-width="1"/>
+        <text x="330" y="377" text-anchor="middle" font-size="10" fill="#9B3A2F" font-weight="500">429 Blocked</text>
+
+        <line x1="570" y1="290" x2="570" y2="350" stroke="#9B3A2F" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#sa-r)"/>
+        <rect x="520" y="355" width="100" height="35" rx="6" fill="rgba(155,58,47,0.08)" stroke="#9B3A2F" stroke-width="1"/>
+        <text x="570" y="377" text-anchor="middle" font-size="10" fill="#9B3A2F" font-weight="500">401 Denied</text>
+
+        <!-- Labels -->
+        <text x="330" y="310" text-anchor="middle" font-size="7" fill="#9B3A2F" letter-spacing="1">FOR MANGE</text>
+        <text x="330" y="320" text-anchor="middle" font-size="7" fill="#9B3A2F" letter-spacing="1">REQUESTS</text>
+        <text x="570" y="310" text-anchor="middle" font-size="7" fill="#9B3A2F" letter-spacing="1">UGYLDIG</text>
+        <text x="570" y="320" text-anchor="middle" font-size="7" fill="#9B3A2F" letter-spacing="1">TOKEN</text>
+
+        <!-- Flow labels -->
+        <text x="139" y="176" text-anchor="middle" font-size="7" fill="#A89880">request</text>
+        <text x="754" y="176" text-anchor="middle" font-size="7" fill="#4A7C59">query</text>
+      </svg>
+    </div>
+    <div class="arch-diagram-legend">
+      <div class="arch-leg-item"><div class="arch-leg-dot" style="background:#4A7C59"></div>Krypteret / beskyttet</div>
+      <div class="arch-leg-item"><div class="arch-leg-dot" style="background:#B08D5B"></div>Rate limiting</div>
+      <div class="arch-leg-item"><div class="arch-leg-dot" style="background:#6B5B8A"></div>Headers &amp; policies</div>
+      <div class="arch-leg-item"><div class="arch-leg-dot" style="background:#9B3A2F"></div>Auth &amp; blokering</div>
+    </div>
+  </div>`;
+
   /* ── Grafisk diagram (SVG) ── */
   const diagram = `
   <div class="arch-diagram">
@@ -1445,6 +1699,7 @@ function renderArch(){
     { ico:'🤝', title:'Affiliate System', badge:'25% recurring', badgeCls:'green', body:sec9 },
     { ico:'🔒', title:'Middleware & Sikkerhed', badge:'Auth, rate limits, CORS', badgeCls:'red', body:sec10 },
     { ico:'📁', title:'Filstruktur', badge:'Komplet overblik', badgeCls:'purple', body:sec11 },
+    { ico:'🛡️', title:'IT Sikkerhed', badge:'6 lag, health status', badgeCls:'green', body:sec12 },
   ];
 
   const accs = sections.map(s => `
@@ -1464,6 +1719,7 @@ function renderArch(){
       <div class="arch-updated">Sidst opdateret: ${updated}</div>
     </div>
     ${diagram}
+    ${secDiagram}
     <div class="arch-grid">${accs}</div>`;
 }
 
